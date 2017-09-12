@@ -20,7 +20,7 @@ $maxMenuWidth = 220;
     <header id="header">
         <div class="tasti-right">
             <div>
-                <a href="<?=$this->model->prefix().$this->model->_Admin->url?>/logout" class="tasto-header">
+                <a href="<?=$this->model->_Admin->getUrlPrefix()?>logout" class="tasto-header">
                     Log out
                 </a>
             </div>
@@ -28,9 +28,9 @@ $maxMenuWidth = 220;
         <div>
             <div>
 				<?php if(file_exists(INCLUDE_PATH.'img/logo.png')){ ?>
-                    <a href="<?=$this->model->prefix().$this->model->_Admin->url?>"><img src="<?=PATH?>img/logo.png" alt="" style="max-height: 39px" /></a>
+                    <a href="<?=$this->model->_Admin->getUrlPrefix()?>"><img src="<?=PATH?>img/logo.png" alt="" style="max-height: 39px" /></a>
 				<?php }else{ ?>
-                    <a href="<?=$this->model->prefix().$this->model->_Admin->url?>" style="font-size: 26px"><?=APP_NAME?></a>
+                    <a href="<?=$this->model->_Admin->getUrlPrefix()?>" style="font-size: 26px"><?=APP_NAME?></a>
 				<?php } ?>
             </div>
             <div style="border-left: solid #FFF 1px">
@@ -63,7 +63,7 @@ $maxMenuWidth = 220;
 
 			foreach($pages as $pIdx => $p){
 			    if(isset($p['rule'])){
-					$link = $this->model->prefix().$this->model->_Admin->url.'/'.$p['rule'];
+					$link = $this->model->_Admin->getUrlPrefix().$p['rule'];
 					$onclick = 'loadAdminPage([\''.$p['rule'].'\']); return false';
                 }else{
 					$link = '#';

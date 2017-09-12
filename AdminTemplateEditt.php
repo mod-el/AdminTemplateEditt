@@ -84,7 +84,7 @@ class AdminTemplateEditt extends Module {
 	public function renderMenuItems($parent, array $items, $lvl=1){
 		foreach($items as $pIdx => $p){
 			if(isset($p['rule'])){
-				$link = $this->model->prefix().$this->model->_Admin->url.'/'.$p['rule'];
+				$link = $this->model->_Admin->getUrlPrefix().$p['rule'];
 				$onclick = 'loadAdminPage([\''.$p['rule'].'\']); return false';
 			}else{
 				$link = '#';
@@ -267,7 +267,7 @@ class AdminTemplateEditt extends Module {
 		$this->searchBreadcrumbs($adminPages, $request, $breadcrumbs);
 
 		$breadcrumbsHtml = [];
-		$prefix = $this->model->prefix().$this->model->_Admin->url.'/';
+		$prefix = $this->model->_Admin->getUrlPrefix();
 		foreach($breadcrumbs as $b){
             $breadcrumbsHtml[] = $b['url']!==null ? '<a href="'.$prefix.$b['url'].'" onclick="loadAdminPage([\''.$b['url'].'\']); return false">'.entities($b['name']).'</a>' : '<a>'.entities($b['name']).'</a>';
         }
