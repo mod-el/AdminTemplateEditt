@@ -1461,3 +1461,13 @@ function switchAllFieldsLang(lang){
 function setLoadingBar(percentage){
 	_('main-loading-bar').style.width = percentage+'%';
 }
+
+function duplicate(){
+	if(changeHistory.length>0){
+		alert('There are prending changes, can\'t duplicate.');
+		return false;
+	}
+
+	var request = currentAdminPage.split('/');
+	window.open(adminPrefix+request[0]+'/duplicate/'+request[2]);
+}

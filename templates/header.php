@@ -12,7 +12,7 @@ $maxMenuWidth = 220;
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script>
 		var maxMenuWidth = <?=$maxMenuWidth?>;
-		var adminPrefix = '<?=$this->model->prefix().($this->model->_Admin->url ? $this->model->_Admin->url.'/' : '')?>';
+		var adminPrefix = <?=json_encode($this->model->_Admin->getUrlPrefix())?>;
     </script>
 </head>
 

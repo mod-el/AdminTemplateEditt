@@ -61,6 +61,9 @@ class AdminTemplateEditt extends Module {
 									$options['header'][] = INCLUDE_PATH.'model/AdminTemplateEditt/templates/form-header';
 									array_unshift($options['footer'], INCLUDE_PATH.'model/AdminTemplateEditt/templates/form-footer');
 								}
+
+								if(isset($_GET['duplicated']))
+								    $options['messages'] = ['Succesfully duplicated!'];
                             }
                         }
 						break;
@@ -233,9 +236,12 @@ class AdminTemplateEditt extends Module {
 					        continue 2;
                     }
                     break;
-                case 'save':
+				case 'save':
 					$action['action'] = 'save(); return false';
-                    break;
+					break;
+				case 'duplicate':
+					$action['action'] = 'duplicate(); return false';
+					break;
             }
 
             $parsedActions[] = $action;
