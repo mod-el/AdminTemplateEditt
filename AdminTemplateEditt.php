@@ -16,7 +16,7 @@ class AdminTemplateEditt extends Module {
 		$this->model->load('Form');
 
 		if(!isset($this->model->_Admin->request[1]) and isset($this->model->_Admin->request[0], $_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-searchFields'])){ // List request
-		    $_REQUEST['search-columns'] = $_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-searchFields'];
+			$_REQUEST['search-columns'] = $_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-searchFields'];
 		}
 	}
 
@@ -38,16 +38,16 @@ class AdminTemplateEditt extends Module {
 			];
 
 			if(isset($_GET['ajax']))
-			    $options['showLayout'] = false;
+				$options['showLayout'] = false;
 
 			if(isset($this->model->_Admin->request[1])){
 				switch($this->model->_Admin->request[1]){
-                    case 'edit':
-                        if(isset($_GET['getData'])){
-                            $arr = $this->model->_Admin->getEditArray();
-                            $this->model->sendJSON($arr);
-                        }else{
-                            if($this->model->element){
+					case 'edit':
+						if(isset($_GET['getData'])){
+							$arr = $this->model->_Admin->getEditArray();
+							$this->model->sendJSON($arr);
+						}else{
+							if($this->model->element){
 								$this->model->_Admin->form->reset();
 
 								$options['template'] = INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-template';
@@ -63,12 +63,12 @@ class AdminTemplateEditt extends Module {
 								}
 
 								if(isset($_GET['duplicated']))
-								    $options['messages'] = ['Succesfully duplicated!'];
-                            }
-                        }
+									$options['messages'] = ['Succesfully duplicated!'];
+							}
+						}
 						break;
 				}
-            }
+			}
 
 			return $options;
 		}
@@ -91,13 +91,13 @@ class AdminTemplateEditt extends Module {
 				$onclick = 'switchMenuGroup(\''.$parent.'-'.$pIdx.'\'); return false';
 			}
 			?>
-			<a href="<?=$link?>" class="main-menu-sub" id="menu-group-<?=$parent?>-<?=$pIdx?>" onclick="<?=$onclick?>" data-menu-id="<?=$parent.'-'.$pIdx?>">
-				<img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/page.png" alt="" />
-				<span class="cont-testo-menu"><?=entities($p['name'])?></span>
-			</a>
-            <?php
-            if(isset($p['sub']) and $p['sub']){
-                ?>
+            <a href="<?=$link?>" class="main-menu-sub" id="menu-group-<?=$parent?>-<?=$pIdx?>" onclick="<?=$onclick?>" data-menu-id="<?=$parent.'-'.$pIdx?>">
+                <img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/page.png" alt="" />
+                <span class="cont-testo-menu"><?=entities($p['name'])?></span>
+            </a>
+			<?php
+			if(isset($p['sub']) and $p['sub']){
+				?>
                 <div class="main-menu-cont expandible" id="menu-group-<?=$parent?>-<?=$pIdx?>-cont" style="height: 0px; padding-left: <?=(15*$lvl)?>px" data-menu-id="<?=$parent.'-'.$pIdx?>">
                     <div>
 						<?php
@@ -105,28 +105,28 @@ class AdminTemplateEditt extends Module {
 						?>
                     </div>
                 </div>
-                <?php
-            }
+				<?php
+			}
 		}
 	}
 
 	/**
-     * Called by AdminController, should send the correct data to the template for rendering content appropriate to the request
-     * If returns an array, this will be merged into the viewOptions (so it can return a template, for instance)
-     *
+	 * Called by AdminController, should send the correct data to the template for rendering content appropriate to the request
+	 * If returns an array, this will be merged into the viewOptions (so it can return a template, for instance)
+	 *
 	 * @param string $request
 	 * @param array $data
 	 * @return array
 	 */
 	public function respond($request, array $data){
-	    switch($request[1]){
-            case '':
-                $this->loadResizeModule($data['columns']);
+		switch($request[1]){
+			case '':
+				$this->loadResizeModule($data['columns']);
 
-                $backgroundRule = isset($this->model->_Admin->options['background']) ? $this->model->_Admin->options['background'] : false;
-                $colorRule = isset($this->model->_Admin->options['color']) ? $this->model->_Admin->options['color'] : false;
+				$backgroundRule = isset($this->model->_Admin->options['background']) ? $this->model->_Admin->options['background'] : false;
+				$colorRule = isset($this->model->_Admin->options['color']) ? $this->model->_Admin->options['color'] : false;
 
-                foreach($data['elements'] as &$el){
+				foreach($data['elements'] as &$el){
 					if(!is_string($backgroundRule) and is_callable($backgroundRule)){
 						$el['background'] = call_user_func($backgroundRule, $el['element']);
 					}else{
@@ -160,28 +160,28 @@ class AdminTemplateEditt extends Module {
 							$el['columns'][$column_id]['color'] = false;
 						}
 					}
-                }
-                unset($el);
+				}
+				unset($el);
 
 				return [
 					'template' => INCLUDE_PATH.'model/'.$this->getClass().'/templates/table',
 					'cacheTemplate' => false,
 					'data' => $data,
 				];
-                break;
-        }
+				break;
+		}
 
-        return [];
-    }
+		return [];
+	}
 
 	/**
-     * Loads ResizeTable module with the appropriate options
-     *
+	 * Loads ResizeTable module with the appropriate options
+	 *
 	 * @param array $columns
 	 * @return bool
 	 */
 	private function loadResizeModule(array $columns = []){
-	    if($this->model->isLoaded('ResizeTable'))
+		if($this->model->isLoaded('ResizeTable'))
 			return true;
 
 		$this->model->load('ResizeTable', [
@@ -194,7 +194,7 @@ class AdminTemplateEditt extends Module {
 		$this->model->_ResizeTable->load();
 
 		return true;
-    }
+	}
 
 	/**
 	 * Sends a JSON with the page aids for the current page
@@ -202,154 +202,154 @@ class AdminTemplateEditt extends Module {
 	public function pageAids(){
 		$request = $this->model->_Admin->request[0];
 
-	    $actions = $this->model->_Admin->getActions([
-            $request,
+		$actions = $this->model->_Admin->getActions([
+			$request,
 			isset($_GET['action']) ? $_GET['action'] : null,
 			isset($_GET['id']) ? $_GET['id'] : null,
-        ]);
+		]);
 
 		$parsedActions = [];
-        foreach($actions as $actId => $act){
-            $action = [
-                'id' => $actId,
-                'text' => $act['text'],
-                'icon' => false,
-                'url' => '#',
-                'action' => 'return false',
-            ];
+		foreach($actions as $actId => $act){
+			$action = [
+				'id' => $actId,
+				'text' => $act['text'],
+				'icon' => false,
+				'url' => '#',
+				'action' => 'return false',
+			];
 
-            $iconPath = PATH.'model/'.$this->getClass().'/files/img/toolbar/'.$actId.'.png';
-            if(file_exists(PATHBASE.$iconPath))
-                $action['icon'] = $iconPath;
+			$iconPath = PATH.'model/'.$this->getClass().'/files/img/toolbar/'.$actId.'.png';
+			if(file_exists(PATHBASE.$iconPath))
+				$action['icon'] = $iconPath;
 
-            switch($act['action']){
+			switch($act['action']){
 				case 'new':
 					$action['action'] = 'newElement(); return false';
 					break;
-                case 'delete':
+				case 'delete':
 					if(!isset($_GET['action'])) {
 						$action['action'] = 'deleteRows(); return false';
 					}else{
-					    if(isset($_GET['id']) and $_GET['id'])
-						    $action['action'] = 'deleteRows(['.$_GET['id'].']); return false';
-					    else
-					        continue 2;
-                    }
-                    break;
+						if(isset($_GET['id']) and $_GET['id'])
+							$action['action'] = 'deleteRows(['.$_GET['id'].']); return false';
+						else
+							continue 2;
+					}
+					break;
 				case 'save':
 					$action['action'] = 'save(); return false';
 					break;
 				case 'duplicate':
 					$action['action'] = 'duplicate(); return false';
 					break;
-            }
+			}
 
-            $parsedActions[] = $action;
-        }
+			$parsedActions[] = $action;
+		}
 
 		if(!isset($_GET['action'])){ // We're in the table page
-            $parsedActions[] = [
-                'id' => 'filters',
-                'text' => 'Filtri',
-                'icon' => PATH.'model/'.$this->getClass().'/files/img/toolbar/filters.png',
-                'url' => '#',
-                'action' => 'switchFiltersForm(this); return false',
-            ];
-        }
+			$parsedActions[] = [
+				'id' => 'filters',
+				'text' => 'Filtri',
+				'icon' => PATH.'model/'.$this->getClass().'/files/img/toolbar/filters.png',
+				'url' => '#',
+				'action' => 'switchFiltersForm(this); return false',
+			];
+		}
 
-        $adminPages = $this->model->_Admin->getPages();
+		$adminPages = $this->model->_Admin->getPages();
 		$breadcrumbs = [
-            [
-                'name' => 'Home',
-                'url' => '',
-            ],
-        ];
+			[
+				'name' => 'Home',
+				'url' => '',
+			],
+		];
 		$this->searchBreadcrumbs($adminPages, $request, $breadcrumbs);
 
 		$breadcrumbsHtml = [];
 		$prefix = $this->model->_Admin->getUrlPrefix();
 		foreach($breadcrumbs as $b){
-            $breadcrumbsHtml[] = $b['url']!==null ? '<a href="'.$prefix.$b['url'].'" onclick="loadAdminPage([\''.$b['url'].'\']); return false">'.entities($b['name']).'</a>' : '<a>'.entities($b['name']).'</a>';
-        }
+			$breadcrumbsHtml[] = $b['url']!==null ? '<a href="'.$prefix.$b['url'].'" onclick="loadAdminPage([\''.$b['url'].'\']); return false">'.entities($b['name']).'</a>' : '<a>'.entities($b['name']).'</a>';
+		}
 		$breadcrumbsHtml = implode(' -&gt; ', $breadcrumbsHtml);
 
 		$filterForms = $this->getFiltersForms();
 
 		ob_start();
 		$filterForms['top']->render([
-            'one-row' => true,
-            'labels-as-placeholders' => true,
-        ]);
+			'one-row' => true,
+			'labels-as-placeholders' => true,
+		]);
 		$topFormHtml = ob_get_clean();
 
 		ob_start();
 		$filterForms['filters']->render();
 		$filtersFormHtml = ob_get_clean();
 
-        $this->model->sendJSON([
-            'sId' => $this->model->_Admin->getSessionId(),
-            'actions' => $parsedActions,
-            'breadcrumbs' => $breadcrumbsHtml,
-            'topForm' => $topFormHtml,
-            'filtersForm' => $filtersFormHtml,
-        ]);
-    }
+		$this->model->sendJSON([
+			'sId' => $this->model->_Admin->getSessionId(),
+			'actions' => $parsedActions,
+			'breadcrumbs' => $breadcrumbsHtml,
+			'topForm' => $topFormHtml,
+			'filtersForm' => $filtersFormHtml,
+		]);
+	}
 
 	/**
-     * Reconstructs page hierarchy in an array, for breadcrumbs building
-     *
+	 * Reconstructs page hierarchy in an array, for breadcrumbs building
+	 *
 	 * @param array $pages
 	 * @param string $request
 	 * @param array $breadcrumbs
 	 * @return bool
 	 */
 	private function searchBreadcrumbs(array $pages, $request, array &$breadcrumbs){
-        foreach($pages as $p){
-            if(isset($p['rule']) and $p['rule']==$request){
+		foreach($pages as $p){
+			if(isset($p['rule']) and $p['rule']==$request){
 				$breadcrumbs[] = [
 					'name' => $p['name'],
 					'url' => $p['rule'],
 				];
-                return true;
-            }
-            if(isset($p['sub'])){
-                $temp = $breadcrumbs;
+				return true;
+			}
+			if(isset($p['sub'])){
+				$temp = $breadcrumbs;
 				$temp[] = [
 					'name' => $p['name'],
 					'url' => isset($p['rule']) ? $p['rule'] : null,
 				];
 				if($this->searchBreadcrumbs($p['sub'], $request, $temp)){
-				    $breadcrumbs = $temp;
-				    return true;
-                }
-            }
-        }
-        return false;
-    }
+					$breadcrumbs = $temp;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Returns the filter forms (the top one and the extended one)
-     * If $arr is true, it will not return the Form objects but just an array with the fields
+	 * If $arr is true, it will not return the Form objects but just an array with the fields
 	 *
-     * @param bool $arr
+	 * @param bool $arr
 	 * @return array
 	 */
 	public function getFiltersForms($arr = false){
-	    $defaults = [];
+		$defaults = [];
 
 		$customFilters = $this->model->_Admin->getCustomFiltersForm();
 		foreach($customFilters->getDataset() as $k => $f){
-		    switch($f->options['type']){
-                case 'date':
-                case 'time':
-                case 'datetime':
-				    $defaults[$k] = 'range';
-                    break;
-                default:
-                    $defaults[$k] = '=';
-                    break;
-            }
-        }
+			switch($f->options['type']){
+				case 'date':
+				case 'time':
+				case 'datetime':
+					$defaults[$k] = 'range';
+					break;
+				default:
+					$defaults[$k] = '=';
+					break;
+			}
+		}
 
 		$adminListOptions = $this->model->_Admin->getListOptions();
 
@@ -367,99 +367,99 @@ class AdminTemplateEditt extends Module {
 	 * @param string $name
 	 * @param array $default
 	 * @param array $filtersSet
-     * @param bool $arr
+	 * @param bool $arr
 	 * @return Form|array
 	 */
 	private function getFiltersForm($name, array $default = [], array $filtersSet = [], $arr = false){
 		$filtersArr = null;
-        if(isset($_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-filters-'.$name]))
-            $filtersArr = json_decode($_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-filters-'.$name], true);
-        if($filtersArr===null)
-		    $filtersArr = $default;
+		if(isset($_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-filters-'.$name]))
+			$filtersArr = json_decode($_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-filters-'.$name], true);
+		if($filtersArr===null)
+			$filtersArr = $default;
 
-        if($arr)
-            return $filtersArr;
+		if($arr)
+			return $filtersArr;
 
-        $form = new Form([
+		$form = new Form([
 			'table' => $this->model->_Admin->options['table'],
 			'model' => $this->model,
-        ]);
+		]);
 
 		$customFilters = $this->model->_Admin->getCustomFiltersForm();
 
 		$values = [];
 		foreach($filtersSet as $f){
-		    if(isset($filtersArr[$f[0]])){
-		        switch(count($f)){
+			if(isset($filtersArr[$f[0]])){
+				switch(count($f)){
 					case 2: // Custom filter
 						$values[$f[0]] = $f[1];
 						break;
 					case 3: // Normal filter
-					    if($f[1]!=$filtersArr[$f[0]]) // Different operator
-					        continue 2;
+						if($f[1]!=$filtersArr[$f[0]]) // Different operator
+							continue 2;
 						$values[$f[0]] = $f[2];
 						break;
 					case 4: // Range filter
 						$values[$f[0]] = [$f[1], $f[2]];
 						break;
-                }
-            }
-        }
+				}
+			}
+		}
 
-        foreach($filtersArr as $k=>$t){
-            if(isset($customFilters[$k])){
-                $datum = $form->add($customFilters[$k]);
-                $datum->options['attributes']['data-filter'] = 'custom';
-                $datum->options['attributes']['data-default'] = (string) $datum->options['default'];
+		foreach($filtersArr as $k=>$t){
+			if(isset($customFilters[$k])){
+				$datum = $form->add($customFilters[$k]);
+				$datum->options['attributes']['data-filter'] = 'custom';
+				$datum->options['attributes']['data-default'] = (string) $datum->options['default'];
 				if(isset($values[$k]))
 					$datum->setValue($values[$k]);
-				elseif($filtersSet) // If at least one filter is set, but not this one, that means the default value was erased by the user
-                    $datum->setValue(null);
-            }else{
+                elseif($filtersSet) // If at least one filter is set, but not this one, that means the default value was erased by the user
+					$datum->setValue(null);
+			}else{
 				$fieldOptions = [
 					'attributes' => [
 						'data-filter' => '=',
-                        'data-default' => '',
+						'data-default' => '',
 					],
-                    'default' => null,
+					'default' => null,
 				];
 
 				if($k==='all'){
-				    $fieldOptions['label'] = 'Ricerca generale';
-				    $fieldOptions['attributes']['data-filter'] = 'custom';
+					$fieldOptions['label'] = 'Ricerca generale';
+					$fieldOptions['attributes']['data-filter'] = 'custom';
 				}
 
-                if($t==='range'){
+				if($t==='range'){
 
-                }else{
+				}else{
 					$datum = $form->add($k, $fieldOptions);
 					if(isset($values[$k]))
 						$datum->setValue($values[$k]);
-                }
-            }
-        }
+				}
+			}
+		}
 
-        return $form;
+		return $form;
 	}
 
 	/**
-     * Method called via Ajax
-     *
+	 * Method called via Ajax
+	 *
 	 * Saves the width of a column, called via an ajax request
 	 */
 	public function saveWidth(){
 		if(checkCsrf() and isset($_GET['k'], $_POST['w']) and is_numeric($_POST['w'])){
-		    $this->loadResizeModule();
+			$this->loadResizeModule();
 			$this->model->_ResizeTable->set($_GET['k'], $_POST['w']);
 		}
 		die();
-    }
+	}
 
 	/**
-     * Method called via Ajax
-     *
-     * Shows the filters picking template, and saves them if necessary
-     *
+	 * Method called via Ajax
+	 *
+	 * Shows the filters picking template, and saves them if necessary
+	 *
 	 * @return array
 	 */
 	public function pickFilters(){
@@ -528,7 +528,7 @@ class AdminTemplateEditt extends Module {
 		$options = array_merge([
 			'type' => 'row',
 			'fields' => [],
-            'cont' => $name,
+			'cont' => $name,
 		], $options);
 
 		echo '<div id="cont-ch-'.entities($options['cont']).'">';
@@ -537,19 +537,19 @@ class AdminTemplateEditt extends Module {
 		$dummyForm = $dummy->getForm();
 
 		if(count($options['fields'])>0){
-		    $form = clone $dummyForm;
-		    $form->clear();
-		    foreach($options['fields'] as $f => $fOpt){
+			$form = clone $dummyForm;
+			$form->clear();
+			foreach($options['fields'] as $f => $fOpt){
 				if(is_numeric($f)){
 					$f = $fOpt;
 					$fOpt = [];
 				}
 
-		        $form->add($dummyForm[$f], ['attributes'=>$fOpt]);
-            }
-        }else{
-		    $form = $dummyForm;
-        }
+				$form->add($dummyForm[$f], ['attributes'=>$fOpt]);
+			}
+		}else{
+			$form = $dummyForm;
+		}
 
 		if($options['type']=='row'){
 			echo '<div class="rob-field-cont">';
@@ -567,27 +567,27 @@ class AdminTemplateEditt extends Module {
 
 		echo '</div>';
 		?>
-		<div class="rob-field-cont sublist-row" style="cursor: pointer" onclick="sublistAddRow('<?=entities($name)?>', '<?=entities($options['cont'])?>')">
-			<div class="rob-field" style="width: 5%"></div>
-			<div class="rob-field" style="width: 95%">
-				<img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/new.png" alt="" /> Aggiungi
-			</div>
-		</div>
+        <div class="rob-field-cont sublist-row" style="cursor: pointer" onclick="sublistAddRow('<?=entities($name)?>', '<?=entities($options['cont'])?>')">
+            <div class="rob-field" style="width: 5%"></div>
+            <div class="rob-field" style="width: 95%">
+                <img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/new.png" alt="" /> Aggiungi
+            </div>
+        </div>
 
-		<div id="sublist-template-<?=entities($options['cont'])?>" class="sublist-template">
-			<div class="rob-field" style="width: 5%; text-align: center">
-				<a href="#" onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?=entities($name)?>', '<?=entities($options['cont'])?>', '[n]'); return false"><img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/delete.png" alt="" /></a>
-				<input type="hidden" name="ch-<?=entities($name)?>-[n]" value="1" />
-			</div>
-			<div class="rob-field" style="width: 95%">
+        <div id="sublist-template-<?=entities($options['cont'])?>" class="sublist-template">
+            <div class="rob-field" style="width: 5%; text-align: center">
+                <a href="#" onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?=entities($name)?>', '<?=entities($options['cont'])?>', '[n]'); return false"><img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/delete.png" alt="" /></a>
+                <input type="hidden" name="ch-<?=entities($name)?>-[n]" value="1" />
+            </div>
+            <div class="rob-field" style="width: 95%">
 				<?php
 				$form->render([
-                    'one-row' => $options['type']==='row',
-                    'show-labels' => $options['type']==='form',
-                ]);
+					'one-row' => $options['type']==='row',
+					'show-labels' => $options['type']==='form',
+				]);
 				?>
-			</div>
-		</div>
+            </div>
+        </div>
 		<?php
 	}
 }
