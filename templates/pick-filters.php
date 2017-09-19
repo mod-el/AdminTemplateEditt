@@ -50,7 +50,7 @@
                     <input type="radio" name="<?=$k?>-type" data-managefilters="<?=$k?>-type" id="campo-<?=$k?>-type-=" value="="<?=(isset($currentFilters[$k]) and $currentFilters[$k]['type']=='=') ? ' checked' : ''?> />
                     <label for="campo-<?=$k?>-type-=">S&igrave;</label>
 					<?php
-                    if($k!=='all' and !array_key_exists($k, $customFilters)){
+                    if($k!=='all'){
 						$numeric = false;
 						if($col!==true and !$col['foreign_key']){
 							switch($col['type']){

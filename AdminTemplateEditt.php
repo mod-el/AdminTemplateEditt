@@ -340,30 +340,41 @@ class AdminTemplateEditt extends Module {
 	 * @return array
 	 */
 	public function getFiltersForms($arr = false){
-		$defaults = [];
+		$defaults = [
+            'top' => [
+				'all' => '=',
+			],
+            'filters' => [],
+        ];
 
 		$customFilters = $this->model->_Admin->getCustomFiltersForm();
 		foreach($customFilters->getDataset() as $k => $f){
-			switch($f->options['type']){
-				case 'date':
-				case 'time':
-				case 'datetime':
-					$defaults[$k] = 'range';
-					break;
-				default:
-					$defaults[$k] = '=';
-					break;
-			}
+			$form = isset($f->options['admin-form']) ? $f->options['admin-form'] : 'filters';
+
+		    if(isset($f->options['admin-type'])){
+		        $defaults[$form][$k] = $f->options['admin-type'];
+            }else{
+				switch($f->options['type']){
+					case 'date':
+					case 'time':
+					case 'datetime':
+						$defaults[$form][$k] = 'range';
+						break;
+					default:
+						$defaults[$form][$k] = '=';
+						break;
+				}
+            }
 		}
 
 		$adminListOptions = $this->model->_Admin->getListOptions();
 
-		return [
-			'top' => $this->getFiltersForm('top', [
-				'all' => '=',
-			], $adminListOptions['filters'], $arr),
-			'filters' => $this->getFiltersForm('filters', $defaults, $adminListOptions['filters'], $arr),
-		];
+		$forms = [];
+		foreach($defaults as $form => $defaultFilters){
+			$forms[$form] = $this->getFiltersForm($form, $defaultFilters, $adminListOptions['filters'], $arr);
+        }
+
+        return $forms;
 	}
 
 	/**
@@ -414,7 +425,7 @@ class AdminTemplateEditt extends Module {
 		foreach($filtersArr as $k=>$t){
 			if(isset($customFilters[$k])){
 				$datum = $form->add($customFilters[$k]);
-				$datum->options['attributes']['data-filter'] = 'custom';
+				$datum->options['attributes']['data-filter'] = isset($datum->options['admin-type']) ? $datum->options['admin-type'] : 'custom';
 				$datum->options['attributes']['data-default'] = (string) $datum->options['default'];
 				if(isset($values[$k]))
 					$datum->setValue($values[$k]);
@@ -423,10 +434,11 @@ class AdminTemplateEditt extends Module {
 			}else{
 				$fieldOptions = [
 					'attributes' => [
-						'data-filter' => '=',
+						'data-filter' => $t,
 						'data-default' => '',
 					],
 					'default' => null,
+                    'admin-type' => $t,
 				];
 
 				if($k==='all'){
