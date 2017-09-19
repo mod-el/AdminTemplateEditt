@@ -50,7 +50,12 @@ class AdminTemplateEditt extends Module {
 							if($this->model->element){
 								$this->model->_Admin->form->reset();
 
-								$options['template'] = INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-template';
+								$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
+								if(file_exists(INCLUDE_PATH.'data/templates/'.$dir.$this->model->_Admin->request[0].'.php'))
+									$options['template'] = $dir.$this->model->_Admin->request[0];
+								else
+									$options['template'] = INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-template';
+
 								$options['cacheTemplate'] = false;
 
 								if(isset($_GET['ajax'])){
