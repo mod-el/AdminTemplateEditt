@@ -28,12 +28,12 @@ class AdminTemplateEditt extends Module {
 		if(isset($this->model->_Admin->request[0]) and $this->model->_Admin->request[0]=='login'){
 			return [
 				'showLayout' => false,
-				'template' => INCLUDE_PATH.'model/AdminTemplateEditt/templates/login',
+				'template' => INCLUDE_PATH.'model/'.$this->getClass().'/templates/login',
 			];
 		}else{
 			$options = [
-				'header' => [INCLUDE_PATH.'model/AdminTemplateEditt/templates/header'],
-				'footer' => [INCLUDE_PATH.'model/AdminTemplateEditt/templates/footer'],
+				'header' => [INCLUDE_PATH.'model/'.$this->getClass().'/templates/header'],
+				'footer' => [INCLUDE_PATH.'model/'.$this->getClass().'/templates/footer'],
 				'template' => null,
 			];
 
@@ -50,16 +50,16 @@ class AdminTemplateEditt extends Module {
                             if($this->model->element){
 								$this->model->_Admin->form->reset();
 
-								$options['template'] = INCLUDE_PATH.'model/AdminTemplateEditt/templates/form-template';
+								$options['template'] = INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-template';
 								$options['cacheTemplate'] = false;
 
 								if(isset($_GET['ajax'])){
 									$options['showLayout'] = true;
-									$options['header'] = [INCLUDE_PATH.'model/AdminTemplateEditt/templates/form-header'];
-									$options['footer'] = [INCLUDE_PATH.'model/AdminTemplateEditt/templates/form-footer'];
+									$options['header'] = [INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-header'];
+									$options['footer'] = [INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-footer'];
 								}else{
-									$options['header'][] = INCLUDE_PATH.'model/AdminTemplateEditt/templates/form-header';
-									array_unshift($options['footer'], INCLUDE_PATH.'model/AdminTemplateEditt/templates/form-footer');
+									$options['header'][] = INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-header';
+									array_unshift($options['footer'], INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-footer');
 								}
 
 								if(isset($_GET['duplicated']))
@@ -92,7 +92,7 @@ class AdminTemplateEditt extends Module {
 			}
 			?>
 			<a href="<?=$link?>" class="main-menu-sub" id="menu-group-<?=$parent?>-<?=$pIdx?>" onclick="<?=$onclick?>" data-menu-id="<?=$parent.'-'.$pIdx?>">
-				<img src="<?=PATH?>model/AdminTemplateEditt/files/img/page.png" alt="" />
+				<img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/page.png" alt="" />
 				<span class="cont-testo-menu"><?=entities($p['name'])?></span>
 			</a>
             <?php
@@ -164,7 +164,7 @@ class AdminTemplateEditt extends Module {
                 unset($el);
 
 				return [
-					'template' => INCLUDE_PATH.'model/AdminTemplateEditt/templates/table',
+					'template' => INCLUDE_PATH.'model/'.$this->getClass().'/templates/table',
 					'cacheTemplate' => false,
 					'data' => $data,
 				];
@@ -218,7 +218,7 @@ class AdminTemplateEditt extends Module {
                 'action' => 'return false',
             ];
 
-            $iconPath = PATH.'model/AdminTemplateEditt/files/img/toolbar/'.$actId.'.png';
+            $iconPath = PATH.'model/'.$this->getClass().'/files/img/toolbar/'.$actId.'.png';
             if(file_exists(PATHBASE.$iconPath))
                 $action['icon'] = $iconPath;
 
@@ -251,7 +251,7 @@ class AdminTemplateEditt extends Module {
             $parsedActions[] = [
                 'id' => 'filters',
                 'text' => 'Filtri',
-                'icon' => PATH.'model/AdminTemplateEditt/files/img/toolbar/filters.png',
+                'icon' => PATH.'model/'.$this->getClass().'/files/img/toolbar/filters.png',
                 'url' => '#',
                 'action' => 'switchFiltersForm(this); return false',
             ];
@@ -493,7 +493,7 @@ class AdminTemplateEditt extends Module {
 		}
 		return [
 			'showLayout' => false,
-			'template' => INCLUDE_PATH.'model/AdminTemplateEditt/templates/pick-filters',
+			'template' => INCLUDE_PATH.'model/'.$this->getClass().'/templates/pick-filters',
 			'cacheTemplate' => false,
 		];
 	}
@@ -512,7 +512,7 @@ class AdminTemplateEditt extends Module {
 		}
 		return [
 			'showLayout' => false,
-			'template' => INCLUDE_PATH.'model/AdminTemplateEditt/templates/pick-search-fields',
+			'template' => INCLUDE_PATH.'model/'.$this->getClass().'/templates/pick-search-fields',
 			'cacheTemplate' => false,
 		];
 	}
@@ -570,13 +570,13 @@ class AdminTemplateEditt extends Module {
 		<div class="rob-field-cont sublist-row" style="cursor: pointer" onclick="sublistAddRow('<?=entities($name)?>', '<?=entities($options['cont'])?>')">
 			<div class="rob-field" style="width: 5%"></div>
 			<div class="rob-field" style="width: 95%">
-				<img src="<?=PATH?>model/AdminTemplateEditt/files/img/toolbar/new.png" alt="" /> Aggiungi
+				<img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/new.png" alt="" /> Aggiungi
 			</div>
 		</div>
 
 		<div id="sublist-template-<?=entities($options['cont'])?>" class="sublist-template">
 			<div class="rob-field" style="width: 5%; text-align: center">
-				<a href="#" onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?=entities($name)?>', '<?=entities($options['cont'])?>', '[n]'); return false"><img src="<?=PATH?>model/AdminTemplateEditt/files/img/toolbar/delete.png" alt="" /></a>
+				<a href="#" onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?=entities($name)?>', '<?=entities($options['cont'])?>', '[n]'); return false"><img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/delete.png" alt="" /></a>
 				<input type="hidden" name="ch-<?=entities($name)?>-[n]" value="1" />
 			</div>
 			<div class="rob-field" style="width: 95%">
