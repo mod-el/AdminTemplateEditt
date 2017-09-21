@@ -92,7 +92,7 @@ $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
                 }
             }
 			?>
-            <div id="main-menu-resize" onmousedown="startMenuResize(event); event.stopPropagation(); event.preventDefault()"></div>
+            <div id="main-menu-resize" onmousedown="startMenuResize(event); event.stopPropagation(); event.preventDefault()" ondblclick="switchMenu()"></div>
         </div>
 
         <div id="main-page-cont" style="width: calc(<?='100% - '.$maxMenuWidth.'px'?>)">
