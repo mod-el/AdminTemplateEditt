@@ -1,7 +1,7 @@
 <?php
 $config = $this->model->_Admin->retrieveConfig();
 $hideMenu = isset($config['hide-menu']) ? $config['hide-menu'] : 'mobile';
-$maxMenuWidth = 220;
+$maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
 ?>
 <!DOCTYPE html>
 
@@ -14,6 +14,11 @@ $maxMenuWidth = 220;
 		var maxMenuWidth = <?=$maxMenuWidth?>;
 		var adminPrefix = <?=json_encode($this->model->_Admin->getUrlPrefix())?>;
     </script>
+    <style>
+        #main-menu {
+            max-width: <?=$maxMenuWidth?>px;
+        }
+    </style>
 </head>
 
 <body>
@@ -87,6 +92,7 @@ $maxMenuWidth = 220;
                 }
             }
 			?>
+            <div id="main-menu-resize" onmousedown="startMenuResize(event); event.stopPropagation(); event.preventDefault()"></div>
         </div>
 
         <div id="main-page-cont" style="width: calc(<?='100% - '.$maxMenuWidth.'px'?>)">
