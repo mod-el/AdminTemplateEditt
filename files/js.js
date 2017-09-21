@@ -513,6 +513,9 @@ document.onmousemove = function(event){
 
 document.onmouseup = function(event){
 	if(menuResizing!==false){
+		if(menuResizing.endW<10)
+			menuResizing.endW = 10;
+
 		maxMenuWidth = menuResizing.endW;
 		openMenu();
 		menuResizing = false;
