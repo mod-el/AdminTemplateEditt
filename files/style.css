@@ -119,9 +119,9 @@ textarea{
 
 #main-menu{
 	width: 40%;
-	max-width: 220px;
 	min-height: 100%;
 	background-color: #f2f2f2;
+	position: relative;
 
 	-webkit-transition: width 0.3s ease-out;
 	-moz-transition: width 0.3s ease-out;
@@ -129,6 +129,15 @@ textarea{
 	-ms-transition: width 0.3s ease-out;
 	transition: width 0.3s ease-out;
 	overflow: hidden;
+}
+
+#main-menu-resize{
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 3px;
+	height: 100%;
+	cursor: ew-resize;
 }
 
 #img-open-menu{
@@ -192,7 +201,6 @@ a.main-menu-sub:hover, .main-menu-sub.selected{
 }
 
 #main-page-cont{
-	min-width: 80%;
 	height: 100%;
 	background-color: #FFF;
 

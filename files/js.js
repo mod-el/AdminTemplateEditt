@@ -1,5 +1,6 @@
 var sId = null;
 var currentAdminPage = false;
+var menuResizing = false;
 var columnResizing = false;
 var menuIsOpen = true;
 var sortedBy = [];
@@ -265,6 +266,11 @@ function closeMenu(){
 	}, 500);
 }
 
+function startMenuResize(){
+	var coords = getMouseCoords(event);
+	menuResizing = {'startX':coords.x, 'startW':maxMenuWidth, 'endW':false};
+}
+
 /*
  Loads a page using fetch; fills the main div with the content when the response comes, and additionally returns a Promise
  */
@@ -480,13 +486,21 @@ function startColumnResize(event, k){
 
 document.onmousemove = function(event){
 	var coords = getMouseCoords(event);
+	if(menuResizing!==false){
+		var diff = coords.x-menuResizing.startX;
+		var newW = menuResizing.startW+diff;
+		if(newW>window.innerWidth*0.4)
+			newW = Math.floor(window.innerWidth*0.4);
+
+		_('main-menu').style.maxWidth = newW+'px';
+
+		menuResizing.endW = newW;
+	}
 	if(columnResizing!==false){
 		var diff = coords.x-columnResizing.startX;
 		var newW = columnResizing.startW+diff;
-		if(newW<20){
+		if(newW<20)
 			newW = 20;
-			diff = 20-columnResizing.startW;
-		}
 
 		var celle = document.querySelectorAll('[data-column="'+columnResizing.k+'"]');
 		celle.forEach(function(cella){
@@ -498,6 +512,13 @@ document.onmousemove = function(event){
 };
 
 document.onmouseup = function(event){
+	if(menuResizing!==false){
+		maxMenuWidth = menuResizing.endW;
+		openMenu();
+		menuResizing = false;
+
+		setCookie('menu-width', maxMenuWidth, 365*10);
+	}
 	if(columnResizing!==false){
 		if(columnResizing.endW!==false)
 			saveColumnWidth(columnResizing.k, columnResizing.endW);
@@ -806,7 +827,7 @@ function switchFiltersForm(origin) {
 		if(window.innerWidth<800){
 			toolsLightbox('filtersForm', {'origin': origin, 'width': 'calc(100% - 20px)', 'left': '10px', 'offset-y': 10});
 		}else{
-			toolsLightbox('filtersForm', {'origin': origin, 'width': '60%', 'left': '220px', 'offset-y': 10});
+			toolsLightbox('filtersForm', {'origin': origin, 'width': '60%', 'left': maxMenuWidth+'px', 'offset-y': 10});
 		}
 	}
 }
