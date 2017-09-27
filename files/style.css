@@ -642,6 +642,37 @@ input[data-managefilters] + label:hover, input[data-managefilters]:checked + lab
 	height: 10px;
 }
 
+.admin-tabs{
+	border-bottom: solid #e6e6e6 1px;
+	font-size: 0;
+	font-family: 'Raleway', sans-serif;
+}
+
+.admin-tabs > *{
+	display: inline-block;
+	font-size: 14px;
+}
+
+.admin-tabs > a{
+	background: #999;
+	padding: 5px 10px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	color: #FFF;
+	text-decoration: none;
+	margin: 0 1px;
+	cursor: pointer;
+}
+
+.admin-tabs > a.admin-tab:hover, .admin-tabs > a.admin-tab.selected{
+	background: #71af71;
+	text-decoration: none;
+}
+
+[data-subpages] [data-subpage]{
+	display: none;
+}
+
 @media print{
 	#header, #toolbar, #breadcrumbs{
 		display: none !important;

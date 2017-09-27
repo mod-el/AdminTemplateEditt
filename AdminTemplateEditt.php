@@ -47,10 +47,11 @@ class AdminTemplateEditt extends Module {
 							$arr = $this->model->_Admin->getEditArray();
 							$this->model->sendJSON($arr);
 						}else{
+							$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
+
 							if($this->model->element){
 								$this->model->_Admin->form->reset();
 
-								$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
 								if(file_exists(INCLUDE_PATH.'data/templates/'.$dir.$this->model->_Admin->request[0].'.php'))
 									$options['template'] = $dir.$this->model->_Admin->request[0];
 								else
@@ -69,6 +70,11 @@ class AdminTemplateEditt extends Module {
 
 								if(isset($_GET['duplicated']))
 									$options['messages'] = ['Succesfully duplicated!'];
+							}
+
+							if(isset($this->model->_Admin->request[3])){
+								$options['showLayout'] = false;
+								$options['template'] = $dir.$this->model->_Admin->request[0].'/'.$this->model->_Admin->request[3];
 							}
 						}
 						break;
@@ -606,5 +612,42 @@ class AdminTemplateEditt extends Module {
             </div>
         </div>
 		<?php
+	}
+
+	/**
+     * Renders a group of tabs
+     *
+     * @param string $name
+	 * @param array $tabs
+	 * @param array $options
+	 */
+	public function renderTabs($name, array $tabs, array $options = []){
+		$options = array_merge([
+			'before' => false,
+			'after' => false,
+			'default' => null,
+		], $options);
+
+		$totK = $this->model->_Admin->request[0].'-'.$this->model->element['id'].'-'.$name;
+
+		if($options['default']!==null and !isset($tabs[$options['default']]))
+			$options['default'] = null;
+
+		echo '<div class="admin-tabs" data-tabs="'.entities($totK).'" data-name="'.entities($name).'"'.($options['default']!==null ? ' data-default="'.entities($options['default']).'"' : '').'>';
+		if($options['before'])
+			echo '<div>'.$options['before'].'</div>';
+		foreach($tabs as $k=>$t) {
+			if(!is_array($t))
+				$t = ['label'=>$t];
+			$t = array_merge([
+				'label'=>'',
+				'onclick'=>'',
+			], $t);
+
+			echo '<a class="admin-tab" data-tab="'.entities($k).'" data-onclick="'.($t['onclick'] ? entities($t['onclick']).';' : '').'">'.entities($t['label']).'</a>';
+		}
+		if($options['after'])
+			echo '<div>'.$options['after'].'</div>';
+		echo '</div>';
 	}
 }

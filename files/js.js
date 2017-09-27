@@ -35,12 +35,14 @@ window.addEventListener('DOMContentLoaded', function() {
 		loadPageAids(request);
 
 		if(_('adminForm') && _('adminForm').dataset.filled==='0'){
-			if(request[2]){
-				loadElementData(request[0], request[2]).then(fillAdminForm).then(monitorFields).catch(alert);
-			}else{
-				initalizeEmptyForm();
-				monitorFields();
-			}
+			checkSubPages().then(function(){
+				if(request[2]){
+					loadElementData(request[0], request[2]).then(fillAdminForm).then(monitorFields).catch(alert);
+				}else{
+					initalizeEmptyForm();
+					monitorFields();
+				}
+			});
 		}
 	}
 });
@@ -934,10 +936,12 @@ function loadElement(page, id, history_push){
 		var formData = loadElementData(page, id);
 
 		return Promise.all([formTemplate, formData]).then(function(data){
-			return fillAdminForm(data[1]).then(monitorFields);
+			return checkSubPages().then(function(){
+				return fillAdminForm(data[1]).then(monitorFields);
+			});
 		}).catch(alert);
 	}else{
-		return loadAdminPage([page, 'edit'], '', false, history_push).then(monitorFields).catch(alert);
+		return loadAdminPage([page, 'edit'], '', false, history_push).then(checkSubPages).then(monitorFields).catch(alert);
 	}
 }
 
@@ -1494,4 +1498,87 @@ function duplicate(){
 
 	var request = currentAdminPage.split('/');
 	window.open(adminPrefix+request[0]+'/duplicate/'+request[2]);
+}
+
+function checkSubPages(){
+	var promises = [];
+
+	var containers = document.querySelectorAll('[data-subpages]');
+	containers.forEach(function(cont){
+		var tabsCont = document.querySelector('[data-tabs][data-name="'+cont.getAttribute('data-subpages')+'"]');
+		var tabs = tabsCont.querySelectorAll('[data-tab]');
+		tabs.forEach(function(tab){
+			var page = cont.querySelector('[data-subpage="'+tab.getAttribute('data-tab')+'"]');
+			if(!page){
+				var subPageCont = document.createElement('div');
+				subPageCont.setAttribute('data-subpage', tab.getAttribute('data-tab'));
+				subPageCont.innerHTML = '[to-be-loaded]';
+				cont.appendChild(subPageCont);
+			}
+
+			if(tab.getAttribute('data-oninit')){
+				(function(){
+					eval(this.getAttribute('data-oninit'));
+				}).call(tab);
+			}
+
+			tab.addEventListener('click', function(event){
+				sessionStorage.setItem(cont.getAttribute('data-subpages'), this.getAttribute('data-tab'));
+				loadSubPage(cont.getAttribute('data-subpages'), this.getAttribute('data-tab'));
+
+				if(this.getAttribute('data-onclick')){
+					eval(this.getAttribute('data-onclick'));
+				}
+
+				return false;
+			});
+		});
+
+		var def = null;
+		if(sessionStorage.getItem(cont.getAttribute('data-subpages'))){
+			def = sessionStorage.getItem(cont.getAttribute('data-subpages'));
+		}else if(tabsCont.getAttribute('data-default')){
+			def = tabsCont.getAttribute('data-default');
+		}else{
+			def = tabsCont.querySelector('data-tab');
+		}
+
+		if(def){
+			promises.push(new Promise(function(resolve){
+				loadSubPage(cont.getAttribute('data-subpages'), def).then(resolve);
+			}));
+		}
+	});
+
+	return Promise.all(promises);
+}
+
+function loadSubPage(cont_name, p){
+	var tabsCont = document.querySelector('[data-tabs][data-name="'+cont_name+'"]');
+
+	tabsCont.querySelectorAll('[data-tab]').forEach(function(el){
+		var cont = document.querySelector('[data-subpages="'+cont_name+'"] [data-subpage="'+el.getAttribute('data-tab')+'"]');
+
+		if(el.getAttribute('data-tab')===p){
+			el.addClass('selected');
+
+			cont.style.display = 'block';
+		}else{
+			el.removeClass('selected');
+
+			cont.style.display = 'none';
+		}
+	});
+
+	var cont = document.querySelector('[data-subpages="'+cont_name+'"] [data-subpage="'+p+'"]');
+	if(cont.innerHTML==='[to-be-loaded]'){
+		var request = currentAdminPage.split('/');
+		if(request.length===2)
+			request.push(0);
+
+		loading(cont);
+		return ajax(cont, adminPrefix+request.join('/')+'/'+p, '', '');
+	}else{
+		return new Promise(function(resolve){ resolve(); });
+	}
 }
