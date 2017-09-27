@@ -223,12 +223,12 @@ function resize(menu){
 		table.style.height = (_('main-page').offsetHeight-sub_h)+'px';
 	}
 
-	 if(form = _('topForm')){
-		 var w = _('toolbar').clientWidth-10;
-		 _('toolbar').querySelectorAll('.toolbar-button').forEach(function(button){
-			 w -= button.offsetWidth;
-		 });
-		 form.style.width = w+'px';
+	if(form = _('topForm')){
+		var w = _('toolbar').clientWidth-10;
+		_('toolbar').querySelectorAll('.toolbar-button').forEach(function(button){
+			w -= button.offsetWidth;
+		});
+		form.style.width = w+'px';
 	}
 }
 
@@ -241,6 +241,7 @@ function switchMenu(){
 
 function openMenu(){
 	_('main-menu').style.width = '40%';
+	_('main-menu').style.maxWidth = maxMenuWidth+'px';
 	_('main-page-cont').style.width = 'calc(100% - '+maxMenuWidth+'px)';
 
 	var hideMenu = _('main-menu').getAttribute('data-hide');
@@ -607,12 +608,12 @@ function changeSorting(event, column){
 		});
 	}else if(event.ctrlKey){
 		if(!sortedBy.some(function(s, idx){
-			if(s[0]===column){
-				sortedBy[idx][1] = sortedBy[idx][1]==='ASC' ? 'DESC' : 'ASC';
-				return true;
-			}
-			return false;
-		})){
+				if(s[0]===column){
+					sortedBy[idx][1] = sortedBy[idx][1]==='ASC' ? 'DESC' : 'ASC';
+					return true;
+				}
+				return false;
+			})){
 			sortedBy.push([
 				column,
 				'ASC'
