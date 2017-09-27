@@ -1537,7 +1537,7 @@ function checkSubPages(){
 
 		var def = null;
 		if(sessionStorage.getItem(tabsCont.getAttribute('data-tabs'))){
-			def = sessionStorage.getItem(cont.getAttribute('data-subpages'));
+			def = sessionStorage.getItem(tabsCont.getAttribute('data-tabs'));
 		}else if(tabsCont.getAttribute('data-default')){
 			def = tabsCont.getAttribute('data-default');
 		}else{
