@@ -1524,7 +1524,7 @@ function checkSubPages(){
 			}
 
 			tab.addEventListener('click', function(event){
-				sessionStorage.setItem(cont.getAttribute('data-subpages'), this.getAttribute('data-tab'));
+				sessionStorage.setItem(tabsCont.getAttribute('data-tabs'), this.getAttribute('data-tab'));
 				loadSubPage(cont.getAttribute('data-subpages'), this.getAttribute('data-tab'));
 
 				if(this.getAttribute('data-onclick')){
@@ -1536,12 +1536,14 @@ function checkSubPages(){
 		});
 
 		var def = null;
-		if(sessionStorage.getItem(cont.getAttribute('data-subpages'))){
+		if(sessionStorage.getItem(tabsCont.getAttribute('data-tabs'))){
 			def = sessionStorage.getItem(cont.getAttribute('data-subpages'));
 		}else if(tabsCont.getAttribute('data-default')){
 			def = tabsCont.getAttribute('data-default');
 		}else{
-			def = tabsCont.querySelector('data-tab');
+			def = tabsCont.querySelector('[data-tab]');
+			if(def)
+				def = def.getAttribute('data-tab');
 		}
 
 		if(def){
