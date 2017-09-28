@@ -968,7 +968,7 @@ function fillAdminForm(data){
 			throw 'Error in loading element';
 		}
 
-		form.fill(data.data);
+		form.fill(data.data, false, 'filled');
 
 		for(var name in data.children){
 			if(!data.children.hasOwnProperty(name))
