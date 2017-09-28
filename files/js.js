@@ -9,6 +9,8 @@ var selectedRows = [];
 var searchCounter = 0;
 var pageLoadingHash = '';
 
+var dataCache = {'data': {}, 'children': []};
+
 var saving = false;
 
 /* Form history monitoring */
@@ -955,6 +957,12 @@ function loadElementData(page, id){
 }
 
 function fillAdminForm(data){
+	if(typeof data==='undefined'){
+		data = dataCache;
+	}else{
+		dataCache = data;
+	}
+
 	return new Promise(function(resolve, reject){
 		if(!(form = _('adminForm'))){
 			throw 'Error in loading element';
@@ -1594,7 +1602,7 @@ function loadSubPage(cont_name, p){
 			request.push(0);
 
 		loading(cont);
-		return ajax(cont, adminPrefix+request.join('/')+'/'+p, '', '').then(checkSubPages);
+		return ajax(cont, adminPrefix+request.join('/')+'/'+p, '', '').then(fillAdminForm).then(checkSubPages);
 	}else{
 		return new Promise(function(resolve){ resolve(); });
 	}
