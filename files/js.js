@@ -296,7 +296,7 @@ function loadPage(url, get, post, deleteContent){
 
 	pageLoadingHash = url+get+post;
 
-	return ajax(false, url, get, post).then((function(hash) {
+	return ajax(url, get, post).then((function(hash) {
 		return function (response) {
 			if(hash!==pageLoadingHash)
 				return false;
@@ -388,8 +388,8 @@ function loadPageAids(request, get){
 	if(form = _('filtersFormCont'))
 		form.innerHTML = '';
 
-	return ajax(false, adminPrefix+request[0]+'/pageAids', get).then(function(aids){
-		if(typeof aids!='object')
+	return ajax( adminPrefix+request[0]+'/pageAids', get).then(function(aids){
+		if(typeof aids!=='object')
 			return false;
 
 		sId = aids.sId;
@@ -568,7 +568,7 @@ function autoResize(label){
 
 function saveColumnWidth(k, w){
 	var request = currentAdminPage.split('/');
-	return ajax(false, adminPrefix+request[0]+'/saveWidth', 'k='+encodeURIComponent(k), 'w='+encodeURIComponent(w)+'&c_id='+c_id);
+	return ajax(adminPrefix+request[0]+'/saveWidth', 'k='+encodeURIComponent(k), 'w='+encodeURIComponent(w)+'&c_id='+c_id);
 }
 
 function tableEvents(){
@@ -755,7 +755,7 @@ function deleteRows(ids){
 	_('#toolbar-button-delete img').src = absolute_path+'model/Output/files/loading.gif';
 
 	var request = currentAdminPage.split('/');
-	return ajax(false, adminPrefix+request[0]+'/delete', 'id='+encodeURIComponent(ids.join(',')), 'c_id='+c_id).then(function(r){
+	return ajax(adminPrefix+request[0]+'/delete', 'id='+encodeURIComponent(ids.join(',')), 'c_id='+c_id).then(function(r){
 		if(typeof r!='object')
 			r = {'err':r};
 
@@ -891,7 +891,7 @@ function saveFilters(){
 	});
 
 	loading(_('popup-real'));
-	return ajax(false, adminPrefix+request[0]+'/pickFilters', '', 'c_id='+c_id+'&filters='+encodeURIComponent(JSON.stringify(filters))).then(function(r){
+	return ajax(adminPrefix+request[0]+'/pickFilters', '', 'c_id='+c_id+'&filters='+encodeURIComponent(JSON.stringify(filters))).then(function(r){
 		if(r!='ok'){
 			alert(r);
 			return false;
@@ -920,7 +920,7 @@ function saveSearchFields(){
 	var post = 'c_id='+c_id+'&fields='+encodeURIComponent(fields.join(','));
 
 	loading(_('popup-real'));
-	return ajax(false, adminPrefix+request[0]+'/pickSearchFields', '', post).then(function(r){
+	return ajax(adminPrefix+request[0]+'/pickSearchFields', '', post).then(function(r){
 		zkPopupClose();
 		if(r!='ok'){
 			alert(r);
@@ -949,7 +949,7 @@ function loadElement(page, id, history_push){
 }
 
 function loadElementData(page, id){
-	return ajax(false, adminPrefix+page+'/edit/'+id, 'getData=1', false).then(function(r){
+	return ajax(adminPrefix+page+'/edit/'+id, 'getData=1', false).then(function(r){
 		if(typeof r!='object')
 			throw r;
 		return r;
@@ -1272,7 +1272,7 @@ function save(){
 			}
 		}
 
-		return ajax(false, url, '', 'c_id='+c_id+'&data='+encodeURIComponent(JSON.stringify(savingValues)), {
+		return ajax(url, '', 'c_id='+c_id+'&data='+encodeURIComponent(JSON.stringify(savingValues)), {
 			'onprogress': function(event){
 				if(event.total===0){
 					var percentage = 0;
@@ -1332,7 +1332,7 @@ function instantSave(id, f, field){
 	var saving = {};
 	saving[f] = v;
 
-	ajax(false, adminPrefix+request[0]+'/save/'+id, 'instant='+encodeURIComponent(ids.join(',')), 'c_id='+c_id+'&data='+encodeURIComponent(JSON.stringify(saving))).then(function(r){
+	ajax(adminPrefix+request[0]+'/save/'+id, 'instant='+encodeURIComponent(ids.join(',')), 'c_id='+c_id+'&data='+encodeURIComponent(JSON.stringify(saving))).then(function(r){
 		if(typeof r!='object'){
 			alert(r);
 			field.style.display = 'none';
@@ -1602,7 +1602,8 @@ function loadSubPage(cont_name, p){
 			request.push(0);
 
 		loading(cont);
-		return ajax(cont, adminPrefix+request.join('/')+'/'+p, '', '').then(fillAdminForm).then(checkSubPages);
+
+		cont.ajax(adminPrefix+request.join('/')+'/'+p, '', '').then(fillAdminForm).then(checkSubPages);
 	}else{
 		return new Promise(function(resolve){ resolve(); });
 	}
