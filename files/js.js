@@ -1603,7 +1603,7 @@ function loadSubPage(cont_name, p){
 
 		loading(cont);
 
-		cont.ajax(adminPrefix+request.join('/')+'/'+p, '', '').then(fillAdminForm).then(checkSubPages);
+		return cont.ajax(adminPrefix+request.join('/')+'/'+p, '', '').then(fillAdminForm).then(checkSubPages);
 	}else{
 		return new Promise(function(resolve){ resolve(); });
 	}
