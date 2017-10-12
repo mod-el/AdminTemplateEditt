@@ -301,6 +301,9 @@ function loadPage(url, get, post, deleteContent){
 			if(hash!==pageLoadingHash)
 				return false;
 
+			if(window.resetAllInstantSearches)
+				resetAllInstantSearches();
+
 			_('main-loading').style.display = 'none';
 			jsFill(response, _('main-content'));
 			resize();
