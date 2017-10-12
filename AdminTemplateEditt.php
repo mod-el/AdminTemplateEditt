@@ -10,6 +10,8 @@ class AdminTemplateEditt extends Module {
 			$this->model->load('DatePicker');
 		if($this->model->moduleExists('CkEditor'))
 			$this->model->load('CkEditor');
+		if($this->model->moduleExists('InstantSearch'))
+			$this->model->load('InstantSearch');
 
 		$this->model->load('FrontEnd');
 		$this->model->load('Popup');
