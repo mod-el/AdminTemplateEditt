@@ -305,7 +305,7 @@ function loadPage(url, get, post, deleteContent){
 				resetAllInstantSearches();
 
 			_('main-loading').style.display = 'none';
-			jsFill(response, _('main-content'));
+			_('main-content').jsFill(response);
 			resize();
 			if (_('results-table'))
 				tableEvents();
@@ -893,7 +893,7 @@ function saveFilters(){
 		}
 	});
 
-	loading(_('popup-real'));
+	_('popup-real').loading();
 	return ajax(adminPrefix+request[0]+'/pickFilters', '', 'c_id='+c_id+'&filters='+encodeURIComponent(JSON.stringify(filters))).then(function(r){
 		if(r!='ok'){
 			alert(r);
@@ -922,7 +922,7 @@ function saveSearchFields(){
 	});
 	var post = 'c_id='+c_id+'&fields='+encodeURIComponent(fields.join(','));
 
-	loading(_('popup-real'));
+	_('popup-real').loading();
 	return ajax(adminPrefix+request[0]+'/pickSearchFields', '', post).then(function(r){
 		zkPopupClose();
 		if(r!='ok'){
@@ -1604,9 +1604,7 @@ function loadSubPage(cont_name, p){
 		if(request.length===2)
 			request.push(0);
 
-		loading(cont);
-
-		return cont.ajax(adminPrefix+request.join('/')+'/'+p, '', '').then(function(){
+		return cont.loading().ajax(adminPrefix+request.join('/')+'/'+p, '', '').then(function(){
 			return fillAdminForm();
 		}).then(checkSubPages);
 	}else{
