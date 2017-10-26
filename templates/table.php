@@ -5,8 +5,6 @@
 <div class="pad20o no-overflow">
     <div id="results-table-count">
         <div><?=$this->options['data']['tot']?> risultati presenti</div>
-        <span class="nowrap">[<a href="#" onclick="selectAllRows(1); return false"> seleziona tutti </a>]</span>
-        <span class="nowrap">[<a href="#" onclick="selectAllRows(0); return false"> deseleziona tutti </a>]</span>
         <span class="nowrap">[<a href="?nopag=1" onclick="allInOnePage(); return false"> tutti su una pagina </a>]</span>
     </div>
 
@@ -22,7 +20,7 @@
 <div id="table-headings">
     <div>
         <div class="special-cell" style="padding: 0 5px">
-
+            <input type="checkbox" onchange="if(this.checked) selectAllRows(1); else selectAllRows(0)" />
         </div>
         <?php
         $mainDeletePrivilege = $this->model->_Admin->canUser('D');
