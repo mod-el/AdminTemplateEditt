@@ -21,7 +21,9 @@
 
 <div id="table-headings">
     <div>
-        <div class="special-cell" style="padding: 0 5px"><a href="#" onclick="autoResize(false); return false" title="Ottimizza Colonne"><img src="<?=PATH?>model/AdminTemplateEditt/files/img/expand.png" alt="" /></a></div>
+        <div class="special-cell" style="padding: 0 5px">
+
+        </div>
         <?php
         $mainDeletePrivilege = $this->model->_Admin->canUser('D');
         if($mainDeletePrivilege){
@@ -43,7 +45,7 @@
             }
             ?>
             <div style="width: <?=$this->model->_ResizeTable->widths[$column_id]?>px" data-column="<?=$column_id?>" id="column-<?=$column_id?>">
-                <div class="table-headings-resize" onmousedown="startColumnResize(event, '<?=$column_id?>'); event.stopPropagation(); event.preventDefault()" ondblclick="autoResize('<?=$column_id?>')"></div>
+                <div class="table-headings-resize" onmousedown="startColumnResize(event, '<?=$column_id?>'); event.stopPropagation(); event.preventDefault()" ondblclick="autoResize('<?=$column_id?>')" data-context-menu="{'Ottimizza':function(){ autoResize('<?=$column_id?>'); }, 'Ottimizza colonne':function(){ autoResize(false); }}"></div>
                 <div class="table-headings-label<?=$f['sortable'] ? ' sortable' : ''?><?=$sorted ? ' selected' : ''?>"<?php
                 if($f['sortable']){
                     echo ' onclick="changeSorting(event, \''.$column_id.'\')"';
