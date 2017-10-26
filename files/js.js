@@ -96,6 +96,10 @@ window.addEventListener('keydown', function(event){
 	}
 });
 
+window.addEventListener('mouseup', function(event){
+	releaseRowsSelection();
+});
+
 /*
  Opens or close a menu group
  */

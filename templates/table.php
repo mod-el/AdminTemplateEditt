@@ -72,7 +72,7 @@
             <div class="results-table-row" data-n="<?=$c_row++?>" data-id="<?=$id?>" data-clickable="<?=$clickable?>" style="<?=$el['background'] ? 'background: '.entities($el['background']).';' : ''?><?=$el['color'] ? 'color: '.entities($el['color']).';' : ''?>">
                 <div class="special-cell" onmousedown="event.stopPropagation()" onmouseup="event.stopPropagation()" onclick="event.stopPropagation(); var check = this.firstElementChild.firstElementChild; if(check.getValue()) check.setValue(0); else check.setValue(1);">
                     <div>
-                        <input type="checkbox" value="1" id="row-checkbox-<?=$id?>" data-id="<?=$id?>" onchange="selectRow('<?=$id?>', this.checked ? 1 : 0)" onclick="event.stopPropagation()" onmousedown="if(event.shiftKey){ holdRowsSelection(this); } event.stopPropagation()" onmouseup="releaseRowsSelection(); event.stopPropagation()" onmouseover="if(holdingRowsSelection!==null) this.setValue(holdingRowsSelection)" />
+                        <input type="checkbox" value="1" id="row-checkbox-<?=$id?>" data-id="<?=$id?>" onchange="selectRow('<?=$id?>', this.checked ? 1 : 0)" onclick="event.stopPropagation()" onmousedown="if(event.shiftKey){ holdRowsSelection(this); } event.stopPropagation()" onmouseup="event.stopPropagation()" onmouseover="if(holdingRowsSelection!==null) this.setValue(holdingRowsSelection)" />
                     </div>
                 </div>
                 <?php
