@@ -6,6 +6,7 @@ var menuIsOpen = true;
 var sortedBy = [];
 var currentPage = 1;
 var selectedRows = [];
+var holdingRowsSelection = null;
 var searchCounter = 0;
 var pageLoadingHash = '';
 
@@ -365,6 +366,7 @@ function loadAdminPage(request, get, post, history_push){
 	if(window.innerWidth<800)
 		closeMenu();
 
+	selectedRows = [];
 	currentAdminPage = full_url;
 
 	historyWipe();
@@ -739,7 +741,7 @@ function deleteRows(ids){
 		return false;
 	}
 
-	if(!confirm('Sicuro di voler eliminare?'))
+	if(!confirm('Sicuro di voler eliminare '+ids.length+' righe?'))
 		return false;
 
 	if(usingChecks){
@@ -1610,4 +1612,16 @@ function loadSubPage(cont_name, p){
 	}else{
 		return new Promise(function(resolve){ resolve(); });
 	}
+}
+
+function holdRowsSelection(checkbox){
+	if(checkbox.getValue())
+		holdingRowsSelection = 0;
+	else
+		holdingRowsSelection = 1;
+	checkbox.setValue(holdingRowsSelection);
+}
+
+function releaseRowsSelection(){
+	holdingRowsSelection = null;
 }

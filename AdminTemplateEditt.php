@@ -16,6 +16,7 @@ class AdminTemplateEditt extends Module {
 		$this->model->load('FrontEnd');
 		$this->model->load('Popup');
 		$this->model->load('Form');
+		$this->model->load('ContextMenu');
 
 		if(!isset($this->model->_Admin->request[1]) and isset($this->model->_Admin->request[0], $_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-searchFields'])){ // List request
 			$_REQUEST['search-columns'] = $_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-searchFields'];

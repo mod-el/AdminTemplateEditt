@@ -5,8 +5,6 @@
 <div class="pad20o no-overflow">
     <div id="results-table-count">
         <div><?=$this->options['data']['tot']?> risultati presenti</div>
-        <span class="nowrap">[<a href="#" onclick="selectAllRows(1); return false"> seleziona tutti </a>]</span>
-        <span class="nowrap">[<a href="#" onclick="selectAllRows(0); return false"> deseleziona tutti </a>]</span>
         <span class="nowrap">[<a href="?nopag=1" onclick="allInOnePage(); return false"> tutti su una pagina </a>]</span>
     </div>
 
@@ -21,7 +19,9 @@
 
 <div id="table-headings">
     <div>
-        <div class="special-cell" style="padding: 0 5px"><a href="#" onclick="autoResize(false); return false" title="Ottimizza Colonne"><img src="<?=PATH?>model/AdminTemplateEditt/files/img/expand.png" alt="" /></a></div>
+        <div class="special-cell" style="padding: 0 5px">
+            <input type="checkbox" onchange="if(this.checked) selectAllRows(1); else selectAllRows(0)" />
+        </div>
         <?php
         $mainDeletePrivilege = $this->model->_Admin->canUser('D');
         if($mainDeletePrivilege){
@@ -43,7 +43,7 @@
             }
             ?>
             <div style="width: <?=$this->model->_ResizeTable->widths[$column_id]?>px" data-column="<?=$column_id?>" id="column-<?=$column_id?>">
-                <div class="table-headings-resize" onmousedown="startColumnResize(event, '<?=$column_id?>'); event.stopPropagation(); event.preventDefault()" ondblclick="autoResize('<?=$column_id?>')"></div>
+                <div class="table-headings-resize" onmousedown="startColumnResize(event, '<?=$column_id?>'); event.stopPropagation(); event.preventDefault()" ondblclick="autoResize('<?=$column_id?>')" data-context-menu="{'Ottimizza':function(){ autoResize('<?=$column_id?>'); }, 'Ottimizza colonne':function(){ autoResize(false); }}"></div>
                 <div class="table-headings-label<?=$f['sortable'] ? ' sortable' : ''?><?=$sorted ? ' selected' : ''?>"<?php
                 if($f['sortable']){
                     echo ' onclick="changeSorting(event, \''.$column_id.'\')"';
@@ -72,7 +72,7 @@
             <div class="results-table-row" data-n="<?=$c_row++?>" data-id="<?=$id?>" data-clickable="<?=$clickable?>" style="<?=$el['background'] ? 'background: '.entities($el['background']).';' : ''?><?=$el['color'] ? 'color: '.entities($el['color']).';' : ''?>">
                 <div class="special-cell" onmousedown="event.stopPropagation()" onmouseup="event.stopPropagation()" onclick="event.stopPropagation(); var check = this.firstElementChild.firstElementChild; if(check.getValue()) check.setValue(0); else check.setValue(1);">
                     <div>
-                        <input type="checkbox" value="1" id="row-checkbox-<?=$id?>" data-id="<?=$id?>" onchange="selectRow('<?=$id?>', this.checked ? 1 : 0)" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" onmouseup="event.stopPropagation()" />
+                        <input type="checkbox" value="1" id="row-checkbox-<?=$id?>" data-id="<?=$id?>" onchange="selectRow('<?=$id?>', this.checked ? 1 : 0)" onclick="event.stopPropagation()" onmousedown="if(event.shiftKey){ holdRowsSelection(this); } event.stopPropagation()" onmouseup="releaseRowsSelection(); event.stopPropagation()" onmouseover="if(holdingRowsSelection!==null) this.setValue(holdingRowsSelection)" />
                     </div>
                 </div>
                 <?php
