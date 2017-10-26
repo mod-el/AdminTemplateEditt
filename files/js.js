@@ -365,6 +365,7 @@ function loadAdminPage(request, get, post, history_push){
 	if(window.innerWidth<800)
 		closeMenu();
 
+	selectedRows = [];
 	currentAdminPage = full_url;
 
 	historyWipe();
