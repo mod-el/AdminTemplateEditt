@@ -1629,3 +1629,31 @@ function holdRowsSelection(checkbox){
 function releaseRowsSelection(){
 	holdingRowsSelection = null;
 }
+
+function moveBetweenRows(checkbox, keyCode){
+	var id = checkbox.getAttribute('data-id');
+	var row = document.querySelector('.results-table-row[data-id="'+id+'"]');
+	if(!row)
+		return;
+	var n = row.getAttribute('data-n');
+
+	switch(keyCode){
+		case 38:
+			n--;
+			break;
+		case 40:
+			n++;
+			break;
+		default:
+			return;
+			break;
+	}
+
+	var nextRow = document.querySelector('.results-table-row[data-n="'+n+'"]');
+	if(!nextRow)
+		return;
+
+	var nextId = nextRow.getAttribute('data-id');
+	var nextCheckbox = document.getElementById('row-checkbox-'+nextId);
+	nextCheckbox.focus();
+}
