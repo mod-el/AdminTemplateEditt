@@ -145,7 +145,7 @@
                 $free_cells++;
             }
 
-            $dummy = $this->model->_ORM->create($this->model->_Admin->options['element'], ['table'=>$this->model->_Admin->options['table']]);
+            $dummy = $this->model->_ORM->create($this->model->_Admin->options['element'] ?: '\\Model\\Element', ['table'=>$this->model->_Admin->options['table']]);
             $dummyForm = $dummy->getForm();
 
             $cc = 0; $totals_width = 0;
