@@ -9,6 +9,7 @@ var selectedRows = [];
 var holdingRowsSelection = null;
 var searchCounter = 0;
 var pageLoadingHash = '';
+var elementCallback = null;
 
 var dataCache = {'data': {}, 'children': []};
 
@@ -40,7 +41,12 @@ window.addEventListener('DOMContentLoaded', function() {
 		if(_('adminForm') && _('adminForm').dataset.filled==='0'){
 			checkSubPages().then(function(){
 				if(request[2]){
-					loadElementData(request[0], request[2]).then(fillAdminForm).then(monitorFields).catch(alert);
+					loadElementData(request[0], request[2]).then(fillAdminForm).then(function(){
+						if(elementCallback){
+							elementCallback.call();
+							elementCallback = null;
+						}
+					}).then(monitorFields).catch(alert);
 				}else{
 					initalizeEmptyForm();
 					monitorFields();
@@ -940,8 +946,10 @@ function saveSearchFields(){
 }
 
 function loadElement(page, id, history_push){
-	if(typeof history_push=='undefined')
+	if(typeof history_push==='undefined')
 		history_push = true;
+
+	elementCallback = null;
 
 	if(id){
 		var formTemplate = loadAdminPage([page, 'edit', id], '', false, history_push);
@@ -949,7 +957,12 @@ function loadElement(page, id, history_push){
 
 		return Promise.all([formTemplate, formData]).then(function(data){
 			return checkSubPages().then(function(){
-				return fillAdminForm(data[1]).then(monitorFields);
+				return fillAdminForm(data[1]).then(function(){
+					if(elementCallback){
+						elementCallback.call();
+						elementCallback = null;
+					}
+				}).then(monitorFields);
 			});
 		}).catch(alert);
 	}else{
