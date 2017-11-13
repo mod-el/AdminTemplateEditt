@@ -555,6 +555,7 @@ class AdminTemplateEditt extends Module {
 			'type' => 'row',
 			'fields' => [],
 			'cont' => $name,
+            'template' => null,
 		], $options);
 
 		echo '<div id="cont-ch-'.entities($options['cont']).'">';
@@ -601,18 +602,37 @@ class AdminTemplateEditt extends Module {
         </div>
 
         <div id="sublist-template-<?=entities($options['cont'])?>" class="sublist-template">
-            <div class="rob-field" style="width: 5%; text-align: center">
-                <a href="#" onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?=entities($name)?>', '<?=entities($options['cont'])?>', '[n]'); return false"><img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/delete.png" alt="" /></a>
-                <input type="hidden" name="ch-<?=entities($name)?>-[n]" value="1" />
-            </div>
-            <div class="rob-field" style="width: 95%">
-				<?php
-				$form->render([
-					'one-row' => $options['type']==='row',
-					'show-labels' => $options['type']==='form',
-				]);
-				?>
-            </div>
+            <?php
+            if($options['template']){
+				$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
+				$template_path = INCLUDE_PATH.'data/templates/'.$dir.$this->model->_Admin->request[0].'/'.$options['template'].'.php';
+				if(!file_exists($template_path))
+				    $options['template'] = null;
+            }
+
+            if($options['template'] and $options['type']==='outer-template'){
+                include($template_path);
+            }else{
+                ?>
+                <div class="rob-field" style="width: 5%; text-align: center">
+                    <a href="#" onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?=entities($name)?>', '<?=entities($options['cont'])?>', '[n]'); return false"><img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/delete.png" alt="" /></a>
+                    <input type="hidden" name="ch-<?=entities($name)?>-[n]" value="1" />
+                </div>
+                <div class="rob-field" style="width: 95%">
+					<?php
+                    if($options['template'] and $options['type']==='inner-template'){
+						include($template_path);
+                    }else{
+						$form->render([
+							'one-row' => $options['type']==='row',
+							'show-labels' => $options['type']==='form',
+						]);
+                    }
+					?>
+                </div>
+                <?php
+            }
+            ?>
         </div>
 		<?php
 	}
