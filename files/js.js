@@ -1013,6 +1013,9 @@ function fillAdminForm(data){
 					var form_k = 'ch-'+k+'-'+name[0]+'-'+id;
 					if(typeof form[form_k]!=='undefined')
 						form[form_k].setValue(list[id][k], false);
+					var column_cont = _('#cont-ch-'+name[1]+'-'+id+' [data-custom="'+k+'"]');
+					if(column_cont)
+						column_cont.innerHTML = list[id][k];
 				}
 			}
 		}
