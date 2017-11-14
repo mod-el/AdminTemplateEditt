@@ -556,6 +556,7 @@ class AdminTemplateEditt extends Module {
 			'fields' => [],
 			'cont' => $name,
             'template' => null,
+            'add' => true,
 		], $options);
 
 		echo '<div id="cont-ch-'.entities($options['cont']).'">';
@@ -593,16 +594,23 @@ class AdminTemplateEditt extends Module {
 		}
 
 		echo '</div>';
-		?>
-        <div class="rob-field-cont sublist-row" style="cursor: pointer" onclick="sublistAddRow('<?=entities($name)?>', '<?=entities($options['cont'])?>')">
-            <div class="rob-field" style="width: 5%"></div>
-            <div class="rob-field" style="width: 95%">
-                <img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/new.png" alt="" /> Aggiungi
-            </div>
-        </div>
 
+		if($options['add']){
+			?>
+            <div class="rob-field-cont sublist-row" style="cursor: pointer" onclick="sublistAddRow('<?=entities($name)?>', '<?=entities($options['cont'])?>')">
+                <div class="rob-field" style="width: 5%"></div>
+                <div class="rob-field" style="width: 95%">
+                    <img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/new.png" alt="" /> Aggiungi
+                </div>
+            </div>
+            <?php
+        }
+		?>
         <div id="sublist-template-<?=entities($options['cont'])?>" class="sublist-template">
             <?php
+			if(($options['type']==='inner-template' or $options['type']==='outer-template') and $options['template']===null)
+				$options['template'] = $name;
+
             if($options['template']){
 				$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
 				$template_path = INCLUDE_PATH.'data/templates/'.$dir.$this->model->_Admin->request[0].'/'.$options['template'].'.php';
