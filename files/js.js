@@ -1013,6 +1013,9 @@ function fillAdminForm(data){
 					var form_k = 'ch-'+k+'-'+name[0]+'-'+id;
 					if(typeof form[form_k]!=='undefined')
 						form[form_k].setValue(list[id][k], false);
+					var column_cont = _('#cont-ch-'+name[1]+'-'+id+' [data-custom="'+k+'"]');
+					if(column_cont)
+						column_cont.innerHTML = list[id][k];
 				}
 			}
 		}
@@ -1443,18 +1446,21 @@ function sublistAddRow(name, cont, id, trigger){
 	if(typeof cont==='undefined' || cont===null)
 		cont = name;
 
+	var container = _('cont-ch-'+cont);
+	if(!container)
+		return false;
+
 	var div = document.createElement('div');
-	div.className = 'rob-field-cont sublist-row';
+	div.className = container.getAttribute('data-rows-class');
 	div.id = 'cont-ch-'+cont+'-'+id;
 	div.innerHTML = _('sublist-template-'+cont).innerHTML.replace(/\[n\]/g, id);
 
 	if(addbutton = _('cont-ch-'+cont+'-addbutton')){
-		_('cont-ch-'+cont).insertBefore(div, addbutton);
+		container.insertBefore(div, addbutton);
 	}else{
-		_('cont-ch-'+cont).appendChild(div);
+		container.appendChild(div);
 	}
 
-	/*fillPopup();*/
 	monitorFields();
 
 	changedValues['ch-'+name+'-'+id] = 1;

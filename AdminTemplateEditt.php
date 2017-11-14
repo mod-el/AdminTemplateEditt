@@ -350,19 +350,19 @@ class AdminTemplateEditt extends Module {
 	 */
 	public function getFiltersForms($arr = false){
 		$defaults = [
-            'top' => [
+			'top' => [
 				'all' => '=',
 			],
-            'filters' => [],
-        ];
+			'filters' => [],
+		];
 
 		$customFilters = $this->model->_Admin->getCustomFiltersForm();
 		foreach($customFilters->getDataset() as $k => $f){
 			$form = isset($f->options['admin-form']) ? $f->options['admin-form'] : 'filters';
 
-		    if(isset($f->options['admin-type'])){
-		        $defaults[$form][$k] = $f->options['admin-type'];
-            }else{
+			if(isset($f->options['admin-type'])){
+				$defaults[$form][$k] = $f->options['admin-type'];
+			}else{
 				switch($f->options['type']){
 					case 'date':
 					case 'time':
@@ -373,7 +373,7 @@ class AdminTemplateEditt extends Module {
 						$defaults[$form][$k] = '=';
 						break;
 				}
-            }
+			}
 		}
 
 		$adminListOptions = $this->model->_Admin->getListOptions();
@@ -381,9 +381,9 @@ class AdminTemplateEditt extends Module {
 		$forms = [];
 		foreach($defaults as $form => $defaultFilters){
 			$forms[$form] = $this->getFiltersForm($form, $defaultFilters, $adminListOptions['filters'], $arr);
-        }
+		}
 
-        return $forms;
+		return $forms;
 	}
 
 	/**
@@ -447,7 +447,7 @@ class AdminTemplateEditt extends Module {
 						'data-default' => '',
 					],
 					'default' => null,
-                    'admin-type' => $t,
+					'admin-type' => $t,
 				];
 
 				if($k==='all'){
@@ -555,29 +555,16 @@ class AdminTemplateEditt extends Module {
 			'type' => 'row',
 			'fields' => [],
 			'cont' => $name,
-            'template' => null,
-            'add' => true,
+			'class' => 'rob-field-cont sublist-row',
+			'template' => null,
+			'add' => true,
+			'add-inside' => false,
 		], $options);
 
-		echo '<div id="cont-ch-'.entities($options['cont']).'">';
+		echo '<div id="cont-ch-'.entities($options['cont']).'" data-rows-class="'.$options['class'].'">';
 
 		$dummy = $this->model->element->create($name, '[n]');
-		$dummyForm = $dummy->getForm();
-
-		if(count($options['fields'])>0){
-			$form = clone $dummyForm;
-			$form->clear();
-			foreach($options['fields'] as $f => $fOpt){
-				if(is_numeric($f)){
-					$f = $fOpt;
-					$fOpt = [];
-				}
-
-				$form->add($dummyForm[$f], ['attributes'=>$fOpt]);
-			}
-		}else{
-			$form = $dummyForm;
-		}
+		$form = $this->model->_Admin->getSublistRowForm($dummy, $options);
 
 		if($options['type']=='row'){
 			echo '<div class="rob-field-cont">';
@@ -593,62 +580,70 @@ class AdminTemplateEditt extends Module {
 			echo '</div>';
 		}
 
-		echo '</div>';
+		if(!$options['add-inside'])
+			echo '</div>';
 
 		if($options['add']){
-			?>
-            <div class="rob-field-cont sublist-row" style="cursor: pointer" onclick="sublistAddRow('<?=entities($name)?>', '<?=entities($options['cont'])?>')">
-                <div class="rob-field" style="width: 5%"></div>
-                <div class="rob-field" style="width: 95%">
-                    <img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/new.png" alt="" /> Aggiungi
+			if($options['add']===true){
+				?>
+                <div class="rob-field-cont sublist-row" style="cursor: pointer" onclick="sublistAddRow('<?=entities($name)?>', '<?=entities($options['cont'])?>')">
+                    <div class="rob-field" style="width: 5%"></div>
+                    <div class="rob-field" style="width: 95%">
+                        <img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/new.png" alt="" /> Aggiungi
+                    </div>
                 </div>
-            </div>
-            <?php
-        }
+				<?php
+			}else{
+				echo $options['add'];
+			}
+		}
+
+		if($options['add-inside'])
+			echo '</div>';
 		?>
         <div id="sublist-template-<?=entities($options['cont'])?>" class="sublist-template">
-            <?php
+			<?php
 			if(($options['type']==='inner-template' or $options['type']==='outer-template') and $options['template']===null)
 				$options['template'] = $name;
 
-            if($options['template']){
+			if($options['template']){
 				$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
 				$template_path = INCLUDE_PATH.'data/templates/'.$dir.$this->model->_Admin->request[0].'/'.$options['template'].'.php';
 				if(!file_exists($template_path))
-				    $options['template'] = null;
-            }
+					$options['template'] = null;
+			}
 
-            if($options['template'] and $options['type']==='outer-template'){
-                include($template_path);
-            }else{
-                ?>
+			if($options['template'] and $options['type']==='outer-template'){
+				include($template_path);
+			}else{
+				?>
                 <div class="rob-field" style="width: 5%; text-align: center">
                     <a href="#" onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?=entities($name)?>', '<?=entities($options['cont'])?>', '[n]'); return false"><img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/delete.png" alt="" /></a>
                     <input type="hidden" name="ch-<?=entities($name)?>-[n]" value="1" />
                 </div>
                 <div class="rob-field" style="width: 95%">
 					<?php
-                    if($options['template'] and $options['type']==='inner-template'){
+					if($options['template'] and $options['type']==='inner-template'){
 						include($template_path);
-                    }else{
+					}else{
 						$form->render([
 							'one-row' => $options['type']==='row',
 							'show-labels' => $options['type']==='form',
 						]);
-                    }
+					}
 					?>
                 </div>
-                <?php
-            }
-            ?>
+				<?php
+			}
+			?>
         </div>
 		<?php
 	}
 
 	/**
-     * Renders a group of tabs
-     *
-     * @param string $name
+	 * Renders a group of tabs
+	 *
+	 * @param string $name
 	 * @param array $tabs
 	 * @param array $options
 	 */
