@@ -55,7 +55,7 @@ class AdminTemplateEditt extends Module {
 							if($this->model->element){
 								$this->model->_Admin->form->reset();
 
-								if(file_exists(INCLUDE_PATH.'data/templates/'.$dir.$this->model->_Admin->request[0].'.php'))
+								if(file_exists(INCLUDE_PATH.'app/templates/'.$dir.$this->model->_Admin->request[0].'.php'))
 									$options['template'] = $dir.$this->model->_Admin->request[0];
 								else
 									$options['template'] = INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-template';
@@ -608,7 +608,7 @@ class AdminTemplateEditt extends Module {
 
 			if($options['template']){
 				$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
-				$template_path = INCLUDE_PATH.'data/templates/'.$dir.$this->model->_Admin->request[0].'/'.$options['template'].'.php';
+				$template_path = INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.$dir.$this->model->_Admin->request[0].DIRECTORY_SEPARATOR.$options['template'].'.php';
 				if(!file_exists($template_path))
 					$options['template'] = null;
 			}
