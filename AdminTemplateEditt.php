@@ -1,5 +1,7 @@
-<?php
-namespace Model;
+<?php namespace Model\AdminTemplateEditt;
+
+use Model\Core\Module;
+use Model\Form\Form;
 
 class AdminTemplateEditt extends Module {
 	/**
@@ -112,7 +114,7 @@ class AdminTemplateEditt extends Module {
 			<?php
 			if(isset($p['sub']) and $p['sub']){
 				?>
-                <div class="main-menu-cont expandible" id="menu-group-<?=$parent?>-<?=$pIdx?>-cont" style="height: 0px; padding-left: <?=(15*$lvl)?>px" data-menu-id="<?=$parent.'-'.$pIdx?>">
+                <div class="main-menu-cont expandible" id="menu-group-<?=$parent?>-<?=$pIdx?>-cont" style="height: 0; padding-left: <?=(15*$lvl)?>px" data-menu-id="<?=$parent.'-'.$pIdx?>">
                     <div>
 						<?php
 						$this->renderMenuItems($parent.'-'.$pIdx, $p['sub'], $lvl+1);
