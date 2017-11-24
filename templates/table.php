@@ -66,7 +66,7 @@
     $c_row = 0;
     foreach($this->options['data']['elements'] as $id => $el){
 		$form = false;
-		$clickable = $this->model->_Admin->canUser('R', false, $el['element']);
+		$clickable = $this->model->_Admin->canUser('R', null, $el['element']);
         ?>
         <div>
             <div class="results-table-row" data-n="<?=$c_row++?>" data-id="<?=$id?>" data-clickable="<?=$clickable?>" style="<?=$el['background'] ? 'background: '.entities($el['background']).';' : ''?><?=$el['color'] ? 'color: '.entities($el['color']).';' : ''?>">
@@ -76,7 +76,7 @@
                     </div>
                 </div>
                 <?php
-				$canDelete = $this->model->_Admin->canUser('D', false, $el['element']);
+				$canDelete = $this->model->_Admin->canUser('D', null, $el['element']);
 				if($canDelete){
 					?>
                     <div class="special-cell" onmousedown="event.stopPropagation()" onclick="event.stopPropagation()">
