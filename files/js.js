@@ -237,7 +237,7 @@ function resize(menu){
 	}
 
 	if(form = _('topForm')){
-		var w = _('toolbar').clientWidth-10;
+		var w = _('toolbar').clientWidth-12;
 		_('toolbar').querySelectorAll('.toolbar-button').forEach(function(button){
 			w -= button.offsetWidth;
 		});
