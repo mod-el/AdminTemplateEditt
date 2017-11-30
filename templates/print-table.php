@@ -55,7 +55,12 @@
 					$cellColor = $c['color'] ?: $el['color'];
 					?>
                     <td style="<?=$cellBackground ? 'background: '.entities($cellBackground).';' : ''?><?=$cellColor ? 'color: '.entities($cellColor).';' : ''?>">
-                        <?=$c['text']?>
+                        <?php
+                        if($f['price'] and is_numeric($c['text']))
+                            echo makePrice($c['text']);
+                        else
+                            echo $c['text'];
+                        ?>
                     </td>
                     <?php
 				}
@@ -75,9 +80,6 @@
 				$free_cells++;
 			}
 
-			$dummy = $this->model->_ORM->create($this->model->_Admin->options['element'] ?: '\\Model\\ORM\\Element', ['table' => $this->model->_Admin->options['table']]);
-			$dummyForm = $dummy->getForm();
-
 			?><tr><?php
 			if($free_cells>0)
 				echo '<td colspan="'.$free_cells.'" style="text-align: right; font-weight: bold">Totali:</td>';
@@ -92,7 +94,7 @@
 
 				?><td><?php
 				if(isset($totals[$column_id])){
-					if(is_string($f['field']) and isset($dummyForm[$f['field']]) and $dummyForm[$f['field']]->options['type']=='price')
+					if($f['price'])
 						echo makePrice($totals[$column_id]);
 					else
 						echo $totals[$column_id];

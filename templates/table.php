@@ -111,8 +111,10 @@
                                         'onchange' => 'instantSave(\''.$id.'\', \''.entities($f['field']).'\', this)',
                                     ]);
                                 }
+                            }elseif($f['price'] and is_numeric($c['text'])){
+								echo makePrice($c['text']);
                             }else{
-                                echo $c['text'];
+								echo $c['text'];
                             }
                             ?>
                         </div>
@@ -145,9 +147,6 @@
                 $free_cells++;
             }
 
-            $dummy = $this->model->_ORM->create($this->model->_Admin->options['element'] ?: '\\Model\\ORM\\Element', ['table' => $this->model->_Admin->options['table']]);
-            $dummyForm = $dummy->getForm();
-
             $cc = 0; $totals_width = 0;
             foreach($this->options['data']['columns'] as $column_id=>$f){
                 $cc++;
@@ -162,7 +161,7 @@
 
                 ?><div style="width: <?=$this->model->_ResizeTable->widths[$column_id]?>px" data-column="<?=$column_id?>"><div><?php
                     if(isset($totals[$column_id])){
-                        if(is_string($f['field']) and isset($dummyForm[$f['field']]) and $dummyForm[$f['field']]->options['type']=='price')
+                        if($f['price'])
                             echo makePrice($totals[$column_id]);
                         else
                             echo $totals[$column_id];
