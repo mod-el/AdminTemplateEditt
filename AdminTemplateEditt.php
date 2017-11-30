@@ -42,7 +42,7 @@ class AdminTemplateEditt extends Module {
 				'template' => null,
 			];
 
-			if(isset($_GET['ajax']))
+			if(isset($_GET['ajax']) or isset($_GET['print']))
 				$options['showLayout'] = false;
 
 			if(isset($this->model->_Admin->request[1])){
@@ -179,8 +179,13 @@ class AdminTemplateEditt extends Module {
 				}
 				unset($el);
 
+				if(isset($_GET['print']))
+					$template = INCLUDE_PATH.'model/'.$this->getClass().'/templates/print-table';
+				else
+					$template = INCLUDE_PATH.'model/'.$this->getClass().'/templates/table';
+
 				return [
-					'template' => INCLUDE_PATH.'model/'.$this->getClass().'/templates/table',
+					'template' => $template,
 					'cacheTemplate' => false,
 					'data' => $data,
 				];
@@ -287,6 +292,17 @@ class AdminTemplateEditt extends Module {
 				'url' => '#',
 				'action' => 'switchFiltersForm(this); return false',
 			];
+
+			$print = isset($this->model->_Admin->options['print']) ? $this->model->_Admin->options['print'] : false;
+			if($print){
+                $parsedActions[] = [
+                    'id' => 'print',
+                    'text' => 'Stampa',
+                    'fa-icon' => 'print',
+                    'url' => '#',
+                    'action' => 'window.open(\''.$this->model->_Admin->getUrlPrefix().$request.'?sId=\'+sId+\'&print\'); return false',
+                ];
+			}
 		}
 
 		$adminPages = $this->model->_Admin->getPages();
