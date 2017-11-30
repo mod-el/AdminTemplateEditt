@@ -235,8 +235,24 @@ class AdminTemplateEditt extends Module {
 			];
 
 			$iconPath = PATH.'model/'.$this->getClass().'/files/img/toolbar/'.$actId.'.png';
-			if(file_exists(PATHBASE.$iconPath))
+			if(file_exists(PATHBASE.$iconPath)){
 				$action['icon'] = $iconPath;
+			}else{
+			    switch($actId){
+					case 'new':
+						$action['fa-icon'] = 'plus-square-o';
+						break;
+					case 'delete':
+						$action['fa-icon'] = 'trash-o';
+						break;
+					case 'save':
+						$action['fa-icon'] = 'save';
+						break;
+					case 'duplicate':
+						$action['fa-icon'] = 'clone';
+						break;
+                }
+            }
 
 			switch($act['action']){
 				case 'new':
@@ -267,7 +283,7 @@ class AdminTemplateEditt extends Module {
 			$parsedActions[] = [
 				'id' => 'filters',
 				'text' => 'Filtri',
-				'icon' => PATH.'model/'.$this->getClass().'/files/img/toolbar/filters.png',
+				'fa-icon' => 'filter',
 				'url' => '#',
 				'action' => 'switchFiltersForm(this); return false',
 			];
