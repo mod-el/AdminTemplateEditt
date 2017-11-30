@@ -30,7 +30,7 @@
 			<?php
         }
 
-        foreach($this->options['data']['columns'] as $column_id=>$f){
+        foreach($this->options['data']['columns'] as $column_id => $f){
             $sorted = false;
             foreach($this->options['data']['sortedBy'] as $idx=>$s){
                 if($s[0]==$column_id){
@@ -86,7 +86,7 @@
                     </div>
 					<?php
                 }
-				foreach($this->options['data']['columns'] as $column_id=>$f) {
+				foreach($this->options['data']['columns'] as $column_id => $f) {
 					$c = $el['columns'][$column_id];
 					?>
                     <div
@@ -111,8 +111,10 @@
                                         'onchange' => 'instantSave(\''.$id.'\', \''.entities($f['field']).'\', this)',
                                     ]);
                                 }
+                            }elseif($f['price'] and is_numeric($c['text'])){
+								echo makePrice($c['text']);
                             }else{
-                                echo $c['text'];
+								echo $c['text'];
                             }
                             ?>
                         </div>
@@ -139,14 +141,11 @@
 				<?php
 			}
             $free_cells = 0;
-            foreach($this->options['data']['columns'] as $column_id=>$f){
+            foreach($this->options['data']['columns'] as $column_id => $f){
                 if(isset($totals[$column_id]))
                     break;
                 $free_cells++;
             }
-
-            $dummy = $this->model->_ORM->create($this->model->_Admin->options['element'] ?: '\\Model\\Element', ['table'=>$this->model->_Admin->options['table']]);
-            $dummyForm = $dummy->getForm();
 
             $cc = 0; $totals_width = 0;
             foreach($this->options['data']['columns'] as $column_id=>$f){
@@ -162,7 +161,7 @@
 
                 ?><div style="width: <?=$this->model->_ResizeTable->widths[$column_id]?>px" data-column="<?=$column_id?>"><div><?php
                     if(isset($totals[$column_id])){
-                        if(is_string($f['field']) and isset($dummyForm[$f['field']]) and $dummyForm[$f['field']]->options['type']=='price')
+                        if($f['price'])
                             echo makePrice($totals[$column_id]);
                         else
                             echo $totals[$column_id];

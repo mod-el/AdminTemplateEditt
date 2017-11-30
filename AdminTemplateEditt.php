@@ -42,7 +42,7 @@ class AdminTemplateEditt extends Module {
 				'template' => null,
 			];
 
-			if(isset($_GET['ajax']))
+			if(isset($_GET['ajax']) or isset($_GET['print']))
 				$options['showLayout'] = false;
 
 			if(isset($this->model->_Admin->request[1])){
@@ -179,8 +179,13 @@ class AdminTemplateEditt extends Module {
 				}
 				unset($el);
 
+				if(isset($_GET['print']))
+					$template = INCLUDE_PATH.'model/'.$this->getClass().'/templates/print-table';
+				else
+					$template = INCLUDE_PATH.'model/'.$this->getClass().'/templates/table';
+
 				return [
-					'template' => INCLUDE_PATH.'model/'.$this->getClass().'/templates/table',
+					'template' => $template,
 					'cacheTemplate' => false,
 					'data' => $data,
 				];
@@ -235,8 +240,24 @@ class AdminTemplateEditt extends Module {
 			];
 
 			$iconPath = PATH.'model/'.$this->getClass().'/files/img/toolbar/'.$actId.'.png';
-			if(file_exists(PATHBASE.$iconPath))
+			if(file_exists(PATHBASE.$iconPath)){
 				$action['icon'] = $iconPath;
+			}else{
+			    switch($actId){
+					case 'new':
+						$action['fa-icon'] = 'plus-square-o';
+						break;
+					case 'delete':
+						$action['fa-icon'] = 'trash-o';
+						break;
+					case 'save':
+						$action['fa-icon'] = 'save';
+						break;
+					case 'duplicate':
+						$action['fa-icon'] = 'clone';
+						break;
+                }
+            }
 
 			switch($act['action']){
 				case 'new':
@@ -267,10 +288,21 @@ class AdminTemplateEditt extends Module {
 			$parsedActions[] = [
 				'id' => 'filters',
 				'text' => 'Filtri',
-				'icon' => PATH.'model/'.$this->getClass().'/files/img/toolbar/filters.png',
+				'fa-icon' => 'filter',
 				'url' => '#',
 				'action' => 'switchFiltersForm(this); return false',
 			];
+
+			$print = isset($this->model->_Admin->options['print']) ? $this->model->_Admin->options['print'] : false;
+			if($print){
+                $parsedActions[] = [
+                    'id' => 'print',
+                    'text' => 'Stampa',
+                    'fa-icon' => 'print',
+                    'url' => '#',
+                    'action' => 'window.open(\''.$this->model->_Admin->getUrlPrefix().$request.'?sId=\'+sId+\'&print\'); return false',
+                ];
+			}
 		}
 
 		$adminPages = $this->model->_Admin->getPages();

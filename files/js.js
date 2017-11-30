@@ -61,6 +61,7 @@ window.addEventListener('load', function(){
 	window.addEventListener('resize', function () {
 		resize();
 	});
+	setInterval(resizeTopForm, 5000);
 });
 
 window.onpopstate = function(event){
@@ -236,6 +237,10 @@ function resize(menu){
 		table.style.height = (_('main-page').offsetHeight-sub_h)+'px';
 	}
 
+	resizeTopForm();
+}
+
+function resizeTopForm(){
 	if(form = _('topForm')){
 		var w = _('toolbar').clientWidth-12;
 		_('toolbar').querySelectorAll('.toolbar-button').forEach(function(button){
@@ -432,6 +437,8 @@ function loadPageAids(request, get){
 				button.setAttribute('onclick', act.action);
 				if(act.icon)
 					button.innerHTML = '<img src="'+act.icon+'" alt="" onload="resize()" /> ';
+				if(act['fa-icon'])
+					button.innerHTML = '<i class="fa fa-'+act['fa-icon']+'" aria-hidden="true"></i> ';
 				button.innerHTML += act.text;
 				toolbar.appendChild(button);
 			});
