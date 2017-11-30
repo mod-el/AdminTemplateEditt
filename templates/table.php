@@ -30,7 +30,7 @@
 			<?php
         }
 
-        foreach($this->options['data']['columns'] as $column_id=>$f){
+        foreach($this->options['data']['columns'] as $column_id => $f){
             $sorted = false;
             foreach($this->options['data']['sortedBy'] as $idx=>$s){
                 if($s[0]==$column_id){
@@ -86,7 +86,7 @@
                     </div>
 					<?php
                 }
-				foreach($this->options['data']['columns'] as $column_id=>$f) {
+				foreach($this->options['data']['columns'] as $column_id => $f) {
 					$c = $el['columns'][$column_id];
 					?>
                     <div
@@ -139,13 +139,13 @@
 				<?php
 			}
             $free_cells = 0;
-            foreach($this->options['data']['columns'] as $column_id=>$f){
+            foreach($this->options['data']['columns'] as $column_id => $f){
                 if(isset($totals[$column_id]))
                     break;
                 $free_cells++;
             }
 
-            $dummy = $this->model->_ORM->create($this->model->_Admin->options['element'] ?: '\\Model\\Element', ['table'=>$this->model->_Admin->options['table']]);
+            $dummy = $this->model->_ORM->create($this->model->_Admin->options['element'] ?: '\\Model\\ORM\\Element', ['table' => $this->model->_Admin->options['table']]);
             $dummyForm = $dummy->getForm();
 
             $cc = 0; $totals_width = 0;
