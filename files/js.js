@@ -1276,7 +1276,12 @@ function save(){
 	}
 
 	saving = true;
-	_('#toolbar-button-save img').src = absolute_path+'model/Output/files/loading.gif';
+	if(_('#toolbar-button-save img'))
+		_('#toolbar-button-save img').src = absolute_path+'model/Output/files/loading.gif';
+	if(_('#toolbar-button-save i.fa')){
+		_('#toolbar-button-save i.fa').removeClass('fa-save');
+		_('#toolbar-button-save i.fa').addClass('fa-spinner');
+	}
 	resize();
 
 	var request = currentAdminPage.split('/');
@@ -1326,7 +1331,12 @@ function save(){
 			setLoadingBar(0);
 
 			saving = false;
-			_('#toolbar-button-save img').src = absolute_path+'model/AdminTemplateEditt/files/img/toolbar/save.png';
+			if(_('#toolbar-button-save img'))
+				_('#toolbar-button-save img').src = absolute_path+'model/AdminTemplateEditt/files/img/toolbar/save.png';
+			if(_('#toolbar-button-save i.fa')){
+				_('#toolbar-button-save i.fa').removeClass('fa-spinner');
+				_('#toolbar-button-save i.fa').addClass('fa-save');
+			}
 
 			if(typeof r!=='object'){
 				alert(r);
