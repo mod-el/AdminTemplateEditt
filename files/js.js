@@ -998,45 +998,51 @@ function fillAdminForm(data){
 		dataCache = data;
 	}
 
-	return new Promise(function(resolve, reject){
-		if(!(form = _('adminForm'))){
-			throw 'Error in loading element';
-		}
+	if(!(form = _('adminForm'))){
+		throw 'Error in loading element';
+	}
 
-		form.fill(data.data, false, 'filled');
+	form.fill(data.data, false, 'filled');
 
-		for(var name in data.children){
-			if(!data.children.hasOwnProperty(name))
+	var promises = [];
+
+	for(var name in data.children){
+		if(!data.children.hasOwnProperty(name))
+			continue;
+
+		var list = data.children[name];
+
+		name = name.split('-');
+
+		for(var id in list){
+			if(!list.hasOwnProperty(id))
 				continue;
 
-			var list = data.children[name];
+			sublistAddRow(name[0], name[1], id, false);
 
-			name = name.split('-');
+			promises.push(new Promise(function(resolve){
+				setTimeout(function(){
+					for(var k in list[id]){
+						if(!list[id].hasOwnProperty(k))
+							continue;
 
-			for(var id in list){
-				if(!list.hasOwnProperty(id))
-					continue;
+						var form_k = 'ch-'+k+'-'+name[0]+'-'+id;
+						if(typeof form[form_k]!=='undefined')
+							form[form_k].setValue(list[id][k], false);
+						var column_cont = _('#cont-ch-'+name[1]+'-'+id+' [data-custom="'+k+'"]');
+						if(column_cont)
+							column_cont.innerHTML = list[id][k];
+					}
 
-				sublistAddRow(name[0], name[1], id, false);
-
-				for(var k in list[id]){
-					if(!list[id].hasOwnProperty(k))
-						continue;
-
-					var form_k = 'ch-'+k+'-'+name[0]+'-'+id;
-					if(typeof form[form_k]!=='undefined')
-						form[form_k].setValue(list[id][k], false);
-					var column_cont = _('#cont-ch-'+name[1]+'-'+id+' [data-custom="'+k+'"]');
-					if(column_cont)
-						column_cont.innerHTML = list[id][k];
-				}
-			}
+					resolve();
+				}, 100);
+			}));
 		}
+	}
 
-		form.dataset.filled = '1';
+	form.dataset.filled = '1';
 
-		resolve();
-	});
+	return Promise.all(promises);
 }
 
 function initalizeEmptyForm(){
@@ -1446,6 +1452,8 @@ function sublistAddRow(name, cont, id, trigger){
 	if(typeof trigger==='undefined')
 		trigger = true;
 
+	afterMutation = monitorFields;
+
 	var form = _('adminForm');
 
 	if(typeof id==='undefined' || id===null){
@@ -1473,8 +1481,6 @@ function sublistAddRow(name, cont, id, trigger){
 	}else{
 		container.appendChild(div);
 	}
-
-	monitorFields();
 
 	changedValues['ch-'+name+'-'+id] = 1;
 
