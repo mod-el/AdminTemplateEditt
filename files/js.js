@@ -998,45 +998,47 @@ function fillAdminForm(data){
 		dataCache = data;
 	}
 
-	return new Promise(function(resolve, reject){
-		if(!(form = _('adminForm'))){
-			throw 'Error in loading element';
-		}
+	if(!(form = _('adminForm'))){
+		throw 'Error in loading element';
+	}
 
-		form.fill(data.data, false, 'filled');
+	form.fill(data.data, false, 'filled');
 
-		for(var name in data.children){
-			if(!data.children.hasOwnProperty(name))
+	var promises = [];
+
+	for(var name in data.children){
+		if(!data.children.hasOwnProperty(name))
+			continue;
+
+		var list = data.children[name];
+
+		name = name.split('-');
+
+		for(var id in list){
+			if(!list.hasOwnProperty(id))
 				continue;
 
-			var list = data.children[name];
+			promises.push(sublistAddRow(name[0], name[1], id, false).then((function(id, name){
+				return function(){
+					for(var k in list[id]){
+						if(!list[id].hasOwnProperty(k))
+							continue;
 
-			name = name.split('-');
-
-			for(var id in list){
-				if(!list.hasOwnProperty(id))
-					continue;
-
-				sublistAddRow(name[0], name[1], id, false);
-
-				for(var k in list[id]){
-					if(!list[id].hasOwnProperty(k))
-						continue;
-
-					var form_k = 'ch-'+k+'-'+name[0]+'-'+id;
-					if(typeof form[form_k]!=='undefined')
-						form[form_k].setValue(list[id][k], false);
-					var column_cont = _('#cont-ch-'+name[1]+'-'+id+' [data-custom="'+k+'"]');
-					if(column_cont)
-						column_cont.innerHTML = list[id][k];
-				}
-			}
+						var form_k = 'ch-'+k+'-'+name[0]+'-'+id;
+						if(typeof form[form_k]!=='undefined')
+							form[form_k].setValue(list[id][k], false);
+						var column_cont = _('#cont-ch-'+name[1]+'-'+id+' [data-custom="'+k+'"]');
+						if(column_cont)
+							column_cont.innerHTML = list[id][k];
+					}
+				};
+			})(id, name)));
 		}
+	}
 
-		form.dataset.filled = '1';
+	form.dataset.filled = '1';
 
-		resolve();
-	});
+	return Promise.all(promises);
 }
 
 function initalizeEmptyForm(){
@@ -1274,7 +1276,12 @@ function save(){
 	}
 
 	saving = true;
-	_('#toolbar-button-save img').src = absolute_path+'model/Output/files/loading.gif';
+	if(_('#toolbar-button-save img'))
+		_('#toolbar-button-save img').src = absolute_path+'model/Output/files/loading.gif';
+	if(_('#toolbar-button-save i.fa')){
+		_('#toolbar-button-save i.fa').removeClass('fa-save');
+		_('#toolbar-button-save i.fa').addClass('fa-spinner');
+	}
 	resize();
 
 	var request = currentAdminPage.split('/');
@@ -1324,7 +1331,12 @@ function save(){
 			setLoadingBar(0);
 
 			saving = false;
-			_('#toolbar-button-save img').src = absolute_path+'model/AdminTemplateEditt/files/img/toolbar/save.png';
+			if(_('#toolbar-button-save img'))
+				_('#toolbar-button-save img').src = absolute_path+'model/AdminTemplateEditt/files/img/toolbar/save.png';
+			if(_('#toolbar-button-save i.fa')){
+				_('#toolbar-button-save i.fa').removeClass('fa-spinner');
+				_('#toolbar-button-save i.fa').addClass('fa-save');
+			}
 
 			if(typeof r!=='object'){
 				alert(r);
@@ -1446,6 +1458,8 @@ function sublistAddRow(name, cont, id, trigger){
 	if(typeof trigger==='undefined')
 		trigger = true;
 
+	var promise = afterMutation(monitorFields);
+
 	var form = _('adminForm');
 
 	if(typeof id==='undefined' || id===null){
@@ -1474,8 +1488,6 @@ function sublistAddRow(name, cont, id, trigger){
 		container.appendChild(div);
 	}
 
-	monitorFields();
-
 	changedValues['ch-'+name+'-'+id] = 1;
 
 	if(trigger){
@@ -1489,7 +1501,9 @@ function sublistAddRow(name, cont, id, trigger){
 		rebuildHistoryBox();
 	}
 
-	return next;
+	return promise.then(function(){
+		return next;
+	});
 }
 
 function sublistDeleteRow(name, cont, id, trigger){

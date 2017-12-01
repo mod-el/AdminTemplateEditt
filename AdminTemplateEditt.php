@@ -623,7 +623,7 @@ class AdminTemplateEditt extends Module {
                 <div class="rob-field-cont sublist-row" style="cursor: pointer" onclick="sublistAddRow('<?=entities($name)?>', '<?=entities($options['cont'])?>')">
                     <div class="rob-field" style="width: 5%"></div>
                     <div class="rob-field" style="width: 95%">
-                        <img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/new.png" alt="" /> Aggiungi
+                        <i class="fa fa-plus" aria-hidden="true"></i> Aggiungi
                     </div>
                 </div>
 				<?php
@@ -652,7 +652,7 @@ class AdminTemplateEditt extends Module {
 			}else{
 				?>
                 <div class="rob-field" style="width: 5%; text-align: center">
-                    <a href="#" onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?=entities($name)?>', '<?=entities($options['cont'])?>', '[n]'); return false"><img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/toolbar/delete.png" alt="" /></a>
+                    <a href="#" onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?=entities($name)?>', '<?=entities($options['cont'])?>', '[n]'); return false"><i class="fa fa-trash" aria-label="Delete" style="color: #000"></i></a>
                     <input type="hidden" name="ch-<?=entities($name)?>-[n]" value="1" />
                 </div>
                 <div class="rob-field" style="width: 95%">
