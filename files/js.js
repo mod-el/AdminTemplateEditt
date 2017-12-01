@@ -1018,10 +1018,8 @@ function fillAdminForm(data){
 			if(!list.hasOwnProperty(id))
 				continue;
 
-			sublistAddRow(name[0], name[1], id, false);
-
-			promises.push(new Promise(function(resolve){
-				setTimeout(function(){
+			promises.push(sublistAddRow(name[0], name[1], id, false).then((function(id, name){
+				return function(){
 					for(var k in list[id]){
 						if(!list[id].hasOwnProperty(k))
 							continue;
@@ -1033,10 +1031,8 @@ function fillAdminForm(data){
 						if(column_cont)
 							column_cont.innerHTML = list[id][k];
 					}
-
-					resolve();
-				}, 100);
-			}));
+				};
+			})(id, name)));
 		}
 	}
 
@@ -1452,7 +1448,7 @@ function sublistAddRow(name, cont, id, trigger){
 	if(typeof trigger==='undefined')
 		trigger = true;
 
-	afterMutation = monitorFields;
+	var promise = afterMutation(monitorFields);
 
 	var form = _('adminForm');
 
@@ -1495,7 +1491,9 @@ function sublistAddRow(name, cont, id, trigger){
 		rebuildHistoryBox();
 	}
 
-	return next;
+	return promise.then(function(){
+		return next;
+	});
 }
 
 function sublistDeleteRow(name, cont, id, trigger){
