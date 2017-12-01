@@ -611,8 +611,14 @@ function tableEvents(){
 	table.querySelectorAll('.results-table-row').forEach(function(row){
 		row.addEventListener('click', function(event){
 			if(event.button===0){
-				if(row.dataset.clickable==='1')
-					loadElement(currentAdminPage.split('/')[0], row.dataset.id);
+				if(row.dataset.clickable==='1'){
+					if(row.dataset.onclick){
+						eval('var custom_function = function(){ '+this.dataset.onclick+' }');
+						custom_function.call(this);
+					}else{
+						loadElement(currentAdminPage.split('/')[0], row.dataset.id);
+					}
+				}
 			}
 		});
 	});
