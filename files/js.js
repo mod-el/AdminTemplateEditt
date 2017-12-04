@@ -1018,7 +1018,7 @@ function fillAdminForm(data){
 			if(!list.hasOwnProperty(id))
 				continue;
 
-			promises.push(sublistAddRow(name[0], name[1], id, false).then((function(id, name){
+			promises.push(sublistAddRow(name[0], name[1], id, false).then((function(list, id, name){
 				return function(){
 					for(var k in list[id]){
 						if(!list[id].hasOwnProperty(k))
@@ -1032,7 +1032,7 @@ function fillAdminForm(data){
 							column_cont.innerHTML = list[id][k];
 					}
 				};
-			})(id, name)));
+			})(list, id, name)));
 		}
 	}
 
