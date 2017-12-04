@@ -963,6 +963,7 @@ function loadElement(page, id, history_push){
 		history_push = true;
 
 	elementCallback = null;
+	dataCache = {'data': {}, 'children': []};
 
 	if(id){
 		var formTemplate = loadAdminPage([page, 'edit', id], '', false, history_push);
