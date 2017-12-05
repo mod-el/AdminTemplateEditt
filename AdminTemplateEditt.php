@@ -234,7 +234,8 @@ class AdminTemplateEditt extends Module {
 			$action = [
 				'id' => $actId,
 				'text' => $act['text'],
-				'icon' => false,
+				'icon' => null,
+                'fa-icon' => null,
 				'url' => '#',
 				'action' => 'return false',
 			];
@@ -304,6 +305,46 @@ class AdminTemplateEditt extends Module {
                 ];
 			}
 		}
+
+		if(isset($this->model->_Admin->options['actions'])){
+			foreach($this->model->_Admin->options['actions'] as $actIdx => $act){
+				$act = array_merge([
+                    'id' => 'custom-'.$actIdx,
+                    'text' => '',
+					'icon' => null,
+					'fa-icon' => null,
+                    'url' => '#',
+                    'action' => 'return false',
+                ], $act);
+
+			    if(isset($act['specific'])){
+                    switch($act['specific']){
+                        case 'table':
+							if(isset($_GET['action']))
+							    continue 2;
+                            break;
+                        case 'element':
+                            if(!isset($_GET['action']) or $_GET['action']!='edit')
+                                continue 2;
+                            break;
+                        case 'element-edit':
+							if(!isset($_GET['action']) or $_GET['action']!='edit')
+								continue 2;
+							if(!isset($_GET['id']) or !$_GET['id'])
+							    continue 2;
+                            break;
+                        case 'element-new':
+							if(!isset($_GET['action']) or $_GET['action']!='edit')
+								continue 2;
+							if(isset($_GET['id']) and $_GET['id'])
+							    continue 2;
+                            break;
+                    }
+                }
+
+                $parsedActions[] = $act;
+            }
+        }
 
 		$adminPages = $this->model->_Admin->getPages();
 		$breadcrumbs = [
