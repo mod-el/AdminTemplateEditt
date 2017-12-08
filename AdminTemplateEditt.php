@@ -43,8 +43,13 @@ class AdminTemplateEditt extends Module {
 				'template' => null,
 			];
 
-			if(isset($_GET['ajax']) or isset($_GET['print']))
+			if(isset($_GET['ajax']))
 				$options['showLayout'] = false;
+
+			if(isset($_GET['print'])){
+				$options['header'] = [INCLUDE_PATH.'model/'.$this->getClass().'/templates/print-header'];
+				$options['footer'] = [INCLUDE_PATH.'model/'.$this->getClass().'/templates/print-footer'];
+            }
 
 			if(isset($this->model->_Admin->request[1])){
 				switch($this->model->_Admin->request[1]){
@@ -236,13 +241,13 @@ class AdminTemplateEditt extends Module {
 	 * Sends a JSON with the page aids for the current page
 	 */
 	public function pageAids(){
-		$request = $this->model->_Admin->request[0];
-
-		$actions = $this->model->_Admin->getActions([
-			$request,
+		$request = array_filter([
+			$this->model->_Admin->request[0],
 			isset($_GET['action']) ? $_GET['action'] : null,
 			isset($_GET['id']) ? $_GET['id'] : null,
-		]);
+        ]);
+
+		$actions = $this->model->_Admin->getActions($request);
 
 		$parsedActions = [];
 		foreach($actions as $actId => $act){
@@ -308,17 +313,17 @@ class AdminTemplateEditt extends Module {
 				'url' => '#',
 				'action' => 'switchFiltersForm(this); return false',
 			];
+		}
 
-			$print = isset($this->model->_Admin->options['print']) ? $this->model->_Admin->options['print'] : false;
-			if($print){
-                $parsedActions[] = [
-                    'id' => 'print',
-                    'text' => 'Stampa',
-                    'fa-icon' => 'print',
-                    'url' => '#',
-                    'action' => 'window.open(\''.$this->model->_Admin->getUrlPrefix().$request.'?sId=\'+sId+\'&print\'); return false',
-                ];
-			}
+		$print = isset($this->model->_Admin->options['print']) ? $this->model->_Admin->options['print'] : false;
+		if($print){
+			$parsedActions[] = [
+				'id' => 'print',
+				'text' => 'Stampa',
+				'fa-icon' => 'print',
+				'url' => '#',
+				'action' => 'window.open(\''.$this->model->_Admin->getUrlPrefix().implode('/', $request).'?sId=\'+sId+\'&print\'); return false',
+			];
 		}
 
 		if(isset($this->model->_Admin->options['actions'])){
@@ -368,7 +373,7 @@ class AdminTemplateEditt extends Module {
 				'url' => '',
 			],
 		];
-		$this->searchBreadcrumbs($adminPages, $request, $breadcrumbs);
+		$this->searchBreadcrumbs($adminPages, $request[0], $breadcrumbs);
 
 		$breadcrumbsHtml = [];
 		$prefix = $this->model->_Admin->getUrlPrefix();

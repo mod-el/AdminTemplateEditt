@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+[:head]
+
+<style type="text/css">
+    body{
+        background: #FFF;
+    }
+</style>
+
+<script type="text/javascript">
+	var adminPrefix = <?=json_encode($this->model->_Admin->getUrlPrefix())?>;
+	elementCallback = window.print;
+</script>
+
+<div style="width: 210mm">
+    <div style="padding-bottom: 10px">
+		<?php
+		if(file_exists(INCLUDE_PATH.'img'.DIRECTORY_SEPARATOR.'logo.png')){
+			?><a href="<?=$this->model->_Admin->getUrlPrefix()?>"><img src="<?=PATH?>img/logo.png" alt="" style="max-width: 30%" /></a><?php
+		}else{
+			?><span style="font-size: 26px"><?=entities(APP_NAME)?></span><?php
+		}
+		?>
+    </div>

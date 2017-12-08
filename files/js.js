@@ -52,6 +52,9 @@ window.addEventListener('DOMContentLoaded', function() {
 					monitorFields();
 				}
 			});
+		}else if(elementCallback){
+			elementCallback.call();
+			elementCallback = null;
 		}
 	}
 });
@@ -201,12 +204,15 @@ function openMenuToRequest(request){
  Resizes page dynamic components, called on page open and at every resize
  */
 function resize(menu){
+	if(!_('main-grid') || !_('main-menu'))
+		return;
+
 	var hHeight = _('header').offsetHeight;
 	_('main-grid').style.height = 'calc(100% - '+(hHeight+4)+'px)';
 	var tHeight = _('toolbar').offsetHeight;
 	_('main-page').style.height = 'calc(100% - '+tHeight+'px)';
 
-	if(typeof menu=='undefined')
+	if(typeof menu==='undefined')
 		menu = true;
 
 	if(menu){
@@ -393,7 +399,10 @@ function loadAdminPage(request, get, post, history_push){
  Loads the page aids, like breadcrumbs and toolbar buttons
  */
 function loadPageAids(request, get){
-	if(typeof get=='undefined')
+	if(!_('toolbar'))
+		return;
+
+	if(typeof get==='undefined')
 		get = '';
 
 	if(sId!==null)
