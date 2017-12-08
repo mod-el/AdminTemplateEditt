@@ -6,6 +6,7 @@ use Model\Form\Form;
 class AdminTemplateEditt extends Module {
 	/**
 	 * @param mixed $options
+	 * @throws \Model\Core\ZkException
 	 */
 	public function init($options){
 		if($this->model->moduleExists('DatePicker'))
@@ -42,8 +43,13 @@ class AdminTemplateEditt extends Module {
 				'template' => null,
 			];
 
-			if(isset($_GET['ajax']) or isset($_GET['print']))
+			if(isset($_GET['ajax']))
 				$options['showLayout'] = false;
+
+			if(isset($_GET['print'])){
+				$options['header'] = [INCLUDE_PATH.'model/'.$this->getClass().'/templates/print-header'];
+				$options['footer'] = [INCLUDE_PATH.'model/'.$this->getClass().'/templates/print-footer'];
+            }
 
 			if(isset($this->model->_Admin->request[1])){
 				switch($this->model->_Admin->request[1]){
@@ -133,62 +139,75 @@ class AdminTemplateEditt extends Module {
 	 * @param string $request
 	 * @param array $data
 	 * @return array
+	 * @throws \Model\Core\ZkException
 	 */
-	public function respond($request, array $data){
+	public function respond($request, array $data = []){
+	    if(!isset($request[1]))
+			$request[1] = '';
+
 		switch($request[1]){
 			case '':
-				$this->loadResizeModule($data['columns']);
+			    if(isset($data['columns'], $data['elements'])){
+					$this->loadResizeModule($data['columns']);
 
-				$backgroundRule = isset($this->model->_Admin->options['background']) ? $this->model->_Admin->options['background'] : false;
-				$colorRule = isset($this->model->_Admin->options['color']) ? $this->model->_Admin->options['color'] : false;
+					$backgroundRule = isset($this->model->_Admin->options['background']) ? $this->model->_Admin->options['background'] : false;
+					$colorRule = isset($this->model->_Admin->options['color']) ? $this->model->_Admin->options['color'] : false;
 
-				foreach($data['elements'] as &$el){
-					if(!is_string($backgroundRule) and is_callable($backgroundRule)){
-						$el['background'] = call_user_func($backgroundRule, $el['element']);
-					}else{
-						$el['background'] = $backgroundRule;
-					}
-					foreach($el['columns'] as $column_id => $c){
-						if(isset($data['columns'][$column_id]['background']) and $data['columns'][$column_id]['background']){
-							if(!is_string($data['columns'][$column_id]['background']) and is_callable($data['columns'][$column_id]['background'])){
-								$el['columns'][$column_id]['background'] = call_user_func($data['columns'][$column_id]['background'], $el['element']);
-							}else{
-								$el['columns'][$column_id]['background'] = $data['columns'][$column_id]['background'];
-							}
+					foreach($data['elements'] as &$el){
+						if(!is_string($backgroundRule) and is_callable($backgroundRule)){
+							$el['background'] = call_user_func($backgroundRule, $el['element']);
 						}else{
-							$el['columns'][$column_id]['background'] = false;
+							$el['background'] = $backgroundRule;
+						}
+						foreach($el['columns'] as $column_id => $c){
+							if(isset($data['columns'][$column_id]['background']) and $data['columns'][$column_id]['background']){
+								if(!is_string($data['columns'][$column_id]['background']) and is_callable($data['columns'][$column_id]['background'])){
+									$el['columns'][$column_id]['background'] = call_user_func($data['columns'][$column_id]['background'], $el['element']);
+								}else{
+									$el['columns'][$column_id]['background'] = $data['columns'][$column_id]['background'];
+								}
+							}else{
+								$el['columns'][$column_id]['background'] = false;
+							}
+						}
+
+						if(!is_string($colorRule) and is_callable($colorRule)){
+							$el['color'] = call_user_func($colorRule, $el['element']);
+						}else{
+							$el['color'] = $colorRule;
+						}
+						foreach($el['columns'] as $column_id => $c){
+							if(isset($data['columns'][$column_id]['color']) and $data['columns'][$column_id]['color']){
+								if(!is_string($data['columns'][$column_id]['color']) and is_callable($data['columns'][$column_id]['color'])){
+									$el['columns'][$column_id]['color'] = call_user_func($data['columns'][$column_id]['color'], $el['element']);
+								}else{
+									$el['columns'][$column_id]['color'] = $data['columns'][$column_id]['color'];
+								}
+							}else{
+								$el['columns'][$column_id]['color'] = false;
+							}
 						}
 					}
+					unset($el);
 
-					if(!is_string($colorRule) and is_callable($colorRule)){
-						$el['color'] = call_user_func($colorRule, $el['element']);
-					}else{
-						$el['color'] = $colorRule;
-					}
-					foreach($el['columns'] as $column_id => $c){
-						if(isset($data['columns'][$column_id]['color']) and $data['columns'][$column_id]['color']){
-							if(!is_string($data['columns'][$column_id]['color']) and is_callable($data['columns'][$column_id]['color'])){
-								$el['columns'][$column_id]['color'] = call_user_func($data['columns'][$column_id]['color'], $el['element']);
-							}else{
-								$el['columns'][$column_id]['color'] = $data['columns'][$column_id]['color'];
-							}
-						}else{
-							$el['columns'][$column_id]['color'] = false;
-						}
-					}
-				}
-				unset($el);
+					if(isset($_GET['print']))
+						$template = INCLUDE_PATH.'model/'.$this->getClass().'/templates/print-table';
+					else
+						$template = INCLUDE_PATH.'model/'.$this->getClass().'/templates/table';
 
-				if(isset($_GET['print']))
-					$template = INCLUDE_PATH.'model/'.$this->getClass().'/templates/print-table';
-				else
-					$template = INCLUDE_PATH.'model/'.$this->getClass().'/templates/table';
+					return [
+						'template' => $template,
+						'cacheTemplate' => false,
+						'data' => $data,
+					];
+                }else{
+					$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
 
-				return [
-					'template' => $template,
-					'cacheTemplate' => false,
-					'data' => $data,
-				];
+					return [
+						'template' => $dir.$request[0],
+						'cacheTemplate' => false,
+					];
+                }
 				break;
 		}
 
@@ -200,6 +219,7 @@ class AdminTemplateEditt extends Module {
 	 *
 	 * @param array $columns
 	 * @return bool
+	 * @throws \Model\Core\ZkException
 	 */
 	private function loadResizeModule(array $columns = []){
 		if($this->model->isLoaded('ResizeTable'))
@@ -221,13 +241,13 @@ class AdminTemplateEditt extends Module {
 	 * Sends a JSON with the page aids for the current page
 	 */
 	public function pageAids(){
-		$request = $this->model->_Admin->request[0];
-
-		$actions = $this->model->_Admin->getActions([
-			$request,
+		$request = array_filter([
+			$this->model->_Admin->request[0],
 			isset($_GET['action']) ? $_GET['action'] : null,
 			isset($_GET['id']) ? $_GET['id'] : null,
-		]);
+        ]);
+
+		$actions = $this->model->_Admin->getActions($request);
 
 		$parsedActions = [];
 		foreach($actions as $actId => $act){
@@ -285,7 +305,7 @@ class AdminTemplateEditt extends Module {
 			$parsedActions[] = $action;
 		}
 
-		if(!isset($_GET['action'])){ // We're in the table page
+		if(((isset($this->model->_Admin->options['table']) and $this->model->_Admin->options['table']) or (isset($this->model->_Admin->options['element']) and $this->model->_Admin->options['element'])) and !isset($_GET['action'])){ // We're in a "table" page
 			$parsedActions[] = [
 				'id' => 'filters',
 				'text' => 'Filtri',
@@ -293,17 +313,17 @@ class AdminTemplateEditt extends Module {
 				'url' => '#',
 				'action' => 'switchFiltersForm(this); return false',
 			];
+		}
 
-			$print = isset($this->model->_Admin->options['print']) ? $this->model->_Admin->options['print'] : false;
-			if($print){
-                $parsedActions[] = [
-                    'id' => 'print',
-                    'text' => 'Stampa',
-                    'fa-icon' => 'print',
-                    'url' => '#',
-                    'action' => 'window.open(\''.$this->model->_Admin->getUrlPrefix().$request.'?sId=\'+sId+\'&print\'); return false',
-                ];
-			}
+		$print = isset($this->model->_Admin->options['print']) ? $this->model->_Admin->options['print'] : false;
+		if($print){
+			$parsedActions[] = [
+				'id' => 'print',
+				'text' => 'Stampa',
+				'fa-icon' => 'print',
+				'url' => '#',
+				'action' => 'window.open(\''.$this->model->_Admin->getUrlPrefix().implode('/', $request).'?sId=\'+sId+\'&print\'); return false',
+			];
 		}
 
 		if(isset($this->model->_Admin->options['actions'])){
@@ -353,7 +373,7 @@ class AdminTemplateEditt extends Module {
 				'url' => '',
 			],
 		];
-		$this->searchBreadcrumbs($adminPages, $request, $breadcrumbs);
+		$this->searchBreadcrumbs($adminPages, $request[0], $breadcrumbs);
 
 		$breadcrumbsHtml = [];
 		$prefix = $this->model->_Admin->getUrlPrefix();
@@ -432,24 +452,26 @@ class AdminTemplateEditt extends Module {
 		];
 
 		$customFilters = $this->model->_Admin->getCustomFiltersForm();
-		foreach($customFilters->getDataset() as $k => $f){
-			$form = isset($f->options['admin-form']) ? $f->options['admin-form'] : 'filters';
+		if($customFilters){
+			foreach($customFilters->getDataset() as $k => $f){
+				$form = isset($f->options['admin-form']) ? $f->options['admin-form'] : 'filters';
 
-			if(isset($f->options['admin-type'])){
-				$defaults[$form][$k] = $f->options['admin-type'];
-			}else{
-				switch($f->options['type']){
-					case 'date':
-					case 'time':
-					case 'datetime':
-						$defaults[$form][$k] = 'range';
-						break;
-					default:
-						$defaults[$form][$k] = '=';
-						break;
+				if(isset($f->options['admin-type'])){
+					$defaults[$form][$k] = $f->options['admin-type'];
+				}else{
+					switch($f->options['type']){
+						case 'date':
+						case 'time':
+						case 'datetime':
+							$defaults[$form][$k] = 'range';
+							break;
+						default:
+							$defaults[$form][$k] = '=';
+							break;
+					}
 				}
 			}
-		}
+        }
 
 		$adminListOptions = $this->model->_Admin->getListOptions();
 
@@ -562,6 +584,7 @@ class AdminTemplateEditt extends Module {
 	 * Shows the filters picking template, and saves them if necessary
 	 *
 	 * @return array
+	 * @throws \Model\Core\ZkException
 	 */
 	public function pickFilters(){
 		if(checkCsrf()){
@@ -605,6 +628,7 @@ class AdminTemplateEditt extends Module {
 	 * Shows the search fields picking template, and saves them if necessary
 	 *
 	 * @return array
+	 * @throws \Model\Core\ZkException
 	 */
 	public function pickSearchFields(){
 		if(checkCsrf()){
