@@ -300,7 +300,7 @@ class AdminTemplateEditt extends Module {
 			$parsedActions[] = $action;
 		}
 
-		if(((isset($this->options['table']) and $this->options['table']) or (isset($this->options['element']) and $this->options['element'])) and !isset($_GET['action'])){ // We're in a "table" page
+		if(((isset($this->model->_Admin->options['table']) and $this->model->_Admin->options['table']) or (isset($this->model->_Admin->options['element']) and $this->model->_Admin->options['element'])) and !isset($_GET['action'])){ // We're in a "table" page
 			$parsedActions[] = [
 				'id' => 'filters',
 				'text' => 'Filtri',
