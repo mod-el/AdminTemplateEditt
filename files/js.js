@@ -41,20 +41,14 @@ window.addEventListener('DOMContentLoaded', function() {
 		if(_('adminForm') && _('adminForm').dataset.filled==='0'){
 			checkSubPages().then(function(){
 				if(request[2]){
-					loadElementData(request[0], request[2]).then(fillAdminForm).then(function(){
-						if(elementCallback){
-							elementCallback.call();
-							elementCallback = null;
-						}
-					}).then(monitorFields).catch(alert);
+					loadElementData(request[0], request[2]).then(fillAdminForm).then(callElementCallback).then(monitorFields).catch(alert);
 				}else{
 					initalizeEmptyForm();
 					monitorFields();
 				}
 			});
-		}else if(elementCallback){
-			elementCallback.call();
-			elementCallback = null;
+		}else{
+			callElementCallback();
 		}
 	}
 });
@@ -447,7 +441,7 @@ function loadPageAids(request, get){
 				if(act.icon)
 					button.innerHTML = '<img src="'+act.icon+'" alt="" onload="resize()" /> ';
 				if(act['fa-icon'])
-					button.innerHTML = '<i class="fa fa-'+act['fa-icon']+'" aria-hidden="true"></i> ';
+					button.innerHTML = '<i class="'+act['fa-icon']+'" aria-hidden="true"></i> ';
 				button.innerHTML += act.text;
 				toolbar.appendChild(button);
 			});
@@ -980,16 +974,11 @@ function loadElement(page, id, history_push){
 
 		return Promise.all([formTemplate, formData]).then(function(data){
 			return checkSubPages().then(function(){
-				return fillAdminForm(data[1]).then(function(){
-					if(elementCallback){
-						elementCallback.call();
-						elementCallback = null;
-					}
-				}).then(monitorFields);
+				return fillAdminForm(data[1]).then(callElementCallback).then(monitorFields);
 			});
 		}).catch(alert);
 	}else{
-		return loadAdminPage([page, 'edit'], '', false, history_push).then(checkSubPages).then(monitorFields).catch(alert);
+		return loadAdminPage([page, 'edit'], '', false, history_push).then(checkSubPages).then(callElementCallback).then(monitorFields).catch(alert);
 	}
 }
 
@@ -1712,4 +1701,11 @@ function moveBetweenRows(checkbox, keyCode){
 	var nextId = nextRow.getAttribute('data-id');
 	var nextCheckbox = document.getElementById('row-checkbox-'+nextId);
 	nextCheckbox.focus();
+}
+
+function callElementCallback(){
+	if(elementCallback){
+		elementCallback.call();
+		elementCallback = null;
+	}
 }
