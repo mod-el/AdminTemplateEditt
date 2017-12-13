@@ -266,16 +266,16 @@ class AdminTemplateEditt extends Module {
 			}else{
 			    switch($actId){
 					case 'new':
-						$action['fa-icon'] = 'plus-square-o';
+						$action['fa-icon'] = 'far fa-plus-square';
 						break;
 					case 'delete':
-						$action['fa-icon'] = 'trash-o';
+						$action['fa-icon'] = 'far fa-trash-alt';
 						break;
 					case 'save':
-						$action['fa-icon'] = 'save';
+						$action['fa-icon'] = 'far fa-save';
 						break;
 					case 'duplicate':
-						$action['fa-icon'] = 'clone';
+						$action['fa-icon'] = 'far fa-clone';
 						break;
                 }
             }
@@ -309,7 +309,7 @@ class AdminTemplateEditt extends Module {
 			$parsedActions[] = [
 				'id' => 'filters',
 				'text' => 'Filtri',
-				'fa-icon' => 'filter',
+				'fa-icon' => 'fas fa-filter',
 				'url' => '#',
 				'action' => 'switchFiltersForm(this); return false',
 			];
@@ -320,7 +320,7 @@ class AdminTemplateEditt extends Module {
 			$parsedActions[] = [
 				'id' => 'print',
 				'text' => 'Stampa',
-				'fa-icon' => 'print',
+				'fa-icon' => 'fas fa-print',
 				'url' => '#',
 				'action' => 'window.open(\''.$this->model->_Admin->getUrlPrefix().implode('/', $request).'?sId=\'+sId+\'&print\'); return false',
 			];
@@ -688,7 +688,7 @@ class AdminTemplateEditt extends Module {
                 <div class="rob-field-cont sublist-row" style="cursor: pointer" onclick="sublistAddRow('<?=entities($name)?>', '<?=entities($options['cont'])?>')">
                     <div class="rob-field" style="width: 5%"></div>
                     <div class="rob-field" style="width: 95%">
-                        <i class="fa fa-plus" aria-hidden="true"></i> Aggiungi
+                        <i class="fas fa-plus" aria-hidden="true"></i> Aggiungi
                     </div>
                 </div>
 				<?php
@@ -717,7 +717,7 @@ class AdminTemplateEditt extends Module {
 			}else{
 				?>
                 <div class="rob-field" style="width: 5%; text-align: center">
-                    <a href="#" onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?=entities($name)?>', '<?=entities($options['cont'])?>', '[n]'); return false"><i class="fa fa-trash" aria-label="Delete" style="color: #000"></i></a>
+                    <a href="#" onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?=entities($name)?>', '<?=entities($options['cont'])?>', '[n]'); return false"><i class="fas fa-trash" aria-label="Delete" style="color: #000"></i></a>
                     <input type="hidden" name="ch-<?=entities($name)?>-[n]" value="1" />
                 </div>
                 <div class="rob-field" style="width: 95%">

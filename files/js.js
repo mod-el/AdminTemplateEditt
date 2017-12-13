@@ -441,7 +441,7 @@ function loadPageAids(request, get){
 				if(act.icon)
 					button.innerHTML = '<img src="'+act.icon+'" alt="" onload="resize()" /> ';
 				if(act['fa-icon'])
-					button.innerHTML = '<i class="fa fa-'+act['fa-icon']+'" aria-hidden="true"></i> ';
+					button.innerHTML = '<i class="'+act['fa-icon']+'" aria-hidden="true"></i> ';
 				button.innerHTML += act.text;
 				toolbar.appendChild(button);
 			});
