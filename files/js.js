@@ -41,7 +41,7 @@ window.addEventListener('DOMContentLoaded', function() {
 		if(_('adminForm') && _('adminForm').dataset.filled==='0'){
 			checkSubPages().then(function(){
 				if(request[2]){
-					loadElementData(request[0], request[2]).then(fillAdminForm).then(callElementCallback).then(monitorFields).catch(alert);
+					loadElementData(request[0], request[2]).then(fillAdminForm).then(callElementCallback).then(monitorFields).catch(reportAdminError);
 				}else{
 					initalizeEmptyForm();
 					monitorFields();
@@ -976,9 +976,9 @@ function loadElement(page, id, history_push){
 			return checkSubPages().then(function(){
 				return fillAdminForm(data[1]).then(callElementCallback).then(monitorFields);
 			});
-		}).catch(alert);
+		}).catch(reportAdminError);
 	}else{
-		return loadAdminPage([page, 'edit'], '', false, history_push).then(checkSubPages).then(callElementCallback).then(monitorFields).catch(alert);
+		return loadAdminPage([page, 'edit'], '', false, history_push).then(checkSubPages).then(callElementCallback).then(monitorFields).catch(reportAdminError);
 	}
 }
 
@@ -1461,8 +1461,6 @@ function sublistAddRow(name, cont, id, trigger){
 	if(typeof trigger==='undefined')
 		trigger = true;
 
-	var promise = afterMutation(monitorFields);
-
 	var form = _('adminForm');
 
 	if(typeof id==='undefined' || id===null){
@@ -1477,8 +1475,13 @@ function sublistAddRow(name, cont, id, trigger){
 		cont = name;
 
 	var container = _('cont-ch-'+cont);
-	if(!container)
-		return false;
+	if(!container){
+		return new Promise(function(resolve){
+			resolve(false);
+		});
+	}
+
+	var promise = afterMutation(monitorFields);
 
 	var div = document.createElement('div');
 	div.className = container.getAttribute('data-rows-class');
@@ -1712,4 +1715,9 @@ function callElementCallback(){
 		elementCallback.call();
 		elementCallback = null;
 	}
+}
+
+function reportAdminError(err){
+	console.log(err);
+	alert(err);
 }

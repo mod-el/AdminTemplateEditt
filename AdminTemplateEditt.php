@@ -1,5 +1,6 @@
 <?php namespace Model\AdminTemplateEditt;
 
+use Model\Core\Autoloader;
 use Model\Core\Module;
 use Model\Form\Form;
 
@@ -23,76 +24,6 @@ class AdminTemplateEditt extends Module {
 
 		if(!isset($this->model->_Admin->request[1]) and isset($this->model->_Admin->request[0], $_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-searchFields'])){ // List request
 			$_REQUEST['search-columns'] = $_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-searchFields'];
-		}
-	}
-
-	/**
-	 * @param array $config
-	 * @return array
-	 */
-	public function getViewOptions(array $config){
-		if(isset($this->model->_Admin->request[0]) and $this->model->_Admin->request[0]=='login'){
-			return [
-				'showLayout' => false,
-				'template' => INCLUDE_PATH.'model/'.$this->getClass().'/templates/login',
-			];
-		}else{
-			$options = [
-				'header' => [INCLUDE_PATH.'model/'.$this->getClass().'/templates/header'],
-				'footer' => [INCLUDE_PATH.'model/'.$this->getClass().'/templates/footer'],
-				'template' => null,
-			];
-
-			if(isset($_GET['ajax']))
-				$options['showLayout'] = false;
-
-			if(isset($_GET['print'])){
-				$options['header'] = [INCLUDE_PATH.'model/'.$this->getClass().'/templates/print-header'];
-				$options['footer'] = [INCLUDE_PATH.'model/'.$this->getClass().'/templates/print-footer'];
-            }
-
-			if(isset($this->model->_Admin->request[1])){
-				switch($this->model->_Admin->request[1]){
-					case 'edit':
-						if(isset($_GET['getData'])){
-							$arr = $this->model->_Admin->getEditArray();
-							$this->model->sendJSON($arr);
-						}else{
-							$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
-
-							if($this->model->element){
-								$this->model->_Admin->form->reset();
-
-								if(file_exists(INCLUDE_PATH.'app/templates/'.$dir.$this->model->_Admin->request[0].'.php'))
-									$options['template'] = $dir.$this->model->_Admin->request[0];
-								else
-									$options['template'] = INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-template';
-
-								$options['cacheTemplate'] = false;
-
-								if(isset($_GET['ajax'])){
-									$options['showLayout'] = true;
-									$options['header'] = [INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-header'];
-									$options['footer'] = [INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-footer'];
-								}else{
-									$options['header'][] = INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-header';
-									array_unshift($options['footer'], INCLUDE_PATH.'model/'.$this->getClass().'/templates/form-footer');
-								}
-
-								if(isset($_GET['duplicated']))
-									$options['messages'] = ['Succesfully duplicated!'];
-							}
-
-							if(isset($this->model->_Admin->request[3])){
-								$options['showLayout'] = false;
-								$options['template'] = $dir.$this->model->_Admin->request[0].'/'.$this->model->_Admin->request[3];
-							}
-						}
-						break;
-				}
-			}
-
-			return $options;
 		}
 	}
 
@@ -142,6 +73,29 @@ class AdminTemplateEditt extends Module {
 	 * @throws \Model\Core\ZkException
 	 */
 	public function respond($request, array $data = []){
+		if(isset($request[0]) and $request[0]=='login'){
+			return [
+				'template-module' => 'AdminTemplateEditt',
+				'template' => 'login',
+			];
+		}
+
+		$options = [
+			'template-module' => 'AdminTemplateEditt',
+			'template-module-layout' => 'AdminTemplateEditt',
+			'header' => ['header'],
+			'footer' => ['footer'],
+			'template' => null,
+		];
+
+		if(isset($_GET['ajax']))
+			$options['showLayout'] = false;
+
+		if(isset($_GET['print'])){
+			$options['header'] = ['print-header'];
+			$options['footer'] = ['print-footer'];
+		}
+
 	    if(!isset($request[1]))
 			$request[1] = '';
 
@@ -191,23 +145,72 @@ class AdminTemplateEditt extends Module {
 					unset($el);
 
 					if(isset($_GET['print']))
-						$template = INCLUDE_PATH.'model/'.$this->getClass().'/templates/print-table';
+						$template = 'print-table';
 					else
-						$template = INCLUDE_PATH.'model/'.$this->getClass().'/templates/table';
+						$template = 'table';
 
-					return [
+					return array_merge($options, [
 						'template' => $template,
 						'cacheTemplate' => false,
 						'data' => $data,
-					];
+                    ]);
                 }else{
 					$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
 
-					return [
-						'template' => $dir.$request[0],
-						'cacheTemplate' => false,
-					];
+					if(isset($request[0])){
+						return array_merge($options, [
+							'template-module' => null,
+							'template' => $dir.$request[0],
+							'cacheTemplate' => false,
+						]);
+                    }else{
+						return array_merge($options, [
+							'template' => 'dashboard',
+							'cacheTemplate' => false,
+						]);
+                    }
                 }
+				break;
+			case 'edit':
+				if(isset($_GET['getData'])){
+					$arr = $this->model->_Admin->getEditArray();
+					$this->model->sendJSON($arr);
+				}else{
+					$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
+
+					if($this->model->element){
+						$this->model->_Admin->form->reset();
+
+						$checkCustomTemplate = Autoloader::searchFile('template', $dir.$request[0]);
+						if($checkCustomTemplate){
+							$options['template'] = $dir.$request[0];
+							unset($options['template-module']);
+						}else{
+							$options['template'] = 'form-template';
+						}
+
+						$options['cacheTemplate'] = false;
+
+						if(isset($_GET['ajax'])){
+							$options['showLayout'] = true;
+							$options['header'] = ['form-header'];
+							$options['footer'] = ['form-footer'];
+						}else{
+							$options['header'][] = 'form-header';
+							array_unshift($options['footer'], 'form-footer');
+						}
+
+						if(isset($_GET['duplicated']))
+							$options['messages'] = ['Succesfully duplicated!'];
+					}
+
+					if(isset($request[3])){
+						$options['showLayout'] = false;
+						$options['template'] = $dir.$request[0].'/'.$request[3];
+					}
+
+					return $options;
+				}
 				break;
 		}
 
@@ -616,8 +619,10 @@ class AdminTemplateEditt extends Module {
 			die('ok');
 		}
 		return [
+			'template-module' => 'AdminTemplateEditt',
+            'template-module-layout' => 'AdminTemplateEditt',
 			'showLayout' => false,
-			'template' => INCLUDE_PATH.'model/'.$this->getClass().'/templates/pick-filters',
+			'template' => 'pick-filters',
 			'cacheTemplate' => false,
 		];
 	}
@@ -636,8 +641,10 @@ class AdminTemplateEditt extends Module {
 			die('ok');
 		}
 		return [
+			'template-module' => 'AdminTemplateEditt',
+            'template-module-layout' => 'AdminTemplateEditt',
 			'showLayout' => false,
-			'template' => INCLUDE_PATH.'model/'.$this->getClass().'/templates/pick-search-fields',
+			'template' => 'pick-search-fields',
 			'cacheTemplate' => false,
 		];
 	}
@@ -707,8 +714,8 @@ class AdminTemplateEditt extends Module {
 
 			if($options['template']){
 				$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
-				$template_path = INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.$dir.$this->model->_Admin->request[0].DIRECTORY_SEPARATOR.$options['template'].'.php';
-				if(!file_exists($template_path))
+				$template_path = Autoloader::searchFile('template', $dir.$this->model->_Admin->request[0].DIRECTORY_SEPARATOR.$options['template']);
+				if(!$template_path)
 					$options['template'] = null;
 			}
 
