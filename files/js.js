@@ -1277,9 +1277,11 @@ function save(){
 	saving = true;
 	if(_('#toolbar-button-save img'))
 		_('#toolbar-button-save img').src = absolute_path+'model/Output/files/loading.gif';
-	if(_('#toolbar-button-save i.fa')){
-		_('#toolbar-button-save i.fa').removeClass('fa-save');
-		_('#toolbar-button-save i.fa').addClass('fa-spinner');
+	if(_('#toolbar-button-save i')){
+		_('#toolbar-button-save i').removeClass('far');
+		_('#toolbar-button-save i').removeClass('fa-save');
+		_('#toolbar-button-save i').addClass('fas');
+		_('#toolbar-button-save i').addClass('fa-spinner');
 	}
 	resize();
 
@@ -1332,9 +1334,11 @@ function save(){
 			saving = false;
 			if(_('#toolbar-button-save img'))
 				_('#toolbar-button-save img').src = absolute_path+'model/AdminTemplateEditt/files/img/toolbar/save.png';
-			if(_('#toolbar-button-save i.fa')){
-				_('#toolbar-button-save i.fa').removeClass('fa-spinner');
-				_('#toolbar-button-save i.fa').addClass('fa-save');
+			if(_('#toolbar-button-save i')){
+				_('#toolbar-button-save i').removeClass('fas');
+				_('#toolbar-button-save i').removeClass('fa-spinner');
+				_('#toolbar-button-save i').addClass('far');
+				_('#toolbar-button-save i').addClass('fa-save');
 			}
 
 			if(typeof r!=='object'){
