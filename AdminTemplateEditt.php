@@ -714,8 +714,8 @@ class AdminTemplateEditt extends Module {
 
 			if($options['template']){
 				$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
-				$template_path = INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.$dir.$this->model->_Admin->request[0].DIRECTORY_SEPARATOR.$options['template'].'.php';
-				if(!file_exists($template_path))
+				$template_path = Autoloader::searchFile('template', $dir.$this->model->_Admin->request[0].DIRECTORY_SEPARATOR.$options['template']);
+				if(!$template_path)
 					$options['template'] = null;
 			}
 
