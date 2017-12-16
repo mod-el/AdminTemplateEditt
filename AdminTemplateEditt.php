@@ -75,14 +75,14 @@ class AdminTemplateEditt extends Module {
 	public function respond($request, array $data = []){
 		if(isset($request[0]) and $request[0]=='login'){
 			return [
-				'template-module' => 'AdminTemplateEditt',
+				'template-module' => $this->getClass(),
 				'template' => 'login',
 			];
 		}
 
 		$options = [
-			'template-module' => 'AdminTemplateEditt',
-			'template-module-layout' => 'AdminTemplateEditt',
+			'template-module' => $this->getClass(),
+			'template-module-layout' => $this->getClass(),
 			'header' => ['header'],
 			'footer' => ['footer'],
 			'template' => null,
@@ -96,12 +96,12 @@ class AdminTemplateEditt extends Module {
 			$options['footer'] = ['print-footer'];
 		}
 
-	    if(!isset($request[1]))
+		if(!isset($request[1]))
 			$request[1] = '';
 
 		switch($request[1]){
 			case '':
-			    if(isset($data['columns'], $data['elements'])){
+				if(isset($data['columns'], $data['elements'])){
 					$this->loadResizeModule($data['columns']);
 
 					$backgroundRule = isset($this->model->_Admin->options['background']) ? $this->model->_Admin->options['background'] : false;
@@ -153,8 +153,8 @@ class AdminTemplateEditt extends Module {
 						'template' => $template,
 						'cacheTemplate' => false,
 						'data' => $data,
-                    ]);
-                }else{
+					]);
+				}else{
 					$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
 
 					if(isset($request[0])){
@@ -163,13 +163,13 @@ class AdminTemplateEditt extends Module {
 							'template' => $dir.$request[0],
 							'cacheTemplate' => false,
 						]);
-                    }else{
+					}else{
 						return array_merge($options, [
 							'template' => 'dashboard',
 							'cacheTemplate' => false,
 						]);
-                    }
-                }
+					}
+				}
 				break;
 			case 'edit':
 				if(isset($_GET['getData'])){
@@ -248,7 +248,7 @@ class AdminTemplateEditt extends Module {
 			$this->model->_Admin->request[0],
 			isset($_GET['action']) ? $_GET['action'] : null,
 			isset($_GET['id']) ? $_GET['id'] : null,
-        ]);
+		]);
 
 		$actions = $this->model->_Admin->getActions($request);
 
@@ -258,7 +258,7 @@ class AdminTemplateEditt extends Module {
 				'id' => $actId,
 				'text' => $act['text'],
 				'icon' => null,
-                'fa-icon' => null,
+				'fa-icon' => null,
 				'url' => '#',
 				'action' => 'return false',
 			];
@@ -267,7 +267,7 @@ class AdminTemplateEditt extends Module {
 			if(file_exists(PATHBASE.$iconPath)){
 				$action['icon'] = $iconPath;
 			}else{
-			    switch($actId){
+				switch($actId){
 					case 'new':
 						$action['fa-icon'] = 'far fa-plus-square';
 						break;
@@ -280,8 +280,8 @@ class AdminTemplateEditt extends Module {
 					case 'duplicate':
 						$action['fa-icon'] = 'far fa-clone';
 						break;
-                }
-            }
+				}
+			}
 
 			switch($act['action']){
 				case 'new':
@@ -332,42 +332,42 @@ class AdminTemplateEditt extends Module {
 		if(isset($this->model->_Admin->options['actions'])){
 			foreach($this->model->_Admin->options['actions'] as $actIdx => $act){
 				$act = array_merge([
-                    'id' => 'custom-'.$actIdx,
-                    'text' => '',
+					'id' => 'custom-'.$actIdx,
+					'text' => '',
 					'icon' => null,
 					'fa-icon' => null,
-                    'url' => '#',
-                    'action' => 'return false',
-                ], $act);
+					'url' => '#',
+					'action' => 'return false',
+				], $act);
 
-			    if(isset($act['specific'])){
-                    switch($act['specific']){
-                        case 'table':
+				if(isset($act['specific'])){
+					switch($act['specific']){
+						case 'table':
 							if(isset($_GET['action']))
-							    continue 2;
-                            break;
-                        case 'element':
-                            if(!isset($_GET['action']) or $_GET['action']!='edit')
-                                continue 2;
-                            break;
-                        case 'element-edit':
+								continue 2;
+							break;
+						case 'element':
+							if(!isset($_GET['action']) or $_GET['action']!='edit')
+								continue 2;
+							break;
+						case 'element-edit':
 							if(!isset($_GET['action']) or $_GET['action']!='edit')
 								continue 2;
 							if(!isset($_GET['id']) or !$_GET['id'])
-							    continue 2;
-                            break;
-                        case 'element-new':
+								continue 2;
+							break;
+						case 'element-new':
 							if(!isset($_GET['action']) or $_GET['action']!='edit')
 								continue 2;
 							if(isset($_GET['id']) and $_GET['id'])
-							    continue 2;
-                            break;
-                    }
-                }
+								continue 2;
+							break;
+					}
+				}
 
-                $parsedActions[] = $act;
-            }
-        }
+				$parsedActions[] = $act;
+			}
+		}
 
 		$adminPages = $this->model->_Admin->getPages();
 		$breadcrumbs = [
@@ -474,7 +474,7 @@ class AdminTemplateEditt extends Module {
 					}
 				}
 			}
-        }
+		}
 
 		$adminListOptions = $this->model->_Admin->getListOptions();
 
@@ -619,8 +619,8 @@ class AdminTemplateEditt extends Module {
 			die('ok');
 		}
 		return [
-			'template-module' => 'AdminTemplateEditt',
-            'template-module-layout' => 'AdminTemplateEditt',
+			'template-module' => $this->getClass(),
+			'template-module-layout' => $this->getClass(),
 			'showLayout' => false,
 			'template' => 'pick-filters',
 			'cacheTemplate' => false,
@@ -641,8 +641,8 @@ class AdminTemplateEditt extends Module {
 			die('ok');
 		}
 		return [
-			'template-module' => 'AdminTemplateEditt',
-            'template-module-layout' => 'AdminTemplateEditt',
+			'template-module' => $this->getClass(),
+			'template-module-layout' => $this->getClass(),
 			'showLayout' => false,
 			'template' => 'pick-search-fields',
 			'cacheTemplate' => false,
