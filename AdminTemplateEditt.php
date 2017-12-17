@@ -7,7 +7,7 @@ use Model\Form\Form;
 class AdminTemplateEditt extends Module {
 	/**
 	 * @param mixed $options
-	 * @throws \Model\Core\ZkException
+	 * @throws \Model\Core\Exception
 	 */
 	public function init($options){
 		if($this->model->moduleExists('DatePicker'))
@@ -70,7 +70,7 @@ class AdminTemplateEditt extends Module {
 	 * @param string $request
 	 * @param array $data
 	 * @return array
-	 * @throws \Model\Core\ZkException
+	 * @throws \Model\Core\Exception
 	 */
 	public function respond($request, array $data = []){
 		if(isset($request[0]) and $request[0]=='login'){
@@ -222,7 +222,7 @@ class AdminTemplateEditt extends Module {
 	 *
 	 * @param array $columns
 	 * @return bool
-	 * @throws \Model\Core\ZkException
+	 * @throws \Model\Core\Exception
 	 */
 	private function loadResizeModule(array $columns = []){
 		if($this->model->isLoaded('ResizeTable'))
@@ -587,7 +587,7 @@ class AdminTemplateEditt extends Module {
 	 * Shows the filters picking template, and saves them if necessary
 	 *
 	 * @return array
-	 * @throws \Model\Core\ZkException
+	 * @throws \Model\Core\Exception
 	 */
 	public function pickFilters(){
 		if(checkCsrf()){
@@ -633,7 +633,7 @@ class AdminTemplateEditt extends Module {
 	 * Shows the search fields picking template, and saves them if necessary
 	 *
 	 * @return array
-	 * @throws \Model\Core\ZkException
+	 * @throws \Model\Core\Exception
 	 */
 	public function pickSearchFields(){
 		if(checkCsrf()){
