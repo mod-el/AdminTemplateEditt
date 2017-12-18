@@ -155,7 +155,7 @@ class AdminTemplateEditt extends Module {
 						'data' => $data,
 					]);
 				}else{
-					$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
+					$dir = $this->model->_Admin->url ? $this->model->_Admin->url.DIRECTORY_SEPARATOR : '';
 
 					if(isset($request[0])){
 						return array_merge($options, [
@@ -176,7 +176,7 @@ class AdminTemplateEditt extends Module {
 					$arr = $this->model->_Admin->getEditArray();
 					$this->model->sendJSON($arr);
 				}else{
-					$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
+					$dir = $this->model->_Admin->url ? $this->model->_Admin->url.DIRECTORY_SEPARATOR : '';
 
 					if($this->model->element){
 						$this->model->_Admin->form->reset();
@@ -206,7 +206,7 @@ class AdminTemplateEditt extends Module {
 
 					if(isset($request[3])){
 						$options['showLayout'] = false;
-						$options['template'] = $dir.$request[0].'/'.$request[3];
+						$options['template'] = $dir.$request[0].DIRECTORY_SEPARATOR.$request[3];
 					}
 
 					return $options;
@@ -713,7 +713,7 @@ class AdminTemplateEditt extends Module {
 				$options['template'] = $name;
 
 			if($options['template']){
-				$dir = $this->model->_Admin->url ? $this->model->_Admin->url.'/' : '';
+				$dir = $this->model->_Admin->url ? $this->model->_Admin->url.DIRECTORY_SEPARATOR : '';
 				$template_path = Autoloader::searchFile('template', $dir.$this->model->_Admin->request[0].DIRECTORY_SEPARATOR.$options['template']);
 				if(!$template_path)
 					$options['template'] = null;
