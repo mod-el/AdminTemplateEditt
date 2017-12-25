@@ -77,6 +77,7 @@ class AdminTemplateEditt extends Module {
 			return [
 				'template-module' => $this->getClass(),
 				'template' => 'login',
+                'showLayout' => false,
 			];
 		}
 
@@ -186,6 +187,7 @@ class AdminTemplateEditt extends Module {
 							$options['template'] = $dir.$request[0];
 							unset($options['template-module']);
 						}else{
+						    $options['cacheTemplate'] = false;
 							$options['template'] = 'form-template';
 						}
 
@@ -781,5 +783,16 @@ class AdminTemplateEditt extends Module {
 		if($options['after'])
 			echo '<div>'.$options['after'].'</div>';
 		echo '</div>';
+	}
+
+	/**
+	 * @param array $request
+	 * @param string $rule
+	 * @return array
+	 */
+	public function getController(array $request, $rule){
+	    return [
+            'controller' => 'AdminServiceWorker',
+        ];
 	}
 }

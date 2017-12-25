@@ -8,4 +8,6 @@
 
 </body>
 
+[:foot]
+
 </html>
