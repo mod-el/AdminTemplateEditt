@@ -784,4 +784,15 @@ class AdminTemplateEditt extends Module {
 			echo '<div>'.$options['after'].'</div>';
 		echo '</div>';
 	}
+
+	/**
+	 * @param array $request
+	 * @param string $rule
+	 * @return array
+	 */
+	public function getController(array $request, $rule){
+	    return [
+            'controller' => 'AdminServiceWorker',
+        ];
+	}
 }
