@@ -77,6 +77,7 @@ class AdminTemplateEditt extends Module {
 			return [
 				'template-module' => $this->getClass(),
 				'template' => 'login',
+                'showLayout' => false,
 			];
 		}
 
