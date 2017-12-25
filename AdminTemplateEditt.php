@@ -187,6 +187,7 @@ class AdminTemplateEditt extends Module {
 							$options['template'] = $dir.$request[0];
 							unset($options['template-module']);
 						}else{
+						    $options['cacheTemplate'] = false;
 							$options['template'] = 'form-template';
 						}
 
