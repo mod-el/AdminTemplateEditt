@@ -37,12 +37,14 @@ class Config extends Module_Config {
 		$adminRules = $adminConfig->getRules();
 		foreach($adminRules['rules'] as $rule){
 			$rules[] = $rule.'/sw.js';
+			$rules[] = $rule.'/manifest.json';
 		}
 
 		return [
 			'rules' => $rules,
 			'controllers' => [
 				'AdminServiceWorker',
+				'AdminWebAppManifest',
 			],
 		];
 	}
