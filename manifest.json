@@ -1,7 +1,7 @@
 {
 	"name": "Admin 'EDitt'",
 	"description": "Admin template 'EDitt'",
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"dependencies": {
 		"Admin": ">=0.14.0",
 		"Output": ">=0.1.0",
