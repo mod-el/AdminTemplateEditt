@@ -15,6 +15,35 @@ $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
 		var adminPrefix = <?=json_encode($this->model->_Admin->getUrlPrefix())?>;
     </script>
     <style>
+        body{
+            background-color: #f2f2f2;
+            color: #333;
+            font-family: 'Lato', sans-serif;
+        }
+
+        #header{
+            width: 100%;
+            height: 45px;
+            padding: 3px 0;
+            line-height: 39px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            background: #000 url('<?=PATH?>model/AdminTemplateEditt/files/img/bg-header.png') center repeat-x;
+            white-space: nowrap;
+        }
+
+        #header a:link, #header a:visited{
+            color: #FFF;
+        }
+
+        #header > div > div{
+            display: inline-block;
+            color: #FFF;
+            padding: 0 10px;
+            font-family: 'Raleway', sans-serif;
+        }
+
         #main-menu {
             max-width: <?=$maxMenuWidth?>px;
         }

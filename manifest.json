@@ -16,5 +16,6 @@
 	],
 	"js": [
 		"files/js.js"
-	]
+	],
+	"assets-position": "foot"
 }
