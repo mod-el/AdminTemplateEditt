@@ -28,6 +28,19 @@ class AdminTemplateEditt extends Module {
 	}
 
 	/**
+     * Returns a list of the used assets (javascript and stylesheets) for Service Worker caching
+     *
+	 * @return array
+	 */
+	public function getAssets(){
+        return array_values(array_filter(array_map(function($url){
+			if(substr($url, 0, 4)==='http')
+				return false;
+			return PATH.$url;
+		}, $this->model->_Output->getJsList() + $this->model->_Output->getCSSList())));
+    }
+
+	/**
 	 * Recursively renders a left menu items list
 	 *
 	 * @param int $parent
@@ -791,6 +804,7 @@ class AdminTemplateEditt extends Module {
 	 * @return array
 	 */
 	public function getController(array $request, $rule){
+	    $this->model->_Admin->getController($request, $rule); // Lets the Admin module set its internal url parameter
 	    return [
             'controller' => 'AdminServiceWorker',
         ];
