@@ -334,11 +334,12 @@ function loadPage(url, get, post, deleteContent){
 			if(hash!==pageLoadingHash)
 				return false;
 
+			_('main-loading').style.display = 'none';
+			_('main-content').jsFill(response);
+
 			if(window.resetAllInstantSearches)
 				resetAllInstantSearches();
 
-			_('main-loading').style.display = 'none';
-			_('main-content').jsFill(response);
 			resize();
 			if (_('results-table'))
 				tableEvents();
