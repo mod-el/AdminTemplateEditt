@@ -493,9 +493,11 @@ function loadPageAids(request, get){
 		document.querySelectorAll('[data-filter]').forEach(function(el){
 			switch(el.nodeName.toLowerCase()){
 				case 'input':
+				case 'textarea':
 					switch(el.type.toLowerCase()){
 						case 'checkbox':
 						case 'radio':
+						case 'hidden':
 							el.addEventListener('change', search);
 							break;
 						default:
