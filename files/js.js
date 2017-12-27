@@ -984,12 +984,18 @@ function loadElement(page, id, history_push){
 	dataCache = {'data': {}, 'children': []};
 
 	if(id){
-		var formTemplate = loadAdminPage([page, 'edit', id], '', false, history_push);
+		var formTemplate = loadAdminPage([page, 'edit', id], '', false, history_push).then(function(){
+			_('main-loading').addClass('grey');
+			_('main-loading').style.display = 'block';
+		});
 		var formData = loadElementData(page, id);
 
-		return Promise.all([formTemplate, formData]).then(function(data){
+		return Promise.all([formTemplate, formData]).then(function(responses){
+			_('main-loading').removeClass('grey');
+			_('main-loading').style.display = 'none';
+
 			return checkSubPages().then(function(){
-				return fillAdminForm(data[1]).then(callElementCallback).then(monitorFields);
+				return fillAdminForm(responses[1]).then(callElementCallback).then(monitorFields);
 			});
 		}).catch(reportAdminError);
 	}else{
