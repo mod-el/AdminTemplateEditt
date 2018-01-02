@@ -14,7 +14,8 @@ class Config extends Module_Config {
 			$adminConfig = new \Model\Admin\Config($this->model);
 			$adminRules = $adminConfig->getRules();
 			foreach($adminRules['rules'] as $rule){
-				$rule = substr($rule, 1);
+				if($rule)
+					$rule .= '/';
 
 				$manifestData = [
 					'name' => APP_NAME,
@@ -22,15 +23,15 @@ class Config extends Module_Config {
 					'background_color' => '#f2f2f2',
 				];
 
-				$currentManifest = $this->model->_WebAppManifest->getManifest($rule.'/manifest.json');
+				$currentManifest = $this->model->_WebAppManifest->getManifest($rule.'manifest.json');
 				if($currentManifest)
 					$manifestData = array_merge($manifestData, $currentManifest);
 
 				$manifestData['start_url'] = PATH.$rule;
 
-				$this->model->_WebAppManifest->setManifest($rule.'/manifest.json', $manifestData);
+				$this->model->_WebAppManifest->setManifest($rule.'manifest.json', $manifestData);
 
-				$iconsPath = str_replace(['/', '\\'], '-', $rule.'/manifest.json');
+				$iconsPath = str_replace(['/', '\\'], '-', $rule.'manifest.json');
 				$iconFormats = ['32', '192', '512'];
 				foreach($iconFormats as $format){
 					$iconPath = INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'WebAppManifest'.DIRECTORY_SEPARATOR.'icons'.DIRECTORY_SEPARATOR.$iconsPath.DIRECTORY_SEPARATOR.$format.'.png';
@@ -66,7 +67,7 @@ class Config extends Module_Config {
 		$rules = [];
 		$adminRules = $adminConfig->getRules();
 		foreach($adminRules['rules'] as $rule){
-			$rules[] = substr($rule, 1).'/sw.js';
+			$rules[] = ($rule ? $rule.'/' : $rule).'sw.js';
 		}
 
 		return [
