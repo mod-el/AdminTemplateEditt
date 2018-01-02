@@ -10,6 +10,34 @@ class Config extends Module_Config {
 	 * @throws \Model\Core\Exception
 	 */
 	public function makeCache(){
+		if($this->model->moduleExists('WebAppManifest')){
+			$adminConfig = new \Model\Admin\Config($this->model);
+			$adminRules = $adminConfig->getRules();
+			foreach($adminRules['rules'] as $rule){
+				$manifestData = [
+					'name' => APP_NAME,
+					'theme_color' => '#383837',
+					'background_color' => '#f2f2f2',
+				];
+
+				$currentManifest = $this->model->_WebAppManifest->getManifest($rule.'/manifest.json');
+				if($currentManifest)
+					$manifestData = array_merge($manifestData, $currentManifest);
+
+				$manifestData['start_url'] = PATH.$rule;
+
+				$this->model->_WebAppManifest->setManifest($rule.'/manifest.json', $manifestData);
+
+				$iconsPath = str_replace(['/', '\\'], '-', $rule.'/manifest.json');
+				$iconFormats = ['32', '192', '512'];
+				foreach($iconFormats as $format){
+					$iconPath = INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'WebAppManifest'.DIRECTORY_SEPARATOR.'icons'.DIRECTORY_SEPARATOR.$iconsPath.DIRECTORY_SEPARATOR.$format.'.png';
+					if(!file_exists($iconPath))
+						copy(__DIR__.DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'icons'.DIRECTORY_SEPARATOR.$format.'.png', $iconPath);
+				}
+			}
+		}
+
 		$assets = $this->model->_AdminTemplateEditt->getAssets();
 
 		$assets[] = PATH.'model'.DIRECTORY_SEPARATOR.'AdminTemplateEditt'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'header.php';
@@ -37,14 +65,12 @@ class Config extends Module_Config {
 		$adminRules = $adminConfig->getRules();
 		foreach($adminRules['rules'] as $rule){
 			$rules[] = $rule.'/sw.js';
-			$rules[] = $rule.'/manifest.json';
 		}
 
 		return [
 			'rules' => $rules,
 			'controllers' => [
 				'AdminServiceWorker',
-				'AdminWebAppManifest',
 			],
 		];
 	}

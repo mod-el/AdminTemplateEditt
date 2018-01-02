@@ -8,7 +8,8 @@
 		"ContextMenu": ">=1.1.0",
 		"FrontEnd": ">=1.1.0",
 		"ResizeTable": ">=1.2.0",
-		"Popup": ">=1.0.0"
+		"Popup": ">=1.0.0",
+		"WebAppManifest": ">=0.1.0"
 	},
 	"is-admin-template": true,
 	"css": [

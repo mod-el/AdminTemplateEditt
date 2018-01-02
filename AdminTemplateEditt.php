@@ -806,20 +806,8 @@ class AdminTemplateEditt extends Module {
 	public function getController(array $request, $rule){
 	    $this->model->_Admin->getController($request, 0); // Lets the Admin module set its internal url parameter
 
-        switch($rule){
-			case 0:
-				return [
-					'controller' => 'AdminServiceWorker',
-				];
-				break;
-			case 1:
-				return [
-					'controller' => 'AdminWebAppManifest',
-				];
-				break;
-            default:
-                return false;
-                break;
-        }
+		return [
+			'controller' => 'AdminServiceWorker',
+		];
 	}
 }
