@@ -31,10 +31,15 @@ class Config extends Module_Config {
 
 				$this->model->_WebAppManifest->setManifest($rule.'manifest.json', $manifestData);
 
-				$iconsPath = str_replace(['/', '\\'], '-', $rule.'manifest.json');
+				$iconsFolder = str_replace(['/', '\\'], '-', $rule.'manifest.json');
+				$iconsPath = INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'WebAppManifest'.DIRECTORY_SEPARATOR.'icons'.DIRECTORY_SEPARATOR.$iconsFolder;
+
+				if(!is_dir($iconsPath))
+					mkdir($iconsPath, 0777, true);
+
 				$iconFormats = ['32', '192', '512'];
 				foreach($iconFormats as $format){
-					$iconPath = INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'WebAppManifest'.DIRECTORY_SEPARATOR.'icons'.DIRECTORY_SEPARATOR.$iconsPath.DIRECTORY_SEPARATOR.$format.'.png';
+					$iconPath = $iconsPath.DIRECTORY_SEPARATOR.$format.'.png';
 					if(!file_exists($iconPath))
 						copy(__DIR__.DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'icons'.DIRECTORY_SEPARATOR.$format.'.png', $iconPath);
 				}
