@@ -14,6 +14,8 @@ class Config extends Module_Config {
 			$adminConfig = new \Model\Admin\Config($this->model);
 			$adminRules = $adminConfig->getRules();
 			foreach($adminRules['rules'] as $rule){
+				$rule = substr($rule, 1);
+
 				$manifestData = [
 					'name' => APP_NAME,
 					'theme_color' => '#383837',
@@ -64,7 +66,7 @@ class Config extends Module_Config {
 		$rules = [];
 		$adminRules = $adminConfig->getRules();
 		foreach($adminRules['rules'] as $rule){
-			$rules[] = $rule.'/sw.js';
+			$rules[] = substr($rule, 1).'/sw.js';
 		}
 
 		return [
