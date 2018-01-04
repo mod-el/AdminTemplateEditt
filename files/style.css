@@ -246,7 +246,7 @@ a.main-menu-sub:hover, .main-menu-sub.selected{
 	position: absolute;
 	left: 0;
 	top: 0;
-	z-index: 10000;
+	z-index: 200;
 }
 
 #main-loading.grey{
@@ -674,7 +674,7 @@ input[data-managefilters] + label:hover, input[data-managefilters]:checked + lab
 @media screen and (max-width: 800px){
 	#main-menu{
 		position: fixed;
-		z-index: 100;
+		z-index: 1000;
 		max-width: none;
 	}
 
