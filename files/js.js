@@ -252,11 +252,13 @@ function resize(menu){
 	if(topForm){
 		if(window.innerWidth<800){
 			var filtersFormCont = _('filtersFormCont');
-			filtersFormCont.parentNode.insertBefore(topForm, filtersFormCont);
+			if(topForm.parentNode!==filtersFormCont.parentNode)
+				filtersFormCont.parentNode.insertBefore(topForm, filtersFormCont);
 			topForm.style.width = '100%';
 		}else{
 			var toolbar = _('toolbar');
-			toolbar.appendChild(topForm);
+			if(topForm.parentNode!==toolbar)
+				toolbar.appendChild(topForm);
 
 			var w = toolbar.clientWidth-12;
 			toolbar.querySelectorAll('.toolbar-button').forEach(function(button){
