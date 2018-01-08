@@ -252,11 +252,13 @@ function resize(menu){
 	if(topForm){
 		if(window.innerWidth<800){
 			var filtersFormCont = _('filtersFormCont');
-			filtersFormCont.parentNode.insertBefore(topForm, filtersFormCont);
+			if(topForm.parentNode!==filtersFormCont.parentNode)
+				filtersFormCont.parentNode.insertBefore(topForm, filtersFormCont);
 			topForm.style.width = '100%';
 		}else{
 			var toolbar = _('toolbar');
-			toolbar.appendChild(topForm);
+			if(topForm.parentNode!==toolbar)
+				toolbar.appendChild(topForm);
 
 			var w = toolbar.clientWidth-12;
 			toolbar.querySelectorAll('.toolbar-button').forEach(function(button){
@@ -499,7 +501,9 @@ function loadPageAids(request, get){
 						case 'checkbox':
 						case 'radio':
 						case 'hidden':
-							el.addEventListener('change', search);
+							el.addEventListener('change', function(){
+								search();
+							});
 							break;
 						default:
 							el.addEventListener('keyup', function(event){
@@ -518,7 +522,9 @@ function loadPageAids(request, get){
 					}
 					break;
 				default:
-					el.addEventListener('change', search);
+					el.addEventListener('change', function(){
+						search();
+					});
 					break;
 			}
 		});
@@ -899,12 +905,12 @@ function search(forcePage){
 		if(v==='')
 			return;
 
-		switch(el.dataset.filter){
+		switch(el.getAttribute('data-filter-type')){
 			case 'custom':
-				var f = [el.name, v];
+				var f = [el.getAttribute('data-filter'), v];
 				break;
 			default:
-				var f = [el.name, el.dataset.filter, v];
+				var f = [el.getAttribute('data-filter'), el.getAttribute('data-filter-type'), v];
 				break;
 		}
 		filters.push(f);
@@ -914,7 +920,7 @@ function search(forcePage){
 	get = changeGetParameter(get, 'p', forcePage);
 	get = changeGetParameter(get, 'filters', JSON.stringify(filters));
 
-	return loadPage(adminPrefix+currentAdminPage, get);
+	return loadPage(adminPrefix+currentAdminPage.split('/')[0], get);
 }
 
 function filtersReset(){
@@ -1070,7 +1076,13 @@ function initalizeEmptyForm(){
 		return false;
 
 	for(var i = 0, f; f = form.elements[i++];) {
-		f.setValue(null);
+		var fieldValue = f.getValue();
+		if(typeof fieldValue==='object')
+			fieldValue = null;
+		if(!fieldValue && _('[data-filter="'+f.name+'"]')){
+			fieldValue = _('[data-filter="'+f.name+'"]').getValue();
+		}
+		f.setValue(fieldValue);
 	}
 
 	return true;
@@ -1078,6 +1090,7 @@ function initalizeEmptyForm(){
 
 function monitorFields(){
 	var form = _('adminForm');
+
 	for(var i in form.elements){
 		if(!form.elements.hasOwnProperty(i)) continue;
 		var f = form.elements[i];
