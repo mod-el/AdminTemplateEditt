@@ -1070,7 +1070,7 @@ function initalizeEmptyForm(){
 		return false;
 
 	for(var i = 0, f; f = form.elements[i++];) {
-		f.setValue(null);
+		f.setValue(f.getValue());
 	}
 
 	return true;
