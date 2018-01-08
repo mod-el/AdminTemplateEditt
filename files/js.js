@@ -337,9 +337,6 @@ function loadPage(url, get, post, deleteContent){
 			_('main-loading').style.display = 'none';
 			_('main-content').jsFill(response);
 
-			if(window.resetAllInstantSearches)
-				resetAllInstantSearches();
-
 			resize();
 			if (_('results-table'))
 				tableEvents();
@@ -1078,6 +1075,10 @@ function initalizeEmptyForm(){
 
 function monitorFields(){
 	var form = _('adminForm');
+
+	if(window.resetAllInstantSearches)
+		resetAllInstantSearches();
+
 	for(var i in form.elements){
 		if(!form.elements.hasOwnProperty(i)) continue;
 		var f = form.elements[i];
