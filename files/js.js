@@ -1073,7 +1073,13 @@ function initalizeEmptyForm(){
 		return false;
 
 	for(var i = 0, f; f = form.elements[i++];) {
-		f.setValue(f.getValue());
+		var fieldValue = f.getValue();
+		if(typeof fieldValue==='object')
+			fieldValue = null;
+		if(!fieldValue && _('[data-filter="'+f.name+'"]')){
+			fieldValue = _('[data-filter="'+f.name+'"]').getValue();
+		}
+		f.setValue(fieldValue);
 	}
 
 	return true;
