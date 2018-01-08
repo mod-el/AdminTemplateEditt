@@ -899,12 +899,12 @@ function search(forcePage){
 		if(v==='')
 			return;
 
-		switch(el.dataset.filter){
+		switch(el.getAttribute('data-filter-type')){
 			case 'custom':
-				var f = [el.name, v];
+				var f = [el.getAttribute('data-filter'), v];
 				break;
 			default:
-				var f = [el.name, el.dataset.filter, v];
+				var f = [el.getAttribute('data-filter'), el.getAttribute('data-filter-type'), v];
 				break;
 		}
 		filters.push(f);

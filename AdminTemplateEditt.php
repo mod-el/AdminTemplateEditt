@@ -551,7 +551,8 @@ class AdminTemplateEditt extends Module {
 		foreach($filtersArr as $k=>$t){
 			if(isset($customFilters[$k])){
 				$datum = $form->add($customFilters[$k]);
-				$datum->options['attributes']['data-filter'] = isset($datum->options['admin-type']) ? $datum->options['admin-type'] : 'custom';
+				$datum->options['attributes']['data-filter'] = $k;
+				$datum->options['attributes']['data-filter-type'] = isset($datum->options['admin-type']) ? $datum->options['admin-type'] : 'custom';
 				$datum->options['attributes']['data-default'] = (string) $datum->options['default'];
 				if(isset($values[$k]))
 					$datum->setValue($values[$k]);
@@ -560,8 +561,10 @@ class AdminTemplateEditt extends Module {
 			}else{
 				$fieldOptions = [
 					'attributes' => [
-						'data-filter' => $t,
+                        'data-filter' => $k,
+						'data-filter-type' => $t,
 						'data-default' => '',
+                        'name' => 'f-'.$k,
 					],
 					'default' => null,
 					'admin-type' => $t,
@@ -569,7 +572,8 @@ class AdminTemplateEditt extends Module {
 
 				if($k==='all'){
 					$fieldOptions['label'] = 'Ricerca generale';
-					$fieldOptions['attributes']['data-filter'] = 'custom';
+					$fieldOptions['attributes']['data-filter'] = 'all';
+					$fieldOptions['attributes']['data-filter-type'] = 'custom';
 				}
 
 				if($t==='range'){
