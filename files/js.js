@@ -920,7 +920,7 @@ function search(forcePage){
 	get = changeGetParameter(get, 'p', forcePage);
 	get = changeGetParameter(get, 'filters', JSON.stringify(filters));
 
-	return loadPage(adminPrefix+currentAdminPage, get);
+	return loadPage(adminPrefix+currentAdminPage.split('/')[0], get);
 }
 
 function filtersReset(){
