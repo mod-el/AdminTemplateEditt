@@ -496,7 +496,9 @@ function loadPageAids(request, get){
 						case 'checkbox':
 						case 'radio':
 						case 'hidden':
-							el.addEventListener('change', search);
+							el.addEventListener('change', function(){
+								search();
+							});
 							break;
 						default:
 							el.addEventListener('keyup', function(event){
@@ -515,7 +517,9 @@ function loadPageAids(request, get){
 					}
 					break;
 				default:
-					el.addEventListener('change', search);
+					el.addEventListener('change', function(){
+						search();
+					});
 					break;
 			}
 		});
