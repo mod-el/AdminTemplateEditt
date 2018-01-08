@@ -460,6 +460,7 @@ class AdminTemplateEditt extends Module {
 	 *
 	 * @param bool $arr
 	 * @return array
+	 * @throws \Model\Core\Exception
 	 */
 	public function getFiltersForms($arr = false){
 		$defaults = [
@@ -509,6 +510,7 @@ class AdminTemplateEditt extends Module {
 	 * @param array $filtersSet
 	 * @param bool $arr
 	 * @return Form|array
+	 * @throws \Model\Core\Exception
 	 */
 	private function getFiltersForm($name, array $default = [], array $filtersSet = [], $arr = false){
 		$filtersArr = null;
