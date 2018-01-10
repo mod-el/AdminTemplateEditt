@@ -9,7 +9,6 @@ var selectedRows = [];
 var holdingRowsSelection = null;
 var searchCounter = 0;
 var pageLoadingHash = '';
-var elementCallback = null;
 
 var dataCache = {'data': {}, 'children': []};
 
@@ -989,7 +988,8 @@ function loadElement(page, id, history_push){
 	if(typeof history_push==='undefined')
 		history_push = true;
 
-	elementCallback = null;
+	if(typeof elementCallback!=='undefined')
+		elementCallback = null;
 	dataCache = {'data': {}, 'children': []};
 
 	if(id){
@@ -1748,7 +1748,7 @@ function moveBetweenRows(checkbox, keyCode){
 }
 
 function callElementCallback(){
-	if(elementCallback){
+	if(typeof elementCallback!=='undefined' && elementCallback){
 		elementCallback.call();
 		elementCallback = null;
 	}
