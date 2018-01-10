@@ -1035,33 +1035,36 @@ function fillAdminForm(data){
 
 	var promises = [];
 
-	for(var name in data.children){
+	for(let name in data.children){
 		if(!data.children.hasOwnProperty(name))
 			continue;
 
-		var list = data.children[name];
+		var primary = data.children[name].primary;
+		var list = data.children[name].list;
 
 		name = name.split('-');
 
-		for(var id in list){
-			if(!list.hasOwnProperty(id))
+		for(let idx in list){
+			if(!list.hasOwnProperty(idx))
 				continue;
 
-			promises.push(sublistAddRow(name[0], name[1], id, false).then((function(list, id, name){
+			let id = list[idx][primary];
+
+			promises.push(sublistAddRow(name[0], name[1], id, false).then((function(el, id, name){
 				return function(){
-					for(var k in list[id]){
-						if(!list[id].hasOwnProperty(k))
+					for(let k in el){
+						if(!el.hasOwnProperty(k))
 							continue;
 
 						var form_k = 'ch-'+k+'-'+name[0]+'-'+id;
 						if(typeof form[form_k]!=='undefined')
-							form[form_k].setValue(list[id][k], false);
+							form[form_k].setValue(el[k], false);
 						var column_cont = _('#cont-ch-'+name[1]+'-'+id+' [data-custom="'+k+'"]');
 						if(column_cont)
-							column_cont.innerHTML = list[id][k];
+							column_cont.innerHTML = el[k];
 					}
 				};
-			})(list, id, name)));
+			})(list[idx], id, name)));
 		}
 	}
 
