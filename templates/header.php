@@ -16,6 +16,7 @@ $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
     <script>
 		var maxMenuWidth = <?=$maxMenuWidth?>;
 		var adminPrefix = <?=json_encode($this->model->_Admin->getUrlPrefix())?>;
+		var elementCallback = null;
     </script>
     <style>
         body{
