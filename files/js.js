@@ -988,8 +988,7 @@ function loadElement(page, id, history_push){
 	if(typeof history_push==='undefined')
 		history_push = true;
 
-	if(typeof elementCallback!=='undefined')
-		elementCallback = null;
+	elementCallback = null;
 	dataCache = {'data': {}, 'children': []};
 
 	if(id){
@@ -1751,7 +1750,7 @@ function moveBetweenRows(checkbox, keyCode){
 }
 
 function callElementCallback(){
-	if(typeof elementCallback!=='undefined' && elementCallback){
+	if(elementCallback){
 		elementCallback.call();
 		elementCallback = null;
 	}
