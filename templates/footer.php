@@ -8,6 +8,8 @@
 
 </body>
 
+<link rel="stylesheet" type="text/css" href="<?=PATH?>model/AdminTemplateEditt/files/style.css" />
+
 [:foot]
 
 </html>

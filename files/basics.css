@@ -1,0 +1,78 @@
+@import url('https://use.fontawesome.com/releases/v5.0.1/css/all.css');
+@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+html, body{
+	font-size: 14px;
+	height: 100%;
+	margin: 0;
+}
+
+body{
+	background-color: #f2f2f2;
+	color: #333;
+	font-family: 'Lato', sans-serif;
+}
+
+img{
+	border: 0;
+	vertical-align: middle;
+}
+
+a:link, a:visited{
+	color: #1C8BB7;
+	text-decoration: none;
+}
+
+#header{
+	width: 100%;
+	height: 45px;
+	padding: 3px 0;
+	line-height: 39px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	background: #000 url('img/bg-header.png') center repeat-x;
+	white-space: nowrap;
+}
+
+#header a:link, #header a:visited{
+	color: #FFF;
+}
+
+#header > div > div{
+	display: inline-block;
+	color: #FFF;
+	padding: 0 10px;
+	font-family: 'Raleway', sans-serif;
+}
+
+.tasti-right{
+	float: right;
+}
+
+.tasti-right > div{
+	border-right: solid #666 1px;
+}
+
+.tasti-right > div:last-of-type{
+	border-right: none;
+}
+
+.tasto-header:link, .tasto-header:visited{
+	color: #FFF;
+	display: inline-block;
+}
+
+#header a.tasto-header:hover{
+	color: #cdcc08;
+}
+
+#main-grid{
+	white-space: nowrap;
+	position: relative;
+}
+
+#main-grid > *{
+	white-space: normal;
+}
