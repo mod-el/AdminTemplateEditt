@@ -13,7 +13,7 @@
 	},
 	"is-admin-template": true,
 	"css": [
-		"files/style.css"
+		"files/basics.css"
 	],
 	"js": [
 		"files/js.js"

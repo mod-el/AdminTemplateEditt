@@ -19,37 +19,12 @@ $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
 		var elementCallback = null;
     </script>
     <style>
-        body{
-            background-color: #f2f2f2;
-            color: #333;
-            font-family: 'Lato', sans-serif;
-        }
-
-        #header{
-            width: 100%;
-            height: 45px;
-            padding: 3px 0;
-            line-height: 39px;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-            background: #000 url('<?=PATH?>model/AdminTemplateEditt/files/img/bg-header.png') center repeat-x;
-            white-space: nowrap;
-        }
-
-        #header a:link, #header a:visited{
-            color: #FFF;
-        }
-
-        #header > div > div{
-            display: inline-block;
-            color: #FFF;
-            padding: 0 10px;
-            font-family: 'Raleway', sans-serif;
-        }
-
         #main-menu {
             max-width: <?=$maxMenuWidth?>px;
+        }
+
+        #main-grid{
+            display: none;
         }
     </style>
 </head>
@@ -80,8 +55,6 @@ $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
         </div>
     </header>
 
-    <a href="#" onclick="switchMenu(); return false"><img src="<?=PATH?>model/AdminTemplateEditt/files/img/open-menu.png" alt="" id="img-open-menu"<?php if($hideMenu!='always'){ ?> style="opacity: 0"<?php } ?> /></a>
-
     <div id="filtersForm" style="display: none">
         <div class="pad5v no-overflow">
             <div class="right">
@@ -93,6 +66,10 @@ $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
         </div>
         <div id="filtersFormCont"></div>
     </div>
+
+    <link rel="stylesheet" type="text/css" href="<?=PATH?>model/AdminTemplateEditt/files/menu.css" />
+
+    <a href="#" onclick="switchMenu(); return false"><img src="<?=PATH?>model/AdminTemplateEditt/files/img/open-menu.png" alt="" id="img-open-menu"<?php if($hideMenu!='always'){ ?> style="opacity: 0"<?php } ?> /></a>
 
     <div class="grid" id="main-grid">
         <div id="main-menu" data-hide="<?=$hideMenu?>">
