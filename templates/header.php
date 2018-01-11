@@ -18,6 +18,7 @@ $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
 		var adminPrefix = <?=json_encode($this->model->_Admin->getUrlPrefix())?>;
 		var elementCallback = null;
     </script>
+    <link rel="stylesheet" type="text/css" href="<?=PATH?>model/AdminTemplateEditt/files/basics.css" />
     <style>
         #main-menu {
             max-width: <?=$maxMenuWidth?>px;
