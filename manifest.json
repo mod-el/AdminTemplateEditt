@@ -12,9 +12,7 @@
 		"WebAppManifest": ">=0.1.0"
 	},
 	"is-admin-template": true,
-	"css": [
-		"files/basics.css"
-	],
+	"css": [],
 	"js": [
 		"files/js.js"
 	],
