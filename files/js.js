@@ -1030,48 +1030,65 @@ function fillAdminForm(data){
 		throw 'Error in loading element';
 	}
 
-	form.fill(data.data, false, 'filled');
+	return form.fill(data.data, false, 'filled').then(() => {
+		let promises = [];
 
-	var promises = [];
-
-	for(let name in data.children){
-		if(!data.children.hasOwnProperty(name))
-			continue;
-
-		let primary = data.children[name].primary;
-		let list = data.children[name].list;
-
-		name = name.split('-');
-
-		for(let idx in list){
-			if(!list.hasOwnProperty(idx))
+		for(let name in data.children){
+			if(!data.children.hasOwnProperty(name))
 				continue;
 
-			let id = list[idx][primary];
+			let primary = data.children[name].primary;
+			let list = data.children[name].list;
 
-			promises.push(sublistAddRow(name[0], name[1], id, false).then((function(el, id, name){
-				return function(){
-					for(let k in el){
-						if(!el.hasOwnProperty(k))
-							continue;
+			name = name.split('-');
 
-						let form_k = 'ch-'+k+'-'+name[0]+'-'+id;
-						if(typeof form[form_k]!=='undefined')
-							form[form_k].setValue(el[k], false).then((field => {
-								return () => field.setAttribute('data-filled', '1');
-							})(form[form_k]));
-						let column_cont = _('#cont-ch-'+name[1]+'-'+id+' [data-custom="'+k+'"]');
-						if(column_cont)
-							column_cont.innerHTML = el[k];
-					}
-				};
-			})(list[idx], id, name)));
+			for(let idx in list){
+				if(!list.hasOwnProperty(idx))
+					continue;
+
+				let id = list[idx][primary];
+
+				promises.push(sublistAddRow(name[0], name[1], id, false).then(((el, id, name) => {
+					return () => {
+						let promises = [];
+
+						for(let k in el){
+							if(!el.hasOwnProperty(k))
+								continue;
+
+							let form_k = 'ch-'+k+'-'+name[0]+'-'+id;
+
+							let column_cont = _('#cont-ch-'+name[1]+'-'+id+' [data-custom="'+k+'"]');
+							if(column_cont)
+								column_cont.innerHTML = el[k];
+
+							if(typeof el[k]==='object'){
+								for(let lang in el[k]){
+									if(typeof form[form_k+'-'+lang]!=='undefined'){
+										promises.push(form[form_k+'-'+lang].setValue(el[k][lang], false).then((field => {
+											return () => field.setAttribute('data-filled', '1');
+										})(form[form_k+'-'+lang])));
+									}
+								}
+							}else{
+								if(typeof form[form_k]!=='undefined'){
+									promises.push(form[form_k].setValue(el[k], false).then((field => {
+										return () => field.setAttribute('data-filled', '1');
+									})(form[form_k])));
+								}
+							}
+						}
+
+						return Promise.all(promises);
+					};
+				})(list[idx], id, name)));
+			}
 		}
-	}
 
-	form.dataset.filled = '1';
+		form.dataset.filled = '1';
 
-	return Promise.all(promises);
+		return Promise.all(promises);
+	});
 }
 
 function initalizeEmptyForm(){
