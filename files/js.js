@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', function() {
 		tableEvents();
 
 	if(_('sId'))
-		sId = _('sId').getValue();
+		sId = _('sId').getValue(true);
 
 	if(currentAdminPage){
 		_('main-loading').style.display = 'none';
@@ -649,8 +649,8 @@ function tableEvents(){
 		});
 	});
 
-	sortedBy = JSON.parse(_('sortedBy').getValue());
-	currentPage = _('currentPage').getValue();
+	sortedBy = JSON.parse(_('sortedBy').getValue(true));
+	currentPage = _('currentPage').getValue(true);
 }
 
 function changeSorting(event, column){
@@ -900,7 +900,7 @@ function search(forcePage){
 
 	var filters = [];
 	document.querySelectorAll('[data-filter]').forEach(function(el){
-		var v = el.getValue();
+		var v = el.getValue(true);
 		if(v==='')
 			return;
 
@@ -1038,8 +1038,8 @@ function fillAdminForm(data){
 		if(!data.children.hasOwnProperty(name))
 			continue;
 
-		var primary = data.children[name].primary;
-		var list = data.children[name].list;
+		let primary = data.children[name].primary;
+		let list = data.children[name].list;
 
 		name = name.split('-');
 
@@ -1055,10 +1055,12 @@ function fillAdminForm(data){
 						if(!el.hasOwnProperty(k))
 							continue;
 
-						var form_k = 'ch-'+k+'-'+name[0]+'-'+id;
+						let form_k = 'ch-'+k+'-'+name[0]+'-'+id;
 						if(typeof form[form_k]!=='undefined')
-							form[form_k].setValue(el[k], false);
-						var column_cont = _('#cont-ch-'+name[1]+'-'+id+' [data-custom="'+k+'"]');
+							form[form_k].setValue(el[k], false).then((field => {
+								return () => field.setAttribute('data-filled', '1');
+							})(form[form_k]));
+						let column_cont = _('#cont-ch-'+name[1]+'-'+id+' [data-custom="'+k+'"]');
 						if(column_cont)
 							column_cont.innerHTML = el[k];
 					}
@@ -1077,28 +1079,36 @@ function initalizeEmptyForm(){
 	if(!form)
 		return false;
 
-	for(var i = 0, f; f = form.elements[i++];) {
-		var fieldValue = f.getValue();
-		if(typeof fieldValue==='object')
-			fieldValue = null;
-		if(!fieldValue && _('[data-filter="'+f.name+'"]')){
-			fieldValue = _('[data-filter="'+f.name+'"]').getValue();
-		}
-		f.setValue(fieldValue);
+	var promises = [];
+
+	for(let i = 0, f; f = form.elements[i++];) {
+		promises.push(f.getValue().then((function(name){
+			return function(fieldValue){
+				if(!fieldValue && _('[data-filter="'+name+'"]'))
+					return _('[data-filter="'+name+'"]').getValue();
+				return fieldValue;
+			}
+		})(f.name)).then((function(f){
+			return function(fieldValue){
+				return f.setValue(fieldValue);
+			};
+		})(f)));
 	}
 
-	return true;
+	return Promise.all(promises);
 }
 
 function monitorFields(){
 	var form = _('adminForm');
 
-	for(var i in form.elements){
+	for(let i in form.elements){
 		if(!form.elements.hasOwnProperty(i)) continue;
 		var f = form.elements[i];
 		if(!f.name || f.name==='fakeusernameremembered' || f.name==='fakepasswordremembered')
 			continue;
 
+		if(!f.getAttribute('data-filled'))
+			continue;
 		if(f.getAttribute('data-monitored'))
 			continue;
 
@@ -1116,15 +1126,15 @@ function monitorFields(){
 
 		f.setAttribute('data-monitored', '1');
 
-		f.addEventListener('change', function(e){
-			changedMonitoredField(this);
-		});
+		if(f.type!=='file'){ // Files fields are complex structure, thus are not supported in the changes history
+			f.addEventListener('change', function(e){
+				changedMonitoredField(this);
+			});
 
-		var v = f.getValue();
-		if(typeof v==='object') // Probably file inputs, not handled in history
-			continue;
-
-		f.setAttribute('data-default-value', v);
+			f.getValue().then((f => {
+				return (v => f.setAttribute('data-default-value', v));
+			})(f));
+		}
 	}
 	return true;
 }
@@ -1137,26 +1147,21 @@ function changedMonitoredField(f){
 		old = changedValues[f.name];
 	}
 
-	var v = f.getValue();
+	f.getValue().then(((old, f) => {
+		return v => {
+			changedValues[f.name] = v;
 
-	if(typeof v==='object') { // Probably file inputs, not handled in history (I just store the new file value)
-		v.then(function(file){
-			changedValues[f.name] = file;
-		});
-		return;
-	}
+			changeHistory.push({
+				'field': f.name,
+				'old': old,
+				'new': v
+			});
 
-	changedValues[f.name] = v;
+			canceledChanges = [];
 
-	changeHistory.push({
-		'field': f.name,
-		'old': old,
-		'new': v
-	});
-
-	canceledChanges = [];
-
-	rebuildHistoryBox();
+			rebuildHistoryBox();
+		};
+	})(old, f));
 }
 
 function rebuildHistoryBox(){
@@ -1347,7 +1352,7 @@ function save(){
 
 		var form = _('adminForm');
 		var savingValues = {};
-		for(var k in changedValues){
+		for(let k in changedValues){
 			if(form[k].getAttribute('data-multilang') && typeof savingValues[k]==='undefined'){
 				if(typeof savingValues[form[k].getAttribute('data-multilang')]==='undefined')
 					savingValues[form[k].getAttribute('data-multilang')] = {};
@@ -1407,86 +1412,87 @@ function inPageMessage(text, className){
 }
 
 function instantSave(id, f, field){
-	var riga = _('.results-table-row[data-id="'+id+'"]');
-	if(!riga)
-		return false;
-
-	var v = field.getValue();
 	field.style.opacity = 0.2;
 
-	var ids = [];
-	document.querySelectorAll('.results-table-row[data-id]').forEach(function(r){
-		ids.push(r.getAttribute('data-id'));
-	});
+	return field.getValue().then(((id, f, field) => {
+		return v => {
+			let ids = [];
+			document.querySelectorAll('.results-table-row[data-id]').forEach(function(r){
+				ids.push(r.getAttribute('data-id'));
+			});
 
-	var request = currentAdminPage.split('/');
+			let saving = {};
+			saving[f] = v;
 
-	var saving = {};
-	saving[f] = v;
+			let riga = _('.results-table-row[data-id="'+id+'"]');
+			if(!riga)
+				return false;
 
-	ajax(adminPrefix+request[0]+'/save/'+id, 'instant='+encodeURIComponent(ids.join(',')), 'c_id='+c_id+'&data='+encodeURIComponent(JSON.stringify(saving))).then(function(r){
-		if(typeof r!='object'){
-			alert(r);
-			field.style.display = 'none';
-		}else if(typeof r.err!='undefined'){
-			alert(r.err);
-			field.style.display = 'none';
-		}else if(r.status!='ok'){
-			alert('Error');
-			field.style.display = 'none';
-		}else{
-			field.style.opacity = 1;
+			let n = parseInt(riga.getAttribute('data-n'));
+			if(_('instant-'+(n+1)+'-'+f)){
+				_('instant-'+(n+1)+'-'+f).focus();
+				_('instant-'+(n+1)+'-'+f).select();
+			}
 
-			for(var id in r.changed){
-				var el = r.changed[id];
+			return ajax(adminPrefix+(currentAdminPage.split('/'))[0]+'/save/'+id, 'instant='+encodeURIComponent(ids.join(',')), 'c_id='+c_id+'&data='+encodeURIComponent(JSON.stringify(saving))).then(function(r){
+				if(typeof r!='object'){
+					alert(r);
+					field.style.display = 'none';
+				}else if(typeof r.err!='undefined'){
+					alert(r.err);
+					field.style.display = 'none';
+				}else if(r.status!='ok'){
+					alert('Error');
+					field.style.display = 'none';
+				}else{
+					field.style.opacity = 1;
 
-				var row = _('.results-table-row[data-id="'+id+'"]');
-				if(!row)
-					return;
+					for(let id in r.changed){
+						var el = r.changed[id];
 
-				if(el.background)
-					row.style.background = el.background;
-				else
-					row.style.background = '';
+						var row = _('.results-table-row[data-id="'+id+'"]');
+						if(!row)
+							return;
 
-				if(el.color)
-					row.style.color = el.color;
-				else
-					row.style.color = '';
+						if(el.background)
+							row.style.background = el.background;
+						else
+							row.style.background = '';
 
-				for(var k in el.columns){
-					var cell = row.querySelector('[data-column="'+k+'"]');
-					if(!cell)
-						continue;
+						if(el.color)
+							row.style.color = el.color;
+						else
+							row.style.color = '';
 
-					var c = el.columns[k];
+						for(let k in el.columns){
+							var cell = row.querySelector('[data-column="'+k+'"]');
+							if(!cell)
+								continue;
 
-					if(c.background)
-						cell.style.background = c.background;
-					else
-						cell.style.background = '';
+							var c = el.columns[k];
 
-					if(c.color)
-						cell.style.color = c.color;
-					else
-						cell.style.color = '';
+							if(c.background)
+								cell.style.background = c.background;
+							else
+								cell.style.background = '';
 
-					if(cell.hasClass('editable-cell')){
-						var f = cell.querySelector('input, select, textarea');
-						f.setValue(c.value, false);
-					}else{
-						cell.firstElementChild.innerHTML = c.text;
+							if(c.color)
+								cell.style.color = c.color;
+							else
+								cell.style.color = '';
+
+							if(cell.hasClass('editable-cell')){
+								var f = cell.querySelector('input, select, textarea');
+								f.setValue(c.value, false);
+							}else{
+								cell.firstElementChild.innerHTML = c.text;
+							}
+						}
 					}
 				}
-			}
-		}
-	});
-
-	var n = parseInt(riga.getAttribute('data-n'));
-	if(_('instant-'+(n+1)+'-'+f)){
-		_('instant-'+(n+1)+'-'+f).focus();
-		_('instant-'+(n+1)+'-'+f).select();
-	}
+			});
+		};
+	})(id, f, field));
 }
 
 function allInOnePage(){
@@ -1710,7 +1716,7 @@ function loadSubPage(cont_name, p){
 }
 
 function holdRowsSelection(checkbox){
-	if(checkbox.getValue())
+	if(checkbox.getValue(true))
 		holdingRowsSelection = 0;
 	else
 		holdingRowsSelection = 1;
