@@ -19,5 +19,7 @@ if(!isset($_GET['print'])){
 
 <form action="" method="post" id="adminForm" name="adminForm" onsubmit="save(); return false" data-filled="0">
 	<!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
-	<input style="display:none" type="text" name="fakeusernameremembered"/>
-	<input style="display:none" type="password" name="fakepasswordremembered"/>
+	<input style="display:none" type="text" name="fakeusernameremembered" />
+	<input style="display:none" type="password" name="fakepasswordremembered" />
+
+    <input type="hidden" name="_model_version" value="1" />

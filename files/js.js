@@ -1346,8 +1346,6 @@ function save(){
 	}
 	resize();
 
-	var request = currentAdminPage.split('/');
-
 	setLoadingBar(0);
 
 	return new Promise(function(resolve){
@@ -1355,7 +1353,9 @@ function save(){
 			resolve();
 		}, 200);
 	}).then(function(){
-		var url, history_push;
+		let url;
+		let request = currentAdminPage.split('/');
+		var history_push;
 
 		if(typeof request[2]!=='undefined'){
 			// I am editing an existing element
@@ -1367,8 +1367,8 @@ function save(){
 			history_push = true;
 		}
 
-		var form = _('adminForm');
-		var savingValues = {};
+		let form = _('adminForm');
+		let savingValues = {};
 		for(let k in changedValues){
 			if(form[k].getAttribute('data-multilang') && typeof savingValues[k]==='undefined'){
 				if(typeof savingValues[form[k].getAttribute('data-multilang')]==='undefined')
@@ -1379,18 +1379,25 @@ function save(){
 			}
 		}
 
-		return ajax(url, '', 'c_id='+c_id+'&data='+encodeURIComponent(JSON.stringify(savingValues)), {
+		let version_lock = '';
+		if(typeof form['_model_version']!=='undefined')
+			version_lock = '&version='+encodeURIComponent(form['_model_version'].getValue(true));
+
+		return ajax(url, '', 'c_id='+c_id+'&data='+encodeURIComponent(JSON.stringify(savingValues))+version_lock, {
 			'onprogress': function(event){
+				let percentage;
 				if(event.total===0){
-					var percentage = 0;
+					percentage = 0;
 				}else{
-					var percentage = Math.round(event.loaded / event.total * 100);
+					percentage = Math.round(event.loaded / event.total * 100);
 				}
 
 				setLoadingBar(percentage);
 			}
 		}).then(function(r){
 			setLoadingBar(0);
+
+			let request = currentAdminPage.split('/');
 
 			saving = false;
 			if(_('#toolbar-button-save img'))
@@ -1407,12 +1414,10 @@ function save(){
 				return false;
 			}
 			if(r.status==='ok'){
-				request[2] = r.id;
-
-				return loadElement(request[0], request[2], history_push).then(function(){
+				return loadElement(request[0], r.id, history_push).then(function(){
 					inPageMessage('Salvataggio correttamente effettuato.', 'green-message');
 				});
-			}else if(typeof r.err!='undefined'){
+			}else if(typeof r.err!=='undefined'){
 				alert(r.err);
 			}else{
 				alert('Generic error');
