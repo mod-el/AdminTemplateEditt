@@ -1143,11 +1143,11 @@ function monitorFields(){
 
 		f.setAttribute('data-monitored', '1');
 
-		if(f.type!=='file'){ // Files fields are complex structure, thus are not supported in the changes history
-			f.addEventListener('change', function(e){
-				changedMonitoredField(this);
-			});
+		f.addEventListener('change', function(e){
+			changedMonitoredField(this);
+		});
 
+		if(f.type!=='file'){ // Files fields are complex structure, thus are not supported in the changes history
 			f.getValue().then((f => {
 				return (v => f.setAttribute('data-default-value', v));
 			})(f));
@@ -1168,15 +1168,17 @@ function changedMonitoredField(f){
 		return v => {
 			changedValues[f.name] = v;
 
-			changeHistory.push({
-				'field': f.name,
-				'old': old,
-				'new': v
-			});
+			if(f.type!=='file') { // Files fields are complex structure, thus are not supported in the changes history
+				changeHistory.push({
+					'field': f.name,
+					'old': old,
+					'new': v
+				});
 
-			canceledChanges = [];
+				canceledChanges = [];
 
-			rebuildHistoryBox();
+				rebuildHistoryBox();
+			}
 		};
 	})(old, f));
 }
