@@ -19,40 +19,40 @@ var changedValues = {};
 var changeHistory = [];
 var canceledChanges = [];
 
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', function () {
 	currentAdminPage = document.location.pathname.substr(adminPrefix.length);
 	var request = currentAdminPage.split('/');
 
-	if(history.replaceState)
-		history.replaceState({'request':request}, '', document.location);
+	if (history.replaceState)
+		history.replaceState({'request': request}, '', document.location);
 
-	if(_('results-table'))
+	if (_('results-table'))
 		tableEvents();
 
-	if(_('sId'))
+	if (_('sId'))
 		sId = _('sId').getValue(true);
 
-	if(currentAdminPage){
+	if (currentAdminPage) {
 		_('main-loading').style.display = 'none';
 		openMenuToRequest(request);
 		loadPageAids(request);
 
-		if(_('adminForm') && _('adminForm').dataset.filled==='0'){
-			checkSubPages().then(function(){
-				if(request[2]){
+		if (_('adminForm') && _('adminForm').dataset.filled === '0') {
+			checkSubPages().then(function () {
+				if (request[2]) {
 					loadElementData(request[0], request[2]).then(fillAdminForm).then(callElementCallback).then(monitorFields).catch(reportAdminError);
-				}else{
+				} else {
 					initalizeEmptyForm();
 					monitorFields();
 				}
 			});
-		}else{
+		} else {
 			callElementCallback();
 		}
 	}
 });
 
-window.addEventListener('load', function(){
+window.addEventListener('load', function () {
 	resize();
 	window.addEventListener('resize', function () {
 		resize();
@@ -60,31 +60,31 @@ window.addEventListener('load', function(){
 });
 
 if ('serviceWorker' in navigator) {
-	window.addEventListener('load', function() {
-		navigator.serviceWorker.register(adminPrefix + 'sw.js').then(function(registration) {
+	window.addEventListener('load', function () {
+		navigator.serviceWorker.register(adminPrefix + 'sw.js').then(function (registration) {
 			// Registration was successful
 			console.log('ServiceWorker registration successful with scope: ', registration.scope);
-		}, function(err) {
+		}, function (err) {
 			// registration failed :(
 			console.log('ServiceWorker registration failed: ', err);
 		});
 	});
 }
 
-window.onpopstate = function(event){
+window.onpopstate = function (event) {
 	var s = event.state;
-	if(typeof s['request']!=='undefined'){
-		if(s['request'].join('/')===currentAdminPage && typeof s['p']!=='undefined'){
+	if (typeof s['request'] !== 'undefined') {
+		if (s['request'].join('/') === currentAdminPage && typeof s['p'] !== 'undefined') {
 			goToPage(s['p'], false);
-		}else{
+		} else {
 			var get = '';
-			if(typeof s['sId']!=='undefined')
+			if (typeof s['sId'] !== 'undefined')
 				get = changeGetParameter(get, 'sId', s['sId']);
 
-			if(s['request'][1]==='edit'){
+			if (s['request'][1] === 'edit') {
 				loadElement(s['request'][0], s['request'][2], false);
-			}else{
-				if(typeof s['p']!=='undefined')
+			} else {
+				if (typeof s['p'] !== 'undefined')
 					get = changeGetParameter(get, 'p', s['p']);
 				loadAdminPage(s['request'], get, false, false);
 			}
@@ -92,16 +92,16 @@ window.onpopstate = function(event){
 	}
 };
 
-window.addEventListener('keydown', function(event){
-	switch(event.keyCode){
+window.addEventListener('keydown', function (event) {
+	switch (event.keyCode) {
 		case 90: // CTRL+Z
-			if(event.ctrlKey){
+			if (event.ctrlKey) {
 				historyStepBack();
 				event.preventDefault();
 			}
 			break;
 		case 89: // CTRL+Y
-			if(event.ctrlKey){
+			if (event.ctrlKey) {
 				historyStepForward();
 				event.preventDefault();
 			}
@@ -110,19 +110,19 @@ window.addEventListener('keydown', function(event){
 	}
 });
 
-window.addEventListener('mouseup', function(event){
+window.addEventListener('mouseup', function (event) {
 	releaseRowsSelection();
 });
 
 /*
  Opens or close a menu group
  */
-function switchMenuGroup(id){
-	var tasto = _('menu-group-'+id);
-	var cont = _('menu-group-'+id+'-cont');
-	if(tasto.hasClass('selected')) {
+function switchMenuGroup(id) {
+	var tasto = _('menu-group-' + id);
+	var cont = _('menu-group-' + id + '-cont');
+	if (tasto.hasClass('selected')) {
 		closeMenuGroup(tasto, cont);
-	}else{
+	} else {
 		openMenuGroup(tasto, cont);
 	}
 }
@@ -130,11 +130,11 @@ function switchMenuGroup(id){
 /*
  Opens a menu group
  */
-function openMenuGroup(tasto, cont){
+function openMenuGroup(tasto, cont) {
 	tasto.addClass('selected');
-	if(cont){
-		cont.style.height = cont.firstElementChild.offsetHeight+'px';
-		setTimeout(function(){
+	if (cont) {
+		cont.style.height = cont.firstElementChild.offsetHeight + 'px';
+		setTimeout(function () {
 			cont.style.height = 'auto';
 		}, 500);
 	}
@@ -143,13 +143,13 @@ function openMenuGroup(tasto, cont){
 /*
  Closes a menu group
  */
-function closeMenuGroup(tasto, cont){
+function closeMenuGroup(tasto, cont) {
 	tasto.removeClass('selected');
-	if(cont){
-		if(cont.style.height=='0px')
+	if (cont) {
+		if (cont.style.height == '0px')
 			return;
 		cont.addClass('no-transition');
-		cont.style.height = cont.firstElementChild.offsetHeight+'px';
+		cont.style.height = cont.firstElementChild.offsetHeight + 'px';
 		cont.offsetHeight; // Reflow
 		cont.removeClass('no-transition');
 		cont.style.height = '0px';
@@ -160,12 +160,12 @@ function closeMenuGroup(tasto, cont){
 /*
  Closes all menu groups except for the ones provided in the first argument
  */
-function closeAllMenuGroups(except){
-	if(typeof except=='undefined')
+function closeAllMenuGroups(except) {
+	if (typeof except == 'undefined')
 		except = [];
-	document.querySelectorAll('.main-menu-sub, .main-menu-tasto').forEach(function(tasto){
-		if(!in_array(tasto.getAttribute('data-menu-id'), except)){
-			var cont = _('.main-menu-cont[data-menu-id="'+tasto.getAttribute('data-menu-id')+'"]');
+	document.querySelectorAll('.main-menu-sub, .main-menu-tasto').forEach(function (tasto) {
+		if (!in_array(tasto.getAttribute('data-menu-id'), except)) {
+			var cont = _('.main-menu-cont[data-menu-id="' + tasto.getAttribute('data-menu-id') + '"]');
 			closeMenuGroup(tasto, cont);
 		}
 	});
@@ -174,23 +174,23 @@ function closeAllMenuGroups(except){
 /*
  Open the menù pages selecting a specific link
  */
-function openMenuTo(id){
-	var tasto = _('menu-group-'+id);
-	if(!tasto)
+function openMenuTo(id) {
+	var tasto = _('menu-group-' + id);
+	if (!tasto)
 		return false;
 
 	var toOpen = [];
 	var div = tasto;
-	while(div){
-		if(typeof div.getAttribute!=='undefined' && div.getAttribute('data-menu-id')!==null)
+	while (div) {
+		if (typeof div.getAttribute !== 'undefined' && div.getAttribute('data-menu-id') !== null)
 			toOpen.push(div.getAttribute('data-menu-id'));
 		div = div.parentNode;
 	}
 
 	closeAllMenuGroups(toOpen);
-	toOpen.forEach(function(id){
-		var tasto = _('menu-group-'+id);
-		var cont = _('menu-group-'+id+'-cont');
+	toOpen.forEach(function (id) {
+		var tasto = _('menu-group-' + id);
+		var cont = _('menu-group-' + id + '-cont');
 		openMenuGroup(tasto, cont);
 	});
 }
@@ -198,147 +198,147 @@ function openMenuTo(id){
 /*
  Given a specific request, opens the left menu to the appropriate button
  */
-function openMenuToRequest(request){
-	var button = document.querySelector('.main-menu-tasto[href="'+adminPrefix+request[0]+'"], .main-menu-sub[href="'+adminPrefix+request[0]+'"]');
-	if(button)
+function openMenuToRequest(request) {
+	var button = document.querySelector('.main-menu-tasto[href="' + adminPrefix + request[0] + '"], .main-menu-sub[href="' + adminPrefix + request[0] + '"]');
+	if (button)
 		openMenuTo(button.getAttribute('data-menu-id'));
 }
 
 /*
  Resizes page dynamic components, called on page open and at every resize
  */
-function resize(menu){
-	if(!_('main-grid') || !_('main-menu'))
+function resize(menu) {
+	if (!_('main-grid') || !_('main-menu'))
 		return;
 
 	var hHeight = _('header').offsetHeight;
-	_('main-grid').style.height = 'calc(100% - '+(hHeight+4)+'px)';
+	_('main-grid').style.height = 'calc(100% - ' + (hHeight + 4) + 'px)';
 	var tHeight = _('toolbar').offsetHeight;
-	_('main-page').style.height = 'calc(100% - '+tHeight+'px)';
+	_('main-page').style.height = 'calc(100% - ' + tHeight + 'px)';
 
-	if(typeof menu==='undefined')
+	if (typeof menu === 'undefined')
 		menu = true;
 
-	if(menu){
+	if (menu) {
 		var hideMenu = _('main-menu').getAttribute('data-hide');
-		switch(hideMenu){
+		switch (hideMenu) {
 			case 'always':
-				if((lastPosition = localStorage.getItem('sidenav-open-menu'))!==null){
-					if(lastPosition==="0")
+				if ((lastPosition = localStorage.getItem('sidenav-open-menu')) !== null) {
+					if (lastPosition === "0")
 						closeMenu();
-					else if(lastPosition==="1")
+					else if (lastPosition === "1")
 						openMenu();
 				}
 				break;
 			case 'mobile':
-				if(window.innerWidth<800)
+				if (window.innerWidth < 800)
 					closeMenu();
 				break;
 			case 'never':
-				if(!menuIsOpen)
+				if (!menuIsOpen)
 					openMenu();
 				break;
 		}
 	}
 
 	var table = _('results-table');
-	if(table){
-		var sub_h = _('breadcrumbs').offsetHeight+_('#main-content > div:first-of-type').offsetHeight+_('table-headings').offsetHeight+10;
-		table.style.height = (_('main-page').offsetHeight-sub_h)+'px';
+	if (table) {
+		var sub_h = _('breadcrumbs').offsetHeight + _('#main-content > div:first-of-type').offsetHeight + _('table-headings').offsetHeight + 10;
+		table.style.height = (_('main-page').offsetHeight - sub_h) + 'px';
 	}
 
 	var topForm = _('topForm');
-	if(topForm){
-		if(window.innerWidth<800){
+	if (topForm) {
+		if (window.innerWidth < 800) {
 			var filtersFormCont = _('filtersFormCont');
-			if(topForm.parentNode!==filtersFormCont.parentNode)
+			if (topForm.parentNode !== filtersFormCont.parentNode)
 				filtersFormCont.parentNode.insertBefore(topForm, filtersFormCont);
 			topForm.style.width = '100%';
-		}else{
+		} else {
 			var toolbar = _('toolbar');
-			if(topForm.parentNode!==toolbar)
+			if (topForm.parentNode !== toolbar)
 				toolbar.appendChild(topForm);
 
-			var w = toolbar.clientWidth-12;
-			toolbar.querySelectorAll('.toolbar-button').forEach(function(button){
+			var w = toolbar.clientWidth - 12;
+			toolbar.querySelectorAll('.toolbar-button').forEach(function (button) {
 				w -= button.offsetWidth;
 			});
-			topForm.style.width = w+'px';
+			topForm.style.width = w + 'px';
 		}
 	}
 }
 
-function switchMenu(){
-	if(menuIsOpen)
+function switchMenu() {
+	if (menuIsOpen)
 		closeMenu();
 	else
 		openMenu();
 }
 
-function openMenu(){
+function openMenu() {
 	_('main-menu').style.width = '40%';
-	_('main-menu').style.maxWidth = maxMenuWidth+'px';
-	_('main-page-cont').style.width = 'calc(100% - '+maxMenuWidth+'px)';
+	_('main-menu').style.maxWidth = maxMenuWidth + 'px';
+	_('main-page-cont').style.width = 'calc(100% - ' + maxMenuWidth + 'px)';
 
 	var hideMenu = _('main-menu').getAttribute('data-hide');
-	if(window.innerWidth>=800 && hideMenu!='always'){
+	if (window.innerWidth >= 800 && hideMenu != 'always') {
 		_('img-open-menu').style.opacity = 0;
 		_('header').style.paddingLeft = '0';
 	}
 
 	menuIsOpen = true;
 	localStorage.setItem('sidenav-open-menu', "1");
-	setTimeout(function(){
+	setTimeout(function () {
 		resize(false);
 	}, 500);
 }
 
-function closeMenu(){
+function closeMenu() {
 	_('main-menu').style.width = '0%';
 	_('main-page-cont').style.width = '100%';
 	_('img-open-menu').style.opacity = 1;
 	_('header').style.paddingLeft = '40px';
 	menuIsOpen = false;
 	localStorage.setItem('sidenav-open-menu', "0");
-	setTimeout(function(){
+	setTimeout(function () {
 		resize(false);
 	}, 500);
 }
 
-function startMenuResize(){
+function startMenuResize() {
 	var coords = getMouseCoords(event);
-	menuResizing = {'startX':coords.x, 'startW':maxMenuWidth, 'endW':false};
+	menuResizing = {'startX': coords.x, 'startW': maxMenuWidth, 'endW': false};
 }
 
 /*
  Loads a page using fetch; fills the main div with the content when the response comes, and additionally returns a Promise
  */
-function loadPage(url, get, post, deleteContent){
-	if(typeof get==='undefined')
+function loadPage(url, get, post, deleteContent) {
+	if (typeof get === 'undefined')
 		get = '';
-	if(typeof post==='undefined')
+	if (typeof post === 'undefined')
 		post = false;
-	if(typeof deleteContent==='undefined')
+	if (typeof deleteContent === 'undefined')
 		deleteContent = true;
 
 	get = changeGetParameter(get, 'ajax', '');
 
-	if(deleteContent) {
+	if (deleteContent) {
 		_('main-loading').style.display = 'block';
 		_('main-content').innerHTML = '';
 	}
 
-	pageLoadingHash = url+get+post;
+	pageLoadingHash = url + get + post;
 
-	return ajax(url, get, post).then((function(hash) {
+	return ajax(url, get, post).then((function (hash) {
 		return function (response) {
-			if(hash!==pageLoadingHash)
+			if (hash !== pageLoadingHash)
 				return false;
 
 			_('main-loading').style.display = 'none';
 			_('main-content').jsFill(response);
 
-			if(window.resetAllInstantSearches)
+			if (window.resetAllInstantSearches)
 				resetAllInstantSearches();
 
 			resize();
@@ -352,52 +352,52 @@ function loadPage(url, get, post, deleteContent){
 /*
  Moves between admin pages, moving the left menù and taking care of the browser history
  */
-function loadAdminPage(request, get, post, history_push){
-	if(request.length===0)
+function loadAdminPage(request, get, post, history_push) {
+	if (request.length === 0)
 		return false;
-	if(typeof get==='undefined')
+	if (typeof get === 'undefined')
 		get = '';
-	if(typeof history_push=='undefined')
+	if (typeof history_push == 'undefined')
 		history_push = true;
 
 	openMenuToRequest(request);
 
 	var full_url = request.join('/');
 
-	var state = {'request':request};
-	if(get.match(/sId=[0-9]+/)){
+	var state = {'request': request};
+	if (get.match(/sId=[0-9]+/)) {
 		sId = get.replace(/.*sId=([0-9]+).*/, '$1');
 		state['sId'] = sId;
 	}
 
-	if(get.match(/p=[0-9]+/)){
+	if (get.match(/p=[0-9]+/)) {
 		currentPage = parseInt(get.replace(/.*p=([0-9]+).*/, '$1'));
-	}else{
+	} else {
 		currentPage = 1;
 	}
 
 	state['p'] = currentPage;
 	var forcePage = currentPage;
 
-	if(history.pushState && history_push){
-		history.pushState(state, '', adminPrefix+full_url+'?'+get);
+	if (history.pushState && history_push) {
+		history.pushState(state, '', adminPrefix + full_url + '?' + get);
 	}
 
-	if(currentAdminPage!=full_url) {
-		if(typeof request[1]=='undefined' || request[1]==''){ // Table page
-			var promise = loadPageAids(request, get).then((function(forcePage){
-				return function(){
+	if (currentAdminPage != full_url) {
+		if (typeof request[1] == 'undefined' || request[1] == '') { // Table page
+			var promise = loadPageAids(request, get).then((function (forcePage) {
+				return function () {
 					return search(forcePage);
 				};
 			})(forcePage));
-		}else{
-			var promise = Promise.all([loadPage(adminPrefix+full_url, get, post), loadPageAids(request, get)]);
+		} else {
+			var promise = Promise.all([loadPage(adminPrefix + full_url, get, post), loadPageAids(request, get)]);
 		}
-	}else{
-		var promise = loadPage(adminPrefix+full_url, get, post);
+	} else {
+		var promise = loadPage(adminPrefix + full_url, get, post);
 	}
 
-	if(window.innerWidth<800)
+	if (window.innerWidth < 800)
 		closeMenu();
 
 	selectedRows = [];
@@ -411,108 +411,112 @@ function loadAdminPage(request, get, post, history_push){
 /*
  Loads the page aids, like breadcrumbs and toolbar buttons
  */
-function loadPageAids(request, get){
-	if(!_('toolbar'))
+function loadPageAids(request, get) {
+	if (!_('toolbar'))
 		return;
 
-	if(typeof get==='undefined')
+	if (typeof get === 'undefined')
 		get = '';
 
-	if(sId!==null)
+	if (sId !== null)
 		get = changeGetParameter(get, 'sId', sId);
-	if(typeof request[1]!=='undefined')
+	if (typeof request[1] !== 'undefined')
 		get = changeGetParameter(get, 'action', request[1]);
-	if(typeof request[2]!=='undefined')
+	if (typeof request[2] !== 'undefined')
 		get = changeGetParameter(get, 'id', request[2]);
 
 	_('toolbar').innerHTML = '';
 	_('breadcrumbs').innerHTML = '';
-	if(form = _('filtersFormCont'))
+	if (form = _('filtersFormCont'))
 		form.innerHTML = '';
 
-	return ajax( adminPrefix+request[0]+'/pageAids', get).then(function(aids){
-		if(typeof aids!=='object')
+	return ajax(adminPrefix + request[0] + '/pageAids', get).then(function (aids) {
+		if (typeof aids !== 'object')
 			return false;
 
 		sId = aids.sId;
 
-		if(history.replaceState){
+		if (history.replaceState) {
 			var url = document.location.href.replace(document.location.search, '');
-			if(url.substr(-1)=='?')
+			if (url.substr(-1) == '?')
 				url = url.substr(0, -1);
 			var queryString = changeGetParameter(document.location.search.substr(1), 'sId', sId);
-			history.replaceState({'request':currentAdminPage.split('/'), 'sId':sId, 'p':currentPage}, '', url+'?'+queryString);
+			history.replaceState({
+				'request': currentAdminPage.split('/'),
+				'sId': sId,
+				'p': currentPage
+			}, '', url + '?' + queryString);
 		}
 
 		var toolbar = _('toolbar');
 
-		if(aids.actions.length==0){
+		if (aids.actions.length == 0) {
 			toolbar.style.display = 'none';
-		}else{
+		} else {
 			toolbar.style.display = 'block';
 
-			aids.actions.forEach(function(act){
+			aids.actions.forEach(function (act) {
 				var button = document.createElement('a');
 				button.className = 'toolbar-button';
-				button.id = 'toolbar-button-'+act.id;
+				button.id = 'toolbar-button-' + act.id;
 				button.href = act.url;
 				button.setAttribute('onclick', act.action);
-				if(act.icon)
-					button.innerHTML = '<img src="'+act.icon+'" alt="" onload="resize()" /> ';
-				if(act['fa-icon'])
-					button.innerHTML = '<i class="'+act['fa-icon']+'" aria-hidden="true"></i> ';
+				if (act.icon)
+					button.innerHTML = '<img src="' + act.icon + '" alt="" onload="resize()" /> ';
+				if (act['fa-icon'])
+					button.innerHTML = '<i class="' + act['fa-icon'] + '" aria-hidden="true"></i> ';
 				button.innerHTML += act.text;
 				toolbar.appendChild(button);
 			});
 		}
 
-		if(aids.breadcrumbs){
+		if (aids.breadcrumbs) {
 			_('breadcrumbs').style.display = 'block';
 			_('breadcrumbs').innerHTML = aids.breadcrumbs;
-		}else{
+		} else {
 			_('breadcrumbs').style.display = 'none';
 		}
 
-		if(topForm = _('topForm'))
+		if (topForm = _('topForm'))
 			topForm.parentNode.removeChild(topForm);
-		if(lightboxForm = _('filtersFormCont'))
+		if (lightboxForm = _('filtersFormCont'))
 			lightboxForm.innerHTML = '';
 
-		if(typeof aids.topForm!=='undefined'){
+		if (typeof aids.topForm !== 'undefined') {
 			var form = document.createElement('div');
 			form.id = 'topForm';
 			form.innerHTML = aids.topForm;
 			toolbar.appendChild(form);
 		}
 
-		if(typeof aids.filtersForm!=='undefined'){
-			if(lightboxForm)
+		if (typeof aids.filtersForm !== 'undefined') {
+			if (lightboxForm)
 				lightboxForm.innerHTML += aids.filtersForm;
 		}
 
 		resize();
 
-		document.querySelectorAll('[data-filter]').forEach(function(el){
-			switch(el.nodeName.toLowerCase()){
+		document.querySelectorAll('[data-filter]').forEach(function (el) {
+			switch (el.nodeName.toLowerCase()) {
 				case 'input':
 				case 'textarea':
-					switch(el.type.toLowerCase()){
+					switch (el.type.toLowerCase()) {
 						case 'checkbox':
 						case 'radio':
 						case 'hidden':
-							el.addEventListener('change', function(){
+							el.addEventListener('change', function () {
 								search();
 							});
 							break;
 						default:
-							el.addEventListener('keyup', function(event){
-								if((event.keyCode<=40 && event.keyCode!=8 && event.keyCode!=13 && event.keyCode!=32))
+							el.addEventListener('keyup', function (event) {
+								if ((event.keyCode <= 40 && event.keyCode != 8 && event.keyCode != 13 && event.keyCode != 32))
 									return false;
 
 								searchCounter++;
-								setTimeout((function(c){
-									return function(){
-										if(c===searchCounter)
+								setTimeout((function (c) {
+									return function () {
+										if (c === searchCounter)
 											search();
 									}
 								})(searchCounter), 400);
@@ -521,7 +525,7 @@ function loadPageAids(request, get){
 					}
 					break;
 				default:
-					el.addEventListener('change', function(){
+					el.addEventListener('change', function () {
 						search();
 					});
 					break;
@@ -532,116 +536,116 @@ function loadPageAids(request, get){
 	});
 }
 
-function startColumnResize(event, k){
+function startColumnResize(event, k) {
 	var coords = getMouseCoords(event);
-	columnResizing = {'k':k, 'startX':coords.x, 'startW':parseInt(_('column-'+k).style.width), 'endW':false};
+	columnResizing = {'k': k, 'startX': coords.x, 'startW': parseInt(_('column-' + k).style.width), 'endW': false};
 }
 
-document.onmousemove = function(event){
+document.onmousemove = function (event) {
 	var coords = getMouseCoords(event);
-	if(menuResizing!==false){
-		var diff = coords.x-menuResizing.startX;
-		var newW = menuResizing.startW+diff;
-		if(newW>window.innerWidth*0.4)
-			newW = Math.floor(window.innerWidth*0.4);
+	if (menuResizing !== false) {
+		var diff = coords.x - menuResizing.startX;
+		var newW = menuResizing.startW + diff;
+		if (newW > window.innerWidth * 0.4)
+			newW = Math.floor(window.innerWidth * 0.4);
 
-		_('main-menu').style.maxWidth = newW+'px';
+		_('main-menu').style.maxWidth = newW + 'px';
 
 		menuResizing.endW = newW;
 	}
-	if(columnResizing!==false){
-		var diff = coords.x-columnResizing.startX;
-		var newW = columnResizing.startW+diff;
-		if(newW<20)
+	if (columnResizing !== false) {
+		var diff = coords.x - columnResizing.startX;
+		var newW = columnResizing.startW + diff;
+		if (newW < 20)
 			newW = 20;
 
-		var celle = document.querySelectorAll('[data-column="'+columnResizing.k+'"]');
-		celle.forEach(function(cella){
-			cella.style.width = newW+'px';
+		var celle = document.querySelectorAll('[data-column="' + columnResizing.k + '"]');
+		celle.forEach(function (cella) {
+			cella.style.width = newW + 'px';
 		});
 
 		columnResizing.endW = newW;
 	}
 };
 
-document.onmouseup = function(event){
-	if(menuResizing!==false){
-		if(menuResizing.endW<10)
+document.onmouseup = function (event) {
+	if (menuResizing !== false) {
+		if (menuResizing.endW < 10)
 			menuResizing.endW = 10;
 
 		maxMenuWidth = menuResizing.endW;
 		openMenu();
 		menuResizing = false;
 
-		setCookie('menu-width', maxMenuWidth, 365*10);
+		setCookie('menu-width', maxMenuWidth, 365 * 10);
 	}
-	if(columnResizing!==false){
-		if(columnResizing.endW!==false)
+	if (columnResizing !== false) {
+		if (columnResizing.endW !== false)
 			saveColumnWidth(columnResizing.k, columnResizing.endW);
 		columnResizing = false;
 	}
 };
 
-function autoResize(label){
-	if(label!==false){
-		var startW = parseInt(_('column-'+label).style.width);
+function autoResize(label) {
+	if (label !== false) {
+		var startW = parseInt(_('column-' + label).style.width);
 		var maxW = 0;
 
-		var celle = document.querySelectorAll('[data-column="'+label+'"]');
-		celle.forEach(function(cella){
+		var celle = document.querySelectorAll('[data-column="' + label + '"]');
+		celle.forEach(function (cella) {
 			cella.lastElementChild.addClass('just-for-calculation');
 			var w = cella.lastElementChild.scrollWidth;
 			cella.lastElementChild.removeClass('just-for-calculation');
 
-			if(w>maxW)
+			if (w > maxW)
 				maxW = w;
 		});
 
-		if(maxW){
+		if (maxW) {
 			maxW += 20;
-			celle.forEach(function(cella) {
-				cella.style.width = maxW+'px';
+			celle.forEach(function (cella) {
+				cella.style.width = maxW + 'px';
 			});
 		}
 
-		if(startW!=maxW)
+		if (startW != maxW)
 			saveColumnWidth(label, maxW);
-	}else{
+	} else {
 		var celle = document.querySelectorAll('#table-headings div[data-column]');
-		celle.forEach(function(cella) {
+		celle.forEach(function (cella) {
 			autoResize(cella.dataset.column);
 		});
 	}
 }
 
-function saveColumnWidth(k, w){
+function saveColumnWidth(k, w) {
 	var request = currentAdminPage.split('/');
-	return ajax(adminPrefix+request[0]+'/saveWidth', 'k='+encodeURIComponent(k), 'w='+encodeURIComponent(w)+'&c_id='+c_id);
+	return ajax(adminPrefix + request[0] + '/saveWidth', 'k=' + encodeURIComponent(k), 'w=' + encodeURIComponent(w) + '&c_id=' + c_id);
 }
 
-function tableEvents(){
+function tableEvents() {
 	var table = _('results-table');
 
-	table.addEventListener('scroll', function(){
+	table.addEventListener('scroll', function () {
 		var intest = _('table-headings');
-		if(this.scrollLeft>intest.scrollLeftMax)
+		if (this.scrollLeft > intest.scrollLeftMax)
 			this.scrollLeft = intest.scrollLeftMax;
 		intest.scrollLeft = this.scrollLeft;
 	});
 
-	table.querySelectorAll('[id^="row-checkbox-"]').forEach(function(checkbox){
-		if(selectedRows.indexOf(checkbox.dataset.id)!==-1)
+	table.querySelectorAll('[id^="row-checkbox-"]').forEach(function (checkbox) {
+		if (selectedRows.indexOf(checkbox.dataset.id) !== -1)
 			checkbox.setValue(1, false);
 	});
 
-	table.querySelectorAll('.results-table-row').forEach(function(row){
-		row.addEventListener('click', function(event){
-			if(event.button===0){
-				if(row.dataset.clickable==='1'){
-					if(row.dataset.onclick){
-						eval('var custom_function = function(){ '+this.dataset.onclick+' }');
+	table.querySelectorAll('.results-table-row').forEach(function (row) {
+		row.addEventListener('click', function (event) {
+			if (event.button === 0) {
+				if (row.dataset.clickable === '1') {
+					if (row.dataset.onclick) {
+						eval('var custom_function = function(){ ' + this.dataset.onclick + ' }');
 						custom_function.call(this);
-					}else{
+					} else {
 						loadElement(currentAdminPage.split('/')[0], row.dataset.id);
 					}
 				}
@@ -653,32 +657,32 @@ function tableEvents(){
 	currentPage = _('currentPage').getValue(true);
 }
 
-function changeSorting(event, column){
-	if(event.altKey){
-		sortedBy.some(function(s, idx){
-			if(s[0]===column){
+function changeSorting(event, column) {
+	if (event.altKey) {
+		sortedBy.some(function (s, idx) {
+			if (s[0] === column) {
 				sortedBy.splice(idx, 1);
 				return true;
 			}
 			return false;
 		});
-	}else if(event.ctrlKey){
-		if(!sortedBy.some(function(s, idx){
-				if(s[0]===column){
-					sortedBy[idx][1] = sortedBy[idx][1]==='ASC' ? 'DESC' : 'ASC';
+	} else if (event.ctrlKey) {
+		if (!sortedBy.some(function (s, idx) {
+				if (s[0] === column) {
+					sortedBy[idx][1] = sortedBy[idx][1] === 'ASC' ? 'DESC' : 'ASC';
 					return true;
 				}
 				return false;
-			})){
+			})) {
 			sortedBy.push([
 				column,
 				'ASC'
 			]);
 		}
-	}else{
-		if(sortedBy.length===1 && sortedBy[0][0]===column){
-			sortedBy[0][1] = sortedBy[0][1]==='ASC' ? 'DESC' : 'ASC';
-		}else{
+	} else {
+		if (sortedBy.length === 1 && sortedBy[0][0] === column) {
+			sortedBy[0][1] = sortedBy[0][1] === 'ASC' ? 'DESC' : 'ASC';
+		} else {
 			sortedBy = [
 				[
 					column,
@@ -690,136 +694,140 @@ function changeSorting(event, column){
 	reloadResultsTable();
 }
 
-function reloadResultsTable(get, post){
-	if(typeof get=='undefined')
+function reloadResultsTable(get, post) {
+	if (typeof get == 'undefined')
 		get = document.location.search.substr(1);
 	get = changeGetParameter(get, 'sId', sId);
-	if(sortedBy)
-		get += '&sortBy='+encodeURIComponent(JSON.stringify(sortedBy));
-	loadPage(adminPrefix+(currentAdminPage.split('/')[0]), get, post)
+	if (sortedBy)
+		get += '&sortBy=' + encodeURIComponent(JSON.stringify(sortedBy));
+	loadPage(adminPrefix + (currentAdminPage.split('/')[0]), get, post)
 }
 
-function changeGetParameter(queryString, k, v){
-	if(queryString===''){
-		queryString = k+'='+encodeURIComponent(v);
-	}else{
-		if(queryString.indexOf(k+'=')===-1){
-			queryString += '&'+k+'='+encodeURIComponent(v);
-		}else{
-			var regexp = new RegExp(k+'=[^&]*(&|$)');
-			queryString = queryString.replace(regexp, k+'='+encodeURIComponent(v)+'$1');
+function changeGetParameter(queryString, k, v) {
+	if (queryString === '') {
+		queryString = k + '=' + encodeURIComponent(v);
+	} else {
+		if (queryString.indexOf(k + '=') === -1) {
+			queryString += '&' + k + '=' + encodeURIComponent(v);
+		} else {
+			var regexp = new RegExp(k + '=[^&]*(&|$)');
+			queryString = queryString.replace(regexp, k + '=' + encodeURIComponent(v) + '$1');
 		}
 	}
 	return queryString;
 }
 
-function goToPage(p, history_push){
-	if(typeof history_push=='undefined')
+function goToPage(p, history_push) {
+	if (typeof history_push == 'undefined')
 		history_push = true;
 
 	var mainContentDiv = _('main-content');
 
-	var moveBy = mainContentDiv.offsetWidth+50;
-	if(p>currentPage)
+	var moveBy = mainContentDiv.offsetWidth + 50;
+	if (p > currentPage)
 		moveBy *= -1;
 
 	get = changeGetParameter(document.location.search.substr(1), 'sId', sId);
 	get = changeGetParameter(get, 'p', p);
 
-	if(history_push && history.pushState)
-		history.pushState({'request':currentAdminPage.split('/'), 'sId':sId, 'p':p}, '', adminPrefix+currentAdminPage+'?'+get);
+	if (history_push && history.pushState)
+		history.pushState({
+			'request': currentAdminPage.split('/'),
+			'sId': sId,
+			'p': p
+		}, '', adminPrefix + currentAdminPage + '?' + get);
 
-	var pageMove = new Promise(function(resolve){
-		if(p!==currentPage){
-			mainContentDiv.style.left = moveBy+'px';
+	var pageMove = new Promise(function (resolve) {
+		if (p !== currentPage) {
+			mainContentDiv.style.left = moveBy + 'px';
 
 			setTimeout(resolve, 300);
-		}else{
+		} else {
 			resolve();
 		}
-	}).then(function(){
+	}).then(function () {
 		_('main-content').style.display = 'none';
 		_('main-loading').style.display = 'block';
 		return true;
 	});
-	var pageLoad = loadPage(adminPrefix+currentAdminPage, get, false, false);
+	var pageLoad = loadPage(adminPrefix + currentAdminPage, get, false, false);
 
-	return Promise.all([pageMove, pageLoad]).then(function(){
+	return Promise.all([pageMove, pageLoad]).then(function () {
 		_('main-content').style.display = 'block';
 		_('main-loading').style.display = 'none';
 
 		mainContentDiv.className = 'no-transition';
-		mainContentDiv.style.left = (moveBy*-1)+'px';
+		mainContentDiv.style.left = (moveBy * -1) + 'px';
 		mainContentDiv.offsetWidth;
 		mainContentDiv.className = '';
 		mainContentDiv.style.left = '0px';
 
-		return new Promise(function(resolve, reject){
+		return new Promise(function (resolve, reject) {
 			setTimeout(resolve, 300);
 		});
 	});
 }
 
-function selectRow(id, enable){
+function selectRow(id, enable) {
 	var k = selectedRows.indexOf(id);
-	if(k!==-1){
-		if(!enable){
+	if (k !== -1) {
+		if (!enable) {
 			selectedRows.splice(k, 1);
 		}
-	}else{
-		if(enable){
+	} else {
+		if (enable) {
 			selectedRows.push(id);
 		}
 	}
 }
 
-function selectAllRows(enable){
-	_('results-table').querySelectorAll('[id^="row-checkbox-"]').forEach(function(checkbox){
+function selectAllRows(enable) {
+	_('results-table').querySelectorAll('[id^="row-checkbox-"]').forEach(function (checkbox) {
 		checkbox.setValue(enable);
 	});
 }
 
-function deleteRows(ids){
+function deleteRows(ids) {
 	var usingChecks = false;
-	if(typeof ids==='undefined'){
+	if (typeof ids === 'undefined') {
 		ids = selectedRows;
 		usingChecks = true;
 	}
-	if(ids.length===0){
+	if (ids.length === 0) {
 		alert('Nessuna riga selezionata');
 		return false;
 	}
 
-	if(!confirm('Sicuro di voler eliminare '+ids.length+' righe?'))
+	if (!confirm('Sicuro di voler eliminare ' + ids.length + ' righe?'))
 		return false;
 
-	if(usingChecks){
+	if (usingChecks) {
 		var nChecked = 0;
-		_('results-table').querySelectorAll('[id^="row-checkbox-"]').forEach(function(checkbox){
-			if(checkbox.checked)
+		_('results-table').querySelectorAll('[id^="row-checkbox-"]').forEach(function (checkbox) {
+			if (checkbox.checked)
 				nChecked++;
 		});
 
-		if(ids.length>nChecked){
-			if(!confirm('ATTENZIONE: ci sono righe selezionate anche in altre pagine, saranno eliminate anche quelle. Continuare?'))
+		if (ids.length > nChecked) {
+			if (!confirm('ATTENZIONE: ci sono righe selezionate anche in altre pagine, saranno eliminate anche quelle. Continuare?'))
 				return false;
 		}
 	}
 
-	_('#toolbar-button-delete img').src = absolute_path+'model/Output/files/loading.gif';
+	_('#toolbar-button-delete img').src = absolute_path + 'model/Output/files/loading.gif';
 
 	var request = currentAdminPage.split('/');
-	return ajax(adminPrefix+request[0]+'/delete', 'id='+encodeURIComponent(ids.join(',')), 'c_id='+c_id).then(function(r){
-		if(typeof r!='object')
-			r = {'err':r};
+	return ajax(adminPrefix + request[0] + '/delete', 'id=' + encodeURIComponent(ids.join(',')), 'c_id=' + c_id).then(function (r) {
+		if (typeof r != 'object')
+			r = {'err': r};
 
-		_('#toolbar-button-delete img').src = absolute_path+'model/AdminTemplateEditt/files/img/toolbar/delete.png';
+		_('#toolbar-button-delete img').src = absolute_path + 'model/AdminTemplateEditt/files/img/toolbar/delete.png';
 
-		if(typeof r.err!=='undefined'){
+		if (typeof r.err !== 'undefined') {
 			alert(r.err);
-		}else{
+		} else {
 			selectedRows = [];
-			if(request.length===1)
+			if (request.length === 1)
 				reloadResultsTable();
 			else
 				loadAdminPage([request[0]]);
@@ -830,9 +838,10 @@ function deleteRows(ids){
 }
 
 var lightboxOldParent = false;
-function toolsLightbox(id, options){
-	if(lightbox = _('tools-lightbox')){
-		while(lightbox.childNodes.length){
+
+function toolsLightbox(id, options) {
+	if (lightbox = _('tools-lightbox')) {
+		while (lightbox.childNodes.length) {
 			lightboxOldParent.appendChild(lightbox.firstChild);
 		}
 		lightboxOldParent = false;
@@ -851,15 +860,15 @@ function toolsLightbox(id, options){
 	var lightbox = document.createElement('div');
 	lightbox.className = 'tools-lightbox';
 	lightbox.id = 'tools-lightbox';
-	if(options['width']!==false)
+	if (options['width'] !== false)
 		lightbox.style.width = options['width'];
-	if(options['height']!==false)
+	if (options['height'] !== false)
 		lightbox.style.height = options['height'];
 	lightbox.style.transform = 'scale(1,0)';
 
 	var contentDiv = _(id);
 	lightboxOldParent = contentDiv;
-	while(contentDiv.childNodes.length){
+	while (contentDiv.childNodes.length) {
 		lightbox.appendChild(contentDiv.firstChild);
 	}
 
@@ -869,15 +878,15 @@ function toolsLightbox(id, options){
 
 	coords.y += options['origin'].offsetHeight;
 	coords.y -= window.pageYOffset;
-	lightbox.style.top = (coords.y+options['offset-y'])+'px';
+	lightbox.style.top = (coords.y + options['offset-y']) + 'px';
 
-	if(options['left']!==false){
+	if (options['left'] !== false) {
 		lightbox.style.left = options['left'];
-	}else{
-		if(coords.x+options['offset-x']+lightbox.offsetWidth>window.innerWidth-10){
-			lightbox.style.right = (window.innerWidth-coords.x-options['origin'].offsetWidth-options['offset-x'])+'px';
-		}else{
-			lightbox.style.left = (coords.x+options['offset-x'])+'px';
+	} else {
+		if (coords.x + options['offset-x'] + lightbox.offsetWidth > window.innerWidth - 10) {
+			lightbox.style.right = (window.innerWidth - coords.x - options['origin'].offsetWidth - options['offset-x']) + 'px';
+		} else {
+			lightbox.style.left = (coords.x + options['offset-x']) + 'px';
 		}
 	}
 
@@ -885,26 +894,36 @@ function toolsLightbox(id, options){
 }
 
 function switchFiltersForm(origin) {
-	if(_('filtersForm')){
-		if(window.innerWidth<800){
-			toolsLightbox('filtersForm', {'origin': origin, 'width': 'calc(100% - 20px)', 'left': '10px', 'offset-y': 10});
-		}else{
-			toolsLightbox('filtersForm', {'origin': origin, 'width': '60%', 'left': maxMenuWidth+'px', 'offset-y': 10});
+	if (_('filtersForm')) {
+		if (window.innerWidth < 800) {
+			toolsLightbox('filtersForm', {
+				'origin': origin,
+				'width': 'calc(100% - 20px)',
+				'left': '10px',
+				'offset-y': 10
+			});
+		} else {
+			toolsLightbox('filtersForm', {
+				'origin': origin,
+				'width': '60%',
+				'left': maxMenuWidth + 'px',
+				'offset-y': 10
+			});
 		}
 	}
 }
 
-function search(forcePage){
-	if(typeof forcePage=='undefined')
+function search(forcePage) {
+	if (typeof forcePage == 'undefined')
 		forcePage = 1;
 
 	var filters = [];
-	document.querySelectorAll('[data-filter]').forEach(function(el){
+	document.querySelectorAll('[data-filter]').forEach(function (el) {
 		var v = el.getValue(true);
-		if(v==='')
+		if (v === '')
 			return;
 
-		switch(el.getAttribute('data-filter-type')){
+		switch (el.getAttribute('data-filter-type')) {
 			case 'custom':
 				var f = [el.getAttribute('data-filter'), v];
 				break;
@@ -919,122 +938,122 @@ function search(forcePage){
 	get = changeGetParameter(get, 'p', forcePage);
 	get = changeGetParameter(get, 'filters', JSON.stringify(filters));
 
-	return loadPage(adminPrefix+currentAdminPage.split('/')[0], get);
+	return loadPage(adminPrefix + currentAdminPage.split('/')[0], get);
 }
 
-function filtersReset(){
-	document.querySelectorAll('[data-filter]').forEach(function(el){
+function filtersReset() {
+	document.querySelectorAll('[data-filter]').forEach(function (el) {
 		el.setValue(el.dataset.default, false);
 	});
 	search();
 }
 
-function manageFilters(){
+function manageFilters() {
 	var request = currentAdminPage.split('/');
-	zkPopup({'url':adminPrefix+request[0]+'/pickFilters'});
+	zkPopup({'url': adminPrefix + request[0] + '/pickFilters'});
 }
 
-function saveFilters(){
+function saveFilters() {
 	var request = currentAdminPage.split('/');
 
 	var filters = {};
-	document.querySelectorAll('[data-managefilters]').forEach(function(radio){
-		if(radio.checked && radio.value!='0'){
+	document.querySelectorAll('[data-managefilters]').forEach(function (radio) {
+		if (radio.checked && radio.value != '0') {
 			filters[radio.getAttribute('data-managefilters')] = radio.value;
 		}
 	});
 
 	_('popup-real').loading();
-	return ajax(adminPrefix+request[0]+'/pickFilters', '', 'c_id='+c_id+'&filters='+encodeURIComponent(JSON.stringify(filters))).then(function(r){
-		if(r!='ok'){
+	return ajax(adminPrefix + request[0] + '/pickFilters', '', 'c_id=' + c_id + '&filters=' + encodeURIComponent(JSON.stringify(filters))).then(function (r) {
+		if (r != 'ok') {
 			alert(r);
 			return false;
-		}else{
+		} else {
 			return loadPageAids(currentAdminPage.split('/'));
 		}
-	}).then(function(){
+	}).then(function () {
 		zkPopupClose();
 		return search();
 	});
 }
 
-function manageSearchFields(){
+function manageSearchFields() {
 	var request = currentAdminPage.split('/');
-	zkPopup({'url':adminPrefix+request[0]+'/pickSearchFields'});
+	zkPopup({'url': adminPrefix + request[0] + '/pickSearchFields'});
 }
 
-function saveSearchFields(){
+function saveSearchFields() {
 	var request = currentAdminPage.split('/');
 
 	var fields = [];
-	document.querySelectorAll('[data-managesearchfields]').forEach(function(check){
-		if(check.checked)
+	document.querySelectorAll('[data-managesearchfields]').forEach(function (check) {
+		if (check.checked)
 			fields.push(check.getAttribute('data-managesearchfields'));
 	});
-	var post = 'c_id='+c_id+'&fields='+encodeURIComponent(fields.join(','));
+	var post = 'c_id=' + c_id + '&fields=' + encodeURIComponent(fields.join(','));
 
 	_('popup-real').loading();
-	return ajax(adminPrefix+request[0]+'/pickSearchFields', '', post).then(function(r){
+	return ajax(adminPrefix + request[0] + '/pickSearchFields', '', post).then(function (r) {
 		zkPopupClose();
-		if(r!='ok'){
+		if (r != 'ok') {
 			alert(r);
-		}else{
+		} else {
 			return search();
 		}
 	});
 }
 
-function loadElement(page, id, history_push){
-	if(typeof history_push==='undefined')
+function loadElement(page, id, history_push) {
+	if (typeof history_push === 'undefined')
 		history_push = true;
 
 	elementCallback = null;
 	dataCache = {'data': {}, 'children': []};
 
-	if(id){
-		var formTemplate = loadAdminPage([page, 'edit', id], '', false, history_push).then(function(){
+	if (id) {
+		var formTemplate = loadAdminPage([page, 'edit', id], '', false, history_push).then(function () {
 			_('main-loading').addClass('grey');
 			_('main-loading').style.display = 'block';
 		});
 		var formData = loadElementData(page, id);
 
-		return Promise.all([formTemplate, formData]).then(function(responses){
+		return Promise.all([formTemplate, formData]).then(function (responses) {
 			_('main-loading').removeClass('grey');
 			_('main-loading').style.display = 'none';
 
-			return checkSubPages().then(function(){
+			return checkSubPages().then(function () {
 				return fillAdminForm(responses[1]).then(callElementCallback).then(monitorFields);
 			});
 		}).catch(reportAdminError);
-	}else{
+	} else {
 		return loadAdminPage([page, 'edit'], '', false, history_push).then(checkSubPages).then(callElementCallback).then(monitorFields).catch(reportAdminError);
 	}
 }
 
-function loadElementData(page, id){
-	return ajax(adminPrefix+page+'/edit/'+id, 'getData=1', false).then(function(r){
-		if(typeof r!='object')
+function loadElementData(page, id) {
+	return ajax(adminPrefix + page + '/edit/' + id, 'getData=1', false).then(function (r) {
+		if (typeof r != 'object')
 			throw r;
 		return r;
 	});
 }
 
-function fillAdminForm(data){
-	if(typeof data==='undefined'){
+function fillAdminForm(data) {
+	if (typeof data === 'undefined') {
 		data = dataCache;
-	}else{
+	} else {
 		dataCache = data;
 	}
 
-	if(!(form = _('adminForm'))){
+	if (!(form = _('adminForm'))) {
 		throw 'Error in loading element';
 	}
 
 	return form.fill(data.data, false, 'filled').then(() => {
 		let promises = [];
 
-		for(let name in data.children){
-			if(!data.children.hasOwnProperty(name))
+		for (let name in data.children) {
+			if (!data.children.hasOwnProperty(name))
 				continue;
 
 			let primary = data.children[name].primary;
@@ -1042,8 +1061,8 @@ function fillAdminForm(data){
 
 			name = name.split('-');
 
-			for(let idx in list){
-				if(!list.hasOwnProperty(idx))
+			for (let idx in list) {
+				if (!list.hasOwnProperty(idx))
 					continue;
 
 				let id = list[idx][primary];
@@ -1052,26 +1071,26 @@ function fillAdminForm(data){
 					return () => {
 						let promises = [];
 
-						for(let k in el){
-							if(!el.hasOwnProperty(k))
+						for (let k in el) {
+							if (!el.hasOwnProperty(k))
 								continue;
 
-							let form_k = 'ch-'+k+'-'+name[0]+'-'+id;
+							let form_k = 'ch-' + k + '-' + name[0] + '-' + id;
 
-							let column_cont = _('#cont-ch-'+name[1]+'-'+id+' [data-custom="'+k+'"]');
-							if(column_cont)
+							let column_cont = _('#cont-ch-' + name[1] + '-' + id + ' [data-custom="' + k + '"]');
+							if (column_cont)
 								column_cont.innerHTML = el[k];
 
-							if(typeof el[k]==='object'){
-								for(let lang in el[k]){
-									if(typeof form[form_k+'-'+lang]!=='undefined'){
-										promises.push(form[form_k+'-'+lang].setValue(el[k][lang], false).then((field => {
+							if (typeof el[k] === 'object') {
+								for (let lang in el[k]) {
+									if (typeof form[form_k + '-' + lang] !== 'undefined') {
+										promises.push(form[form_k + '-' + lang].setValue(el[k][lang], false).then((field => {
 											return () => field.setAttribute('data-filled', '1');
-										})(form[form_k+'-'+lang])));
+										})(form[form_k + '-' + lang])));
 									}
 								}
-							}else{
-								if(typeof form[form_k]!=='undefined'){
+							} else {
+								if (typeof form[form_k] !== 'undefined') {
 									promises.push(form[form_k].setValue(el[k], false).then((field => {
 										return () => field.setAttribute('data-filled', '1');
 									})(form[form_k])));
@@ -1091,22 +1110,22 @@ function fillAdminForm(data){
 	});
 }
 
-function initalizeEmptyForm(){
+function initalizeEmptyForm() {
 	var form = _('adminForm');
-	if(!form)
+	if (!form)
 		return false;
 
 	var promises = [];
 
-	for(let i = 0, f; f = form.elements[i++];) {
-		promises.push(f.getValue().then((function(name){
-			return function(fieldValue){
-				if(!fieldValue && _('[data-filter="'+name+'"]'))
-					return _('[data-filter="'+name+'"]').getValue();
+	for (let i = 0, f; f = form.elements[i++];) {
+		promises.push(f.getValue().then((function (name) {
+			return function (fieldValue) {
+				if (!fieldValue && _('[data-filter="' + name + '"]'))
+					return _('[data-filter="' + name + '"]').getValue();
 				return fieldValue;
 			}
-		})(f.name)).then((function(f){
-			return function(fieldValue){
+		})(f.name)).then((function (f) {
+			return function (fieldValue) {
 				return f.setValue(fieldValue);
 			};
 		})(f)));
@@ -1115,39 +1134,39 @@ function initalizeEmptyForm(){
 	return Promise.all(promises);
 }
 
-function monitorFields(){
+function monitorFields() {
 	var form = _('adminForm');
 
-	for(let i in form.elements){
-		if(!form.elements.hasOwnProperty(i)) continue;
+	for (let i in form.elements) {
+		if (!form.elements.hasOwnProperty(i)) continue;
 		var f = form.elements[i];
-		if(!f.name || f.name==='fakeusernameremembered' || f.name==='fakepasswordremembered')
+		if (!f.name || f.name === 'fakeusernameremembered' || f.name === 'fakepasswordremembered')
 			continue;
 
-		if(!f.getAttribute('data-filled'))
+		if (!f.getAttribute('data-filled'))
 			continue;
-		if(f.getAttribute('data-monitored'))
+		if (f.getAttribute('data-monitored'))
 			continue;
 
 		var isInSublistTemplate = false;
 		var check = f;
-		while(check){
-			if(check.hasClass && check.hasClass('sublist-template')){
+		while (check) {
+			if (check.hasClass && check.hasClass('sublist-template')) {
 				isInSublistTemplate = true;
 				break;
 			}
 			check = check.parentNode;
 		}
-		if(isInSublistTemplate)
+		if (isInSublistTemplate)
 			continue;
 
 		f.setAttribute('data-monitored', '1');
 
-		f.addEventListener('change', function(e){
+		f.addEventListener('change', function (e) {
 			changedMonitoredField(this);
 		});
 
-		if(f.type!=='file'){ // Files fields are complex structure, thus are not supported in the changes history
+		if (f.type !== 'file') { // Files fields are complex structure, thus are not supported in the changes history
 			f.getValue().then((f => {
 				return (v => f.setAttribute('data-default-value', v));
 			})(f));
@@ -1156,11 +1175,11 @@ function monitorFields(){
 	return true;
 }
 
-function changedMonitoredField(f){
+function changedMonitoredField(f) {
 	var old = null;
-	if(typeof changedValues[f.name]==='undefined'){
+	if (typeof changedValues[f.name] === 'undefined') {
 		old = f.getAttribute('data-default-value');
-	}else{
+	} else {
 		old = changedValues[f.name];
 	}
 
@@ -1168,7 +1187,7 @@ function changedMonitoredField(f){
 		return v => {
 			changedValues[f.name] = v;
 
-			if(f.type!=='file') { // Files fields are complex structure, thus are not supported in the changes history
+			if (f.type !== 'file') { // Files fields are complex structure, thus are not supported in the changes history
 				changeHistory.push({
 					'field': f.name,
 					'old': old,
@@ -1183,68 +1202,68 @@ function changedMonitoredField(f){
 	})(old, f));
 }
 
-function rebuildHistoryBox(){
+function rebuildHistoryBox() {
 	_('links-history').innerHTML = '<a href="#" onclick="historyGoToStep(\'reset\'); return false" class="link-history">Situazione iniziale</a>';
 
-	changeHistory.forEach(function(i, idx){
+	changeHistory.forEach(function (i, idx) {
 		var a = document.createElement('a');
 		a.href = '#';
-		a.setAttribute('onclick', 'historyGoToStep(\'back\', '+idx+'); return false');
+		a.setAttribute('onclick', 'historyGoToStep(\'back\', ' + idx + '); return false');
 		a.className = 'link-history';
-		if(typeof i.sublist!=='undefined'){
-			switch(i.action){
+		if (typeof i.sublist !== 'undefined') {
+			switch (i.action) {
 				case 'new':
-					a.textContent = 'new sublist row in "'+i.sublist+'"';
+					a.textContent = 'new sublist row in "' + i.sublist + '"';
 					break;
 				case 'delete':
-					a.textContent = 'deleted row in "'+i.sublist+'"';
+					a.textContent = 'deleted row in "' + i.sublist + '"';
 					break;
 			}
-		}else{
-			a.textContent = 'edited "'+i.field+'"';
+		} else {
+			a.textContent = 'edited "' + i.field + '"';
 		}
 		_('links-history').appendChild(a);
 	});
 
-	canceledChanges.forEach(function(i, idx){
+	canceledChanges.forEach(function (i, idx) {
 		var a = document.createElement('a');
 		a.href = '#';
-		a.setAttribute('onclick', 'historyGoToStep(\'forward\', '+idx+'); return false');
+		a.setAttribute('onclick', 'historyGoToStep(\'forward\', ' + idx + '); return false');
 		a.className = 'link-history disabled';
-		if(typeof i.sublist!=='undefined'){
-			switch(i.action){
+		if (typeof i.sublist !== 'undefined') {
+			switch (i.action) {
 				case 'new':
-					a.textContent = 'new sublist row in "'+i.sublist+'"';
+					a.textContent = 'new sublist row in "' + i.sublist + '"';
 					break;
 				case 'delete':
-					a.textContent = 'deleted row in "'+i.sublist+'"';
+					a.textContent = 'deleted row in "' + i.sublist + '"';
 					break;
 			}
-		}else{
-			a.textContent = 'edited "'+i.field+'"';
+		} else {
+			a.textContent = 'edited "' + i.field + '"';
 		}
 		_('links-history').appendChild(a);
 	});
 }
 
-function switchHistoryBox(){
+function switchHistoryBox() {
 	var div = _('history-box');
-	if(div.style.right=='0px'){
+	if (div.style.right == '0px') {
 		div.style.right = '-15%';
-	}else{
+	} else {
 		div.style.right = '0px';
 	}
 }
 
-function historyStepBack(){
-	if(changeHistory.length===0)
+function historyStepBack() {
+	if (changeHistory.length === 0)
 		return false;
 	var form = _('adminForm');
 	var el = changeHistory.pop();
 	canceledChanges.unshift(el);
 
-	if(typeof el.sublist!=='undefined'){
-		switch(el.action){
+	if (typeof el.sublist !== 'undefined') {
+		switch (el.action) {
 			case 'new':
 				sublistDeleteRow(el.sublist, el.cont, el.id, false);
 				break;
@@ -1252,14 +1271,14 @@ function historyStepBack(){
 				sublistRestoreRow(el.sublist, el.cont, el.id);
 				break;
 		}
-	}else{
-		if(form[el.field].getAttribute('data-multilang') && form[el.field].getAttribute('data-lang')){
+	} else {
+		if (form[el.field].getAttribute('data-multilang') && form[el.field].getAttribute('data-lang')) {
 			switchFieldLang(form[el.field].getAttribute('data-multilang'), form[el.field].getAttribute('data-lang'));
 		}
 
 		form[el.field].setValue(el.old, false);
 		form[el.field].focus();
-		if(form[el.field].select)
+		if (form[el.field].select)
 			form[el.field].select();
 		changedValues[el.field] = el.old;
 	}
@@ -1267,15 +1286,15 @@ function historyStepBack(){
 	rebuildHistoryBox();
 }
 
-function historyStepForward(){
-	if(canceledChanges.length===0)
+function historyStepForward() {
+	if (canceledChanges.length === 0)
 		return false;
 	var form = _('adminForm');
 	var el = canceledChanges.shift();
 	changeHistory.push(el);
 
-	if(typeof el.sublist!=='undefined'){
-		switch(el.action){
+	if (typeof el.sublist !== 'undefined') {
+		switch (el.action) {
 			case 'new':
 				sublistRestoreRow(el.sublist, el.cont, el.id);
 				break;
@@ -1283,14 +1302,14 @@ function historyStepForward(){
 				sublistDeleteRow(el.sublist, el.cont, el.id, false);
 				break;
 		}
-	}else{
-		if(form[el.field].getAttribute('data-multilang') && form[el.field].getAttribute('data-lang')) {
+	} else {
+		if (form[el.field].getAttribute('data-multilang') && form[el.field].getAttribute('data-lang')) {
 			switchFieldLang(form[el.field].getAttribute('data-multilang'), form[el.field].getAttribute('data-lang'));
 		}
 
 		form[el.field].setValue(el.new, false);
 		form[el.field].focus();
-		if(form[el.field].select)
+		if (form[el.field].select)
 			form[el.field].select();
 		changedValues[el.field] = el.new;
 	}
@@ -1298,49 +1317,49 @@ function historyStepForward(){
 	rebuildHistoryBox();
 }
 
-function historyGoToStep(t, i){
-	switch(t){
+function historyGoToStep(t, i) {
+	switch (t) {
 		case 'reset':
-			while(changeHistory.length>0){
+			while (changeHistory.length > 0) {
 				historyStepBack();
 			}
 			break;
 		case 'back':
-			while(changeHistory.length>i+1){
+			while (changeHistory.length > i + 1) {
 				historyStepBack();
 			}
 			break;
 		case 'forward':
-			if(i+1>canceledChanges)
+			if (i + 1 > canceledChanges)
 				return false;
-			for(c=1;c<=i+1;c++){
+			for (c = 1; c <= i + 1; c++) {
 				historyStepForward();
 			}
 			break;
 	}
 }
 
-function historyWipe(){
+function historyWipe() {
 	changedValues = {};
 	changeHistory = [];
 	canceledChanges = [];
 	rebuildHistoryBox();
 }
 
-function newElement(){
+function newElement() {
 	return loadElement(currentAdminPage.split('/')[0]).then(initalizeEmptyForm);
 }
 
-function save(){
-	if(saving){
+function save() {
+	if (saving) {
 		alert('Already saving');
 		return false;
 	}
 
 	saving = true;
-	if(_('#toolbar-button-save img'))
-		_('#toolbar-button-save img').src = absolute_path+'model/Output/files/loading.gif';
-	if(_('#toolbar-button-save i')){
+	if (_('#toolbar-button-save img'))
+		_('#toolbar-button-save img').src = absolute_path + 'model/Output/files/loading.gif';
+	if (_('#toolbar-button-save i')) {
 		_('#toolbar-button-save i').removeClass('far');
 		_('#toolbar-button-save i').removeClass('fa-save');
 		_('#toolbar-button-save i').addClass('fas');
@@ -1350,165 +1369,165 @@ function save(){
 
 	setLoadingBar(0);
 
-	return new Promise(function(resolve){
-		setTimeout(function(){ // Gives a little bit of time for the fields to activate their "onchange" events
+	return new Promise(function (resolve) {
+		setTimeout(function () { // Gives a little bit of time for the fields to activate their "onchange" events
 			resolve();
 		}, 200);
-	}).then(function(){
+	}).then(function () {
 		let url;
 		let request = currentAdminPage.split('/');
 		var history_push;
 
-		if(typeof request[2]!=='undefined'){
+		if (typeof request[2] !== 'undefined') {
 			// I am editing an existing element
-			url = adminPrefix+request[0]+'/save/'+request[2];
+			url = adminPrefix + request[0] + '/save/' + request[2];
 			history_push = false;
-		}else{
+		} else {
 			// I am saving a new element
-			url = adminPrefix+request[0]+'/save';
+			url = adminPrefix + request[0] + '/save';
 			history_push = true;
 		}
 
 		let form = _('adminForm');
 		let savingValues = {};
-		for(let k in changedValues){
-			if(form[k].getAttribute('data-multilang') && typeof savingValues[k]==='undefined'){
-				if(typeof savingValues[form[k].getAttribute('data-multilang')]==='undefined')
+		for (let k in changedValues) {
+			if (form[k].getAttribute('data-multilang') && typeof savingValues[k] === 'undefined') {
+				if (typeof savingValues[form[k].getAttribute('data-multilang')] === 'undefined')
 					savingValues[form[k].getAttribute('data-multilang')] = {};
 				savingValues[form[k].getAttribute('data-multilang')][form[k].getAttribute('data-lang')] = changedValues[k];
-			}else{
+			} else {
 				savingValues[k] = changedValues[k];
 			}
 		}
 
 		let version_lock = '';
-		if(typeof form['_model_version']!=='undefined')
-			version_lock = '&version='+encodeURIComponent(form['_model_version'].getValue(true));
+		if (typeof form['_model_version'] !== 'undefined')
+			version_lock = '&version=' + encodeURIComponent(form['_model_version'].getValue(true));
 
-		return ajax(url, '', 'c_id='+c_id+'&data='+encodeURIComponent(JSON.stringify(savingValues))+version_lock, {
-			'onprogress': function(event){
+		return ajax(url, '', 'c_id=' + c_id + '&data=' + encodeURIComponent(JSON.stringify(savingValues)) + version_lock, {
+			'onprogress': function (event) {
 				let percentage;
-				if(event.total===0){
+				if (event.total === 0) {
 					percentage = 0;
-				}else{
+				} else {
 					percentage = Math.round(event.loaded / event.total * 100);
 				}
 
 				setLoadingBar(percentage);
 			}
-		}).then(function(r){
+		}).then(function (r) {
 			setLoadingBar(0);
 
 			let request = currentAdminPage.split('/');
 
 			saving = false;
-			if(_('#toolbar-button-save img'))
-				_('#toolbar-button-save img').src = absolute_path+'model/AdminTemplateEditt/files/img/toolbar/save.png';
-			if(_('#toolbar-button-save i')){
+			if (_('#toolbar-button-save img'))
+				_('#toolbar-button-save img').src = absolute_path + 'model/AdminTemplateEditt/files/img/toolbar/save.png';
+			if (_('#toolbar-button-save i')) {
 				_('#toolbar-button-save i').removeClass('fas');
 				_('#toolbar-button-save i').removeClass('fa-spinner');
 				_('#toolbar-button-save i').addClass('far');
 				_('#toolbar-button-save i').addClass('fa-save');
 			}
 
-			if(typeof r!=='object'){
+			if (typeof r !== 'object') {
 				alert(r);
 				return false;
 			}
-			if(r.status==='ok'){
-				return loadElement(request[0], r.id, history_push).then(function(){
+			if (r.status === 'ok') {
+				return loadElement(request[0], r.id, history_push).then(function () {
 					inPageMessage('Salvataggio correttamente effettuato.', 'green-message');
 				});
-			}else if(typeof r.err!=='undefined'){
+			} else if (typeof r.err !== 'undefined') {
 				alert(r.err);
-			}else{
+			} else {
 				alert('Generic error');
 			}
 		});
 	});
 }
 
-function inPageMessage(text, className){
+function inPageMessage(text, className) {
 	var div = document.createElement('div');
 	div.className = className;
 	div.innerHTML = text;
 	_('main-content').insertBefore(div, _('main-content').firstChild);
 }
 
-function instantSave(id, f, field){
+function instantSave(id, f, field) {
 	field.style.opacity = 0.2;
 
 	return field.getValue().then(((id, f, field) => {
 		return v => {
 			let ids = [];
-			document.querySelectorAll('.results-table-row[data-id]').forEach(function(r){
+			document.querySelectorAll('.results-table-row[data-id]').forEach(function (r) {
 				ids.push(r.getAttribute('data-id'));
 			});
 
 			let saving = {};
 			saving[f] = v;
 
-			let riga = _('.results-table-row[data-id="'+id+'"]');
-			if(!riga)
+			let riga = _('.results-table-row[data-id="' + id + '"]');
+			if (!riga)
 				return false;
 
 			let n = parseInt(riga.getAttribute('data-n'));
-			if(_('instant-'+(n+1)+'-'+f)){
-				_('instant-'+(n+1)+'-'+f).focus();
-				_('instant-'+(n+1)+'-'+f).select();
+			if (_('instant-' + (n + 1) + '-' + f)) {
+				_('instant-' + (n + 1) + '-' + f).focus();
+				_('instant-' + (n + 1) + '-' + f).select();
 			}
 
-			return ajax(adminPrefix+(currentAdminPage.split('/'))[0]+'/save/'+id, 'instant='+encodeURIComponent(ids.join(',')), 'c_id='+c_id+'&data='+encodeURIComponent(JSON.stringify(saving))).then(function(r){
-				if(typeof r!='object'){
+			return ajax(adminPrefix + (currentAdminPage.split('/'))[0] + '/save/' + id, 'instant=' + encodeURIComponent(ids.join(',')), 'c_id=' + c_id + '&data=' + encodeURIComponent(JSON.stringify(saving))).then(function (r) {
+				if (typeof r != 'object') {
 					alert(r);
 					field.style.display = 'none';
-				}else if(typeof r.err!='undefined'){
+				} else if (typeof r.err != 'undefined') {
 					alert(r.err);
 					field.style.display = 'none';
-				}else if(r.status!='ok'){
+				} else if (r.status != 'ok') {
 					alert('Error');
 					field.style.display = 'none';
-				}else{
+				} else {
 					field.style.opacity = 1;
 
-					for(let id in r.changed){
+					for (let id in r.changed) {
 						var el = r.changed[id];
 
-						var row = _('.results-table-row[data-id="'+id+'"]');
-						if(!row)
+						var row = _('.results-table-row[data-id="' + id + '"]');
+						if (!row)
 							return;
 
-						if(el.background)
+						if (el.background)
 							row.style.background = el.background;
 						else
 							row.style.background = '';
 
-						if(el.color)
+						if (el.color)
 							row.style.color = el.color;
 						else
 							row.style.color = '';
 
-						for(let k in el.columns){
-							var cell = row.querySelector('[data-column="'+k+'"]');
-							if(!cell)
+						for (let k in el.columns) {
+							var cell = row.querySelector('[data-column="' + k + '"]');
+							if (!cell)
 								continue;
 
 							var c = el.columns[k];
 
-							if(c.background)
+							if (c.background)
 								cell.style.background = c.background;
 							else
 								cell.style.background = '';
 
-							if(c.color)
+							if (c.color)
 								cell.style.color = c.color;
 							else
 								cell.style.color = '';
 
-							if(cell.hasClass('editable-cell')){
+							if (cell.hasClass('editable-cell')) {
 								var f = cell.querySelector('input, select, textarea');
 								f.setValue(c.value, false);
-							}else{
+							} else {
 								cell.firstElementChild.innerHTML = c.text;
 							}
 						}
@@ -1519,33 +1538,33 @@ function instantSave(id, f, field){
 	})(id, f, field));
 }
 
-function allInOnePage(){
+function allInOnePage() {
 	var get = changeGetParameter('', 'sId', sId);
 	get = changeGetParameter(get, 'nopag', 1);
 
 	loadAdminPage([currentAdminPage.split('/')[0]], get);
 }
 
-function sublistAddRow(name, cont, id, trigger){
-	if(typeof trigger==='undefined')
+function sublistAddRow(name, cont, id, trigger) {
+	if (typeof trigger === 'undefined')
 		trigger = true;
 
 	var form = _('adminForm');
 
-	if(typeof id==='undefined' || id===null){
+	if (typeof id === 'undefined' || id === null) {
 		var next = 0;
-		while(typeof form['ch-'+name+'-new'+next]!=='undefined')
+		while (typeof form['ch-' + name + '-new' + next] !== 'undefined')
 			next++;
 
-		id = 'new'+next;
+		id = 'new' + next;
 	}
 
-	if(typeof cont==='undefined' || cont===null)
+	if (typeof cont === 'undefined' || cont === null)
 		cont = name;
 
-	var container = _('cont-ch-'+cont);
-	if(!container){
-		return new Promise(function(resolve){
+	var container = _('cont-ch-' + cont);
+	if (!container) {
+		return new Promise(function (resolve) {
 			resolve(false);
 		});
 	}
@@ -1554,18 +1573,18 @@ function sublistAddRow(name, cont, id, trigger){
 
 	var div = document.createElement('div');
 	div.className = container.getAttribute('data-rows-class');
-	div.id = 'cont-ch-'+cont+'-'+id;
-	div.innerHTML = _('sublist-template-'+cont).innerHTML.replace(/\[n\]/g, id);
+	div.id = 'cont-ch-' + cont + '-' + id;
+	div.innerHTML = _('sublist-template-' + cont).innerHTML.replace(/\[n\]/g, id);
 
-	if(addbutton = _('cont-ch-'+cont+'-addbutton')){
+	if (addbutton = _('cont-ch-' + cont + '-addbutton')) {
 		container.insertBefore(div, addbutton);
-	}else{
+	} else {
 		container.appendChild(div);
 	}
 
-	changedValues['ch-'+name+'-'+id] = 1;
+	changedValues['ch-' + name + '-' + id] = 1;
 
-	if(trigger){
+	if (trigger) {
 		changeHistory.push({
 			'sublist': name,
 			'cont': cont,
@@ -1576,23 +1595,23 @@ function sublistAddRow(name, cont, id, trigger){
 		rebuildHistoryBox();
 	}
 
-	return promise.then(function(){
+	return promise.then(function () {
 		return next;
 	});
 }
 
-function sublistDeleteRow(name, cont, id, trigger){
-	if(typeof trigger==='undefined')
+function sublistDeleteRow(name, cont, id, trigger) {
+	if (typeof trigger === 'undefined')
 		trigger = true;
 
 	var form = _('adminForm');
-	if(typeof form['ch-'+name+'-'+id]!=='undefined')
-		form['ch-'+name+'-'+id].setValue(0, false);
-	_('cont-ch-'+cont+'-'+id).style.display = 'none';
+	if (typeof form['ch-' + name + '-' + id] !== 'undefined')
+		form['ch-' + name + '-' + id].setValue(0, false);
+	_('cont-ch-' + cont + '-' + id).style.display = 'none';
 
-	changedValues['ch-'+name+'-'+id] = 0;
+	changedValues['ch-' + name + '-' + id] = 0;
 
-	if(trigger){
+	if (trigger) {
 		changeHistory.push({
 			'sublist': name,
 			'cont': cont,
@@ -1604,68 +1623,68 @@ function sublistDeleteRow(name, cont, id, trigger){
 	}
 }
 
-function sublistRestoreRow(name, cont, id){
+function sublistRestoreRow(name, cont, id) {
 	var form = _('adminForm');
-	if(typeof form['ch-'+name+'-'+id]!=='undefined')
-		form['ch-'+name+'-'+id].setValue(1, false);
-	_('cont-ch-'+cont+'-'+id).style.display = 'block';
-	changedValues['ch-'+name+'-'+id] = 1;
+	if (typeof form['ch-' + name + '-' + id] !== 'undefined')
+		form['ch-' + name + '-' + id].setValue(1, false);
+	_('cont-ch-' + cont + '-' + id).style.display = 'block';
+	changedValues['ch-' + name + '-' + id] = 1;
 }
 
-function switchAllFieldsLang(lang){
-	document.querySelectorAll('.lang-switch-cont [data-lang]').forEach(function(el){
-		if(el.getAttribute('data-lang')===lang)
+function switchAllFieldsLang(lang) {
+	document.querySelectorAll('.lang-switch-cont [data-lang]').forEach(function (el) {
+		if (el.getAttribute('data-lang') === lang)
 			el.addClass('selected');
 		else
 			el.removeClass('selected');
 	});
 
-	document.querySelectorAll('.multilang-field-container[data-name]').forEach(function(f){
+	document.querySelectorAll('.multilang-field-container[data-name]').forEach(function (f) {
 		switchFieldLang(f.getAttribute('data-name'), lang);
 	});
 }
 
-function setLoadingBar(percentage){
-	_('main-loading-bar').style.width = percentage+'%';
+function setLoadingBar(percentage) {
+	_('main-loading-bar').style.width = percentage + '%';
 }
 
-function duplicate(){
-	if(changeHistory.length>0){
+function duplicate() {
+	if (changeHistory.length > 0) {
 		alert('There are prending changes, can\'t duplicate.');
 		return false;
 	}
 
 	var request = currentAdminPage.split('/');
-	window.open(adminPrefix+request[0]+'/duplicate/'+request[2]);
+	window.open(adminPrefix + request[0] + '/duplicate/' + request[2]);
 }
 
-function checkSubPages(){
+function checkSubPages() {
 	var promises = [];
 
 	var containers = document.querySelectorAll('[data-subpages]');
-	containers.forEach(function(cont){
-		var tabsCont = document.querySelector('[data-tabs][data-name="'+cont.getAttribute('data-subpages')+'"]');
+	containers.forEach(function (cont) {
+		var tabsCont = document.querySelector('[data-tabs][data-name="' + cont.getAttribute('data-subpages') + '"]');
 		var tabs = tabsCont.querySelectorAll('[data-tab]');
-		tabs.forEach(function(tab){
-			var page = cont.querySelector('[data-subpage="'+tab.getAttribute('data-tab')+'"]');
-			if(!page){
+		tabs.forEach(function (tab) {
+			var page = cont.querySelector('[data-subpage="' + tab.getAttribute('data-tab') + '"]');
+			if (!page) {
 				var subPageCont = document.createElement('div');
 				subPageCont.setAttribute('data-subpage', tab.getAttribute('data-tab'));
 				subPageCont.innerHTML = '[to-be-loaded]';
 				cont.appendChild(subPageCont);
 			}
 
-			if(tab.getAttribute('data-oninit')){
-				(function(){
+			if (tab.getAttribute('data-oninit')) {
+				(function () {
 					eval(this.getAttribute('data-oninit'));
 				}).call(tab);
 			}
 
-			tab.addEventListener('click', function(event){
+			tab.addEventListener('click', function (event) {
 				sessionStorage.setItem(tabsCont.getAttribute('data-tabs'), this.getAttribute('data-tab'));
 				loadSubPage(cont.getAttribute('data-subpages'), this.getAttribute('data-tab'));
 
-				if(this.getAttribute('data-onclick')){
+				if (this.getAttribute('data-onclick')) {
 					eval(this.getAttribute('data-onclick'));
 				}
 
@@ -1674,18 +1693,18 @@ function checkSubPages(){
 		});
 
 		var def = null;
-		if(sessionStorage.getItem(tabsCont.getAttribute('data-tabs'))){
+		if (sessionStorage.getItem(tabsCont.getAttribute('data-tabs'))) {
 			def = sessionStorage.getItem(tabsCont.getAttribute('data-tabs'));
-		}else if(tabsCont.getAttribute('data-default')){
+		} else if (tabsCont.getAttribute('data-default')) {
 			def = tabsCont.getAttribute('data-default');
-		}else{
+		} else {
 			def = tabsCont.querySelector('[data-tab]');
-			if(def)
+			if (def)
 				def = def.getAttribute('data-tab');
 		}
 
-		if(def){
-			promises.push(new Promise(function(resolve){
+		if (def) {
+			promises.push(new Promise(function (resolve) {
 				loadSubPage(cont.getAttribute('data-subpages'), def).then(resolve);
 			}));
 		}
@@ -1694,28 +1713,28 @@ function checkSubPages(){
 	return Promise.all(promises);
 }
 
-function loadSubPage(cont_name, p){
-	var tabsCont = document.querySelector('[data-tabs][data-name="'+cont_name+'"]');
+function loadSubPage(cont_name, p) {
+	var tabsCont = document.querySelector('[data-tabs][data-name="' + cont_name + '"]');
 
-	tabsCont.querySelectorAll('[data-tab]').forEach(function(el){
-		var cont = document.querySelector('[data-subpages="'+cont_name+'"] [data-subpage="'+el.getAttribute('data-tab')+'"]');
+	tabsCont.querySelectorAll('[data-tab]').forEach(function (el) {
+		var cont = document.querySelector('[data-subpages="' + cont_name + '"] [data-subpage="' + el.getAttribute('data-tab') + '"]');
 
-		if(el.getAttribute('data-tab')===p){
+		if (el.getAttribute('data-tab') === p) {
 			el.addClass('selected');
 
-			if(el.getAttribute('data-onchange')){
-				(function(){
+			if (el.getAttribute('data-onchange')) {
+				(function () {
 					eval(this.getAttribute('data-onchange'));
 				}).call(el);
 			}
 
 			cont.style.display = 'block';
-		}else{
-			if(el.hasClass('selected')){
+		} else {
+			if (el.hasClass('selected')) {
 				el.removeClass('selected');
 
-				if(el.getAttribute('data-onchange')){
-					(function(){
+				if (el.getAttribute('data-onchange')) {
+					(function () {
 						eval(this.getAttribute('data-onchange'));
 					}).call(el);
 				}
@@ -1725,40 +1744,42 @@ function loadSubPage(cont_name, p){
 		}
 	});
 
-	var cont = document.querySelector('[data-subpages="'+cont_name+'"] [data-subpage="'+p+'"]');
-	if(cont.innerHTML==='[to-be-loaded]'){
+	var cont = document.querySelector('[data-subpages="' + cont_name + '"] [data-subpage="' + p + '"]');
+	if (cont.innerHTML === '[to-be-loaded]') {
 		var request = currentAdminPage.split('/');
-		if(request.length===2)
+		if (request.length === 2)
 			request.push(0);
 
-		return cont.loading().ajax(adminPrefix+request.join('/')+'/'+p, '', '').then(function(){
+		return cont.loading().ajax(adminPrefix + request.join('/') + '/' + p, '', '').then(function () {
 			return fillAdminForm();
 		}).then(checkSubPages);
-	}else{
-		return new Promise(function(resolve){ resolve(); });
+	} else {
+		return new Promise(function (resolve) {
+			resolve();
+		});
 	}
 }
 
-function holdRowsSelection(checkbox){
-	if(checkbox.getValue(true))
+function holdRowsSelection(checkbox) {
+	if (checkbox.getValue(true))
 		holdingRowsSelection = 0;
 	else
 		holdingRowsSelection = 1;
 	checkbox.setValue(holdingRowsSelection);
 }
 
-function releaseRowsSelection(){
+function releaseRowsSelection() {
 	holdingRowsSelection = null;
 }
 
-function moveBetweenRows(checkbox, keyCode){
+function moveBetweenRows(checkbox, keyCode) {
 	var id = checkbox.getAttribute('data-id');
-	var row = document.querySelector('.results-table-row[data-id="'+id+'"]');
-	if(!row)
+	var row = document.querySelector('.results-table-row[data-id="' + id + '"]');
+	if (!row)
 		return;
 	var n = row.getAttribute('data-n');
 
-	switch(keyCode){
+	switch (keyCode) {
 		case 38:
 			n--;
 			break;
@@ -1770,23 +1791,23 @@ function moveBetweenRows(checkbox, keyCode){
 			break;
 	}
 
-	var nextRow = document.querySelector('.results-table-row[data-n="'+n+'"]');
-	if(!nextRow)
+	var nextRow = document.querySelector('.results-table-row[data-n="' + n + '"]');
+	if (!nextRow)
 		return;
 
 	var nextId = nextRow.getAttribute('data-id');
-	var nextCheckbox = document.getElementById('row-checkbox-'+nextId);
+	var nextCheckbox = document.getElementById('row-checkbox-' + nextId);
 	nextCheckbox.focus();
 }
 
-function callElementCallback(){
-	if(elementCallback){
+function callElementCallback() {
+	if (elementCallback) {
 		elementCallback.call();
 		elementCallback = null;
 	}
 }
 
-function reportAdminError(err){
+function reportAdminError(err) {
 	console.log(err);
 	alert(err);
 }
