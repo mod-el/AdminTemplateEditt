@@ -9,7 +9,7 @@ class Config extends Module_Config {
 	 * @return bool
 	 * @throws \Model\Core\Exception
 	 */
-	public function makeCache(){
+	public function makeCache(): bool{
 		if($this->model->moduleExists('WebAppManifest')){
 			$adminConfig = new \Model\Admin\Config($this->model);
 			$adminRules = $adminConfig->getRules();
@@ -49,7 +49,7 @@ class Config extends Module_Config {
 		$md5 = [];
 		foreach($assets as $asset){
 			if(!file_exists(PATHBASE.$asset))
-				$this->model->error('One of the assets file defined by admin template dependencies does not exist!');
+				continue;
 			$md5[] = md5(file_get_contents(PATHBASE.$asset));
 		}
 
@@ -61,7 +61,8 @@ class Config extends Module_Config {
 	 *
 	 * @return array
 	 */
-	public function getRules(){
+	public function getRules(): array
+	{
 		$adminConfig = new \Model\Admin\Config($this->model);
 
 		$rules = [];
