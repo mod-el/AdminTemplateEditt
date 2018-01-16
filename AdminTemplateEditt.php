@@ -6,10 +6,10 @@ use Model\Form\Form;
 
 class AdminTemplateEditt extends Module {
 	/**
-	 * @param mixed $options
+	 * @param array $options
 	 * @throws \Model\Core\Exception
 	 */
-	public function init($options){
+	public function init(array $options){
 		if($this->model->moduleExists('DatePicker'))
 			$this->model->load('DatePicker');
 		if($this->model->moduleExists('CkEditor'))
@@ -813,7 +813,7 @@ class AdminTemplateEditt extends Module {
 	 * @param string $rule
 	 * @return array|bool
 	 */
-	public function getController(array $request, $rule){
+	public function getController(array $request, string $rule){
 	    $this->model->_Admin->getController($request, 0); // Lets the Admin module set its internal url parameter
 
 		return [

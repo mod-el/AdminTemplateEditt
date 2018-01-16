@@ -9,7 +9,7 @@ class Config extends Module_Config {
 	 * @return bool
 	 * @throws \Model\Core\Exception
 	 */
-	public function makeCache(){
+	public function makeCache(): bool{
 		if($this->model->moduleExists('WebAppManifest')){
 			$adminConfig = new \Model\Admin\Config($this->model);
 			$adminRules = $adminConfig->getRules();
@@ -61,7 +61,8 @@ class Config extends Module_Config {
 	 *
 	 * @return array
 	 */
-	public function getRules(){
+	public function getRules(): array
+	{
 		$adminConfig = new \Model\Admin\Config($this->model);
 
 		$rules = [];
