@@ -49,7 +49,7 @@ class Config extends Module_Config {
 		$md5 = [];
 		foreach($assets as $asset){
 			if(!file_exists(PATHBASE.$asset))
-				$this->model->error('One of the assets file defined by admin template dependencies does not exist!');
+				continue;
 			$md5[] = md5(file_get_contents(PATHBASE.$asset));
 		}
 

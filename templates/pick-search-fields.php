@@ -1,6 +1,6 @@
 <fieldset class="pad10">
     <form action="?" method="post" id="pick-search-fields-form" onsubmit="saveSearchFields(); return false">
-        <?php csrfInput(); ?>
+        <?php $this->model->_CSRF->csrfInput(); ?>
         <h2>Cerca nei seguenti campi:</h2>
         <div class="pad10v text-center">
             <input type="submit" value="Salva preferenza" />

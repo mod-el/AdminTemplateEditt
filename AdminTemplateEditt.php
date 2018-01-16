@@ -21,6 +21,7 @@ class AdminTemplateEditt extends Module {
 		$this->model->load('Popup');
 		$this->model->load('Form');
 		$this->model->load('ContextMenu');
+		$this->model->load('CSRF');
 
 		if(!isset($this->model->_Admin->request[1]) and isset($this->model->_Admin->request[0], $_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-searchFields'])){ // List request
 			$_REQUEST['search-columns'] = $_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-searchFields'];
@@ -599,7 +600,7 @@ class AdminTemplateEditt extends Module {
 	 * Saves the width of a column, called via an ajax request
 	 */
 	public function saveWidth(){
-		if(checkCsrf() and isset($_GET['k'], $_POST['w']) and is_numeric($_POST['w'])){
+		if($this->model->_CSRF->checkCsrf() and isset($_GET['k'], $_POST['w']) and is_numeric($_POST['w'])){
 			$this->loadResizeModule();
 			$this->model->_ResizeTable->set($_GET['k'], $_POST['w']);
 		}
@@ -615,7 +616,7 @@ class AdminTemplateEditt extends Module {
 	 * @throws \Model\Core\Exception
 	 */
 	public function pickFilters(){
-		if(checkCsrf()){
+		if($this->model->_CSRF->checkCsrf()){
 			$filtersPost = json_decode($_POST['filters'], true);
 			if($filtersPost===null)
 				die('Errore JSON');
@@ -661,7 +662,7 @@ class AdminTemplateEditt extends Module {
 	 * @throws \Model\Core\Exception
 	 */
 	public function pickSearchFields(){
-		if(checkCsrf()){
+		if($this->model->_CSRF->checkCsrf()){
 			setcookie('model-admin-'.$this->model->_Admin->request[0].'-searchFields', json_encode(explode(',', $_POST['fields'])), time()+(60*60*24*365), $this->model->prefix().($this->model->_Admin->url ? $this->model->_Admin->url.'/' : ''));
 			die('ok');
 		}

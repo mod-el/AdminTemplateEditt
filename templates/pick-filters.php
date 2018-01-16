@@ -1,6 +1,6 @@
 <fieldset class="pad10" style="width: 1000px">
     <form action="#" method="post" id="pick-filters-form" onsubmit="saveFilters(); return false">
-		<?php csrfInput(); ?>
+		<?php $this->model->_CSRF->csrfInput(); ?>
         <h2>Seleziona i filtri:</h2>
         <div class="pad5v text-center">
             <input type="submit" value="Salva preferenza" />
