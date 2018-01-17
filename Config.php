@@ -7,9 +7,33 @@ class Config extends Module_Config {
 
 	/**
 	 * @return bool
-	 * @throws \Model\Core\Exception
 	 */
 	public function makeCache(): bool{
+		if ($this->model->isLoaded('Multilang')) {
+			$this->model->_Multilang->checkAndInsertWords('admin', [
+				'logout' => [
+					'it' => 'Log out',
+					'en' => 'Log out',
+				],
+				'filters-close' => [
+					'it' => 'Chiudi',
+					'en' => 'Close',
+				],
+				'filters-manage' => [
+					'it' => 'Gestisci',
+					'en' => 'Manage',
+				],
+				'filters-manage-main' => [
+					'it' => 'Gestisci campo generico',
+					'en' => 'Manage main search',
+				],
+				'filters-reset' => [
+					'it' => 'Reimposta',
+					'en' => 'Reset',
+				],
+			]);
+		}
+
 		if($this->model->moduleExists('WebAppManifest')){
 			$adminConfig = new \Model\Admin\Config($this->model);
 			$adminRules = $adminConfig->getRules();
