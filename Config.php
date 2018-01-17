@@ -65,7 +65,7 @@ class Config extends Module_Config {
 			}
 		}
 
-		$assets = $this->model->_AdminTemplateEditt->getAssets();
+		$assets = $this->model->_AdminTemplateEditt->getAssetsForServiceWorker();
 
 		$assets[] = PATH.'model'.DIRECTORY_SEPARATOR.'AdminTemplateEditt'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'header.php';
 		$assets[] = PATH.'model'.DIRECTORY_SEPARATOR.'AdminTemplateEditt'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'footer.php';

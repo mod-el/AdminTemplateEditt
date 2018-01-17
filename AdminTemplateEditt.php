@@ -39,12 +39,12 @@ class AdminTemplateEditt extends Module {
      *
 	 * @return array
 	 */
-	public function getAssets(){
+	public function getAssetsForServiceWorker(){
         return array_merge(array_values(array_filter(array_map(function($url){
 			if(substr($url, 0, 4)==='http')
 				return false;
 			return PATH.$url;
-		}, $this->model->_Output->getJsList() + $this->model->_Output->getCSSList()))), [
+		}, $this->model->_Output->getJsList(true) + $this->model->_Output->getCSSList(true)))), [
 		    PATH.'model/AdminTemplateEditt/files/basics.css',
             PATH.'model/AdminTemplateEditt/files/menu.css',
             PATH.'model/AdminTemplateEditt/files/style.css',
