@@ -42,8 +42,7 @@ window.addEventListener('DOMContentLoaded', function () {
 				if (request[2]) {
 					loadElementData(request[0], request[2]).then(fillAdminForm).then(callElementCallback).then(monitorFields).catch(reportAdminError);
 				} else {
-					initalizeEmptyForm();
-					monitorFields();
+					initalizeEmptyForm().then(monitorFields);
 				}
 			});
 		} else {
@@ -1126,7 +1125,9 @@ function initalizeEmptyForm() {
 			}
 		})(f.name)).then((function (f) {
 			return function (fieldValue) {
-				return f.setValue(fieldValue);
+				return f.setValue(fieldValue).then(() => {
+					f.setAttribute('data-filled', '1');
+				});
 			};
 		})(f)));
 	}
@@ -1347,7 +1348,7 @@ function historyWipe() {
 }
 
 function newElement() {
-	return loadElement(currentAdminPage.split('/')[0]).then(initalizeEmptyForm);
+	return loadElement(currentAdminPage.split('/')[0]).then(initalizeEmptyForm).then(monitorFields);
 }
 
 function save() {
