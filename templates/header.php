@@ -35,7 +35,7 @@ $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
         <div class="tasti-right">
             <div>
                 <a href="<?=$this->model->_Admin->getUrlPrefix()?>logout" class="tasto-header">
-                    Log out
+					<?= entities($this->word('admin.logout')) ?>
                 </a>
             </div>
         </div>
@@ -59,11 +59,11 @@ $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
     <div id="filtersForm" style="display: none">
         <div class="pad5v no-overflow">
             <div class="right">
-                [<a href="#" onclick="switchFiltersForm(false); return false"> chiudi </a>]
+                [<a href="#" onclick="switchFiltersForm(false); return false"> <?= entities($this->word('admin.filters-close')) ?> </a>]
             </div>
-            [<a href="#" onclick="manageFilters(); return false"> gestisci </a>]
-            [<a href="#" onclick="manageSearchFields(); return false"> gestisci campo generico </a>]
-            [<a href="#" onclick="filtersReset(); return false"> resetta </a>]
+            [<a href="#" onclick="manageFilters(); return false"> <?= entities($this->word('admin.filters-manage')) ?> </a>]
+            [<a href="#" onclick="manageSearchFields(); return false"> <?= entities($this->word('admin.filters-manage-main')) ?> </a>]
+            [<a href="#" onclick="filtersReset(); return false"> <?= entities($this->word('admin.filters-reset')) ?> </a>]
         </div>
         <div id="filtersFormCont"></div>
     </div>
