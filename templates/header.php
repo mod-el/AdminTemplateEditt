@@ -33,6 +33,24 @@ $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
 <body>
     <header id="header">
         <div class="tasti-right">
+			<?php
+			if($this->model->isLoaded('Multilang')){
+				?>
+                <div>
+                    <select id="admin-language-selector" onchange="this.getValue().then(l => changeAdminLang(l))">
+                        <option value=""></option>
+						<?php
+						foreach($this->model->_Multilang->langs as $l){
+							?>
+                            <option value="<?=entities($l)?>"><?=entities(ucwords($l))?></option>
+							<?php
+						}
+						?>
+                    </select>
+                </div>
+				<?php
+			}
+			?>
             <div>
                 <a href="<?=$this->model->_Admin->getUrlPrefix()?>logout" class="tasto-header">
 					<?= entities($this->word('admin.logout')) ?>
