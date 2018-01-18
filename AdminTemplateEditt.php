@@ -7,7 +7,7 @@ use Model\Form\Form;
 class AdminTemplateEditt extends Module {
 	/**
 	 * @param array $options
-	 * @throws \Model\Core\Exception
+	 * @throws \Exception
 	 */
 	public function init(array $options){
 		if($this->model->moduleExists('DatePicker'))
@@ -23,10 +23,18 @@ class AdminTemplateEditt extends Module {
 		$this->model->load('ContextMenu');
 		$this->model->load('CSRF');
 
-		if($this->model->moduleExists('Multilang')){
-		    $this->model->load('Multilang', [
+		if($this->model->isLoaded('Multilang')){
+            $this->model->_Multilang->reloadConfig([
                 'type' => 'session',
             ]);
+
+			if(isset($_GET['mlang']))
+                die('ok');
+
+			if(isset($_GET['getCurrentLanguage'])){
+			    echo $this->model->_Multilang->lang;
+			    die();
+            }
         }
 
 		if(!isset($this->model->_Admin->request[1]) and isset($this->model->_Admin->request[0], $_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-searchFields'])){ // List request
