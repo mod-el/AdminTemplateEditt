@@ -1080,7 +1080,7 @@ function fillAdminForm(data) {
 							if (column_cont)
 								column_cont.innerHTML = el[k];
 
-							if (typeof el[k] === 'object') {
+							if (el[k] !== null && typeof el[k] === 'object') {
 								for (let lang in el[k]) {
 									if (typeof form[form_k + '-' + lang] !== 'undefined') {
 										promises.push(form[form_k + '-' + lang].setValue(el[k][lang], false).then((field => {
@@ -1136,11 +1136,12 @@ function initalizeEmptyForm() {
 }
 
 function monitorFields() {
-	var form = _('adminForm');
+	let form = _('adminForm');
 
 	for (let i in form.elements) {
-		if (!form.elements.hasOwnProperty(i)) continue;
-		var f = form.elements[i];
+		if (!form.elements.hasOwnProperty(i))
+			continue;
+		let f = form.elements[i];
 		if (!f.name || f.name === 'fakeusernameremembered' || f.name === 'fakepasswordremembered')
 			continue;
 
@@ -1149,8 +1150,8 @@ function monitorFields() {
 		if (f.getAttribute('data-monitored'))
 			continue;
 
-		var isInSublistTemplate = false;
-		var check = f;
+		let isInSublistTemplate = false;
+		let check = f;
 		while (check) {
 			if (check.hasClass && check.hasClass('sublist-template')) {
 				isInSublistTemplate = true;
@@ -1550,10 +1551,10 @@ function sublistAddRow(name, cont, id, trigger) {
 	if (typeof trigger === 'undefined')
 		trigger = true;
 
-	var form = _('adminForm');
+	let form = _('adminForm');
 
 	if (typeof id === 'undefined' || id === null) {
-		var next = 0;
+		let next = 0;
 		while (typeof form['ch-' + name + '-new' + next] !== 'undefined')
 			next++;
 
@@ -1563,19 +1564,29 @@ function sublistAddRow(name, cont, id, trigger) {
 	if (typeof cont === 'undefined' || cont === null)
 		cont = name;
 
-	var container = _('cont-ch-' + cont);
+	let container = _('cont-ch-' + cont);
 	if (!container) {
 		return new Promise(function (resolve) {
 			resolve(false);
 		});
 	}
 
-	var promise = afterMutation(monitorFields);
-
-	var div = document.createElement('div');
+	let div = document.createElement('div');
 	div.className = container.getAttribute('data-rows-class');
 	div.id = 'cont-ch-' + cont + '-' + id;
 	div.innerHTML = _('sublist-template-' + cont).innerHTML.replace(/\[n\]/g, id);
+
+	let promise = afterMutation((div => {
+		return () => {
+			div.querySelectorAll('input, select, textarea').forEach(f => {
+				if (!f.name)
+					return;
+
+				f.setAttribute('data-filled', '1');
+			});
+			return monitorFields();
+		};
+	})(div));
 
 	if (addbutton = _('cont-ch-' + cont + '-addbutton')) {
 		container.insertBefore(div, addbutton);
@@ -1597,7 +1608,7 @@ function sublistAddRow(name, cont, id, trigger) {
 	}
 
 	return promise.then(function () {
-		return next;
+		return id;
 	});
 }
 
