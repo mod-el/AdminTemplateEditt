@@ -9,33 +9,32 @@ class Config extends Module_Config {
 	 * @return bool
 	 */
 	public function makeCache(): bool{
-		if ($this->model->isLoaded('Multilang')) {
-			$this->model->_Multilang->checkAndInsertWords('admin', [
-				'logout' => [
-					'it' => 'Log out',
-					'en' => 'Log out',
-				],
-				'filters-close' => [
-					'it' => 'Chiudi',
-					'en' => 'Close',
-				],
-				'filters-manage' => [
-					'it' => 'Gestisci',
-					'en' => 'Manage',
-				],
-				'filters-manage-main' => [
-					'it' => 'Gestisci campo generico',
-					'en' => 'Manage main search',
-				],
-				'filters-reset' => [
-					'it' => 'Reimposta',
-					'en' => 'Reset',
-				],
-			]);
-		}
+		$adminConfig = new \Model\Admin\Config($this->model);
+
+		$adminConfig->checkAndInsertWords([
+			'logout' => [
+				'it' => 'Log out',
+				'en' => 'Log out',
+			],
+			'filters-close' => [
+				'it' => 'Chiudi',
+				'en' => 'Close',
+			],
+			'filters-manage' => [
+				'it' => 'Gestisci',
+				'en' => 'Manage',
+			],
+			'filters-manage-main' => [
+				'it' => 'Gestisci campo generico',
+				'en' => 'Manage main search',
+			],
+			'filters-reset' => [
+				'it' => 'Reimposta',
+				'en' => 'Reset',
+			],
+		]);
 
 		if($this->model->moduleExists('WebAppManifest')){
-			$adminConfig = new \Model\Admin\Config($this->model);
 			$adminRules = $adminConfig->getRules();
 			foreach($adminRules['rules'] as $rule){
 				if($rule)

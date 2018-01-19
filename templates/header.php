@@ -2,6 +2,7 @@
 $config = $this->model->_Admin->retrieveConfig();
 $hideMenu = isset($config['hide-menu']) ? $config['hide-menu'] : 'mobile';
 $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
+$this->languageBound = true;
 ?>
 <!DOCTYPE html>
 
@@ -53,7 +54,7 @@ $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
 			?>
             <div>
                 <a href="<?=$this->model->_Admin->getUrlPrefix()?>logout" class="tasto-header">
-					<?= entities($this->word('admin.logout')) ?>
+					<?= entities($this->model->_Admin->word('logout')) ?>
                 </a>
             </div>
         </div>
@@ -77,11 +78,11 @@ $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
     <div id="filtersForm" style="display: none">
         <div class="pad5v no-overflow">
             <div class="right">
-                [<a href="#" onclick="switchFiltersForm(false); return false"> <?= entities($this->word('admin.filters-close')) ?> </a>]
+                [<a href="#" onclick="switchFiltersForm(false); return false"> <?= entities($this->model->_Admin->word('filters-close')) ?> </a>]
             </div>
-            [<a href="#" onclick="manageFilters(); return false"> <?= entities($this->word('admin.filters-manage')) ?> </a>]
-            [<a href="#" onclick="manageSearchFields(); return false"> <?= entities($this->word('admin.filters-manage-main')) ?> </a>]
-            [<a href="#" onclick="filtersReset(); return false"> <?= entities($this->word('admin.filters-reset')) ?> </a>]
+            [<a href="#" onclick="manageFilters(); return false"> <?= entities($this->model->_Admin->word('filters-manage')) ?> </a>]
+            [<a href="#" onclick="manageSearchFields(); return false"> <?= entities($this->model->_Admin->word('filters-manage-main')) ?> </a>]
+            [<a href="#" onclick="filtersReset(); return false"> <?= entities($this->model->_Admin->word('filters-reset')) ?> </a>]
         </div>
         <div id="filtersFormCont"></div>
     </div>
