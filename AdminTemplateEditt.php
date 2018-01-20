@@ -105,12 +105,12 @@ class AdminTemplateEditt extends Module
 	 * Called by AdminController, should send the correct data to the template for rendering content appropriate to the request
 	 * If returns an array, this will be merged into the viewOptions (so it can return a template, for instance)
 	 *
-	 * @param string $request
+	 * @param array $request
 	 * @param array $data
 	 * @return array
 	 * @throws \Model\Core\Exception
 	 */
-	public function respond(string $request, array $data = []): array
+	public function respond(array $request, array $data = []): array
 	{
 		if (isset($request[0]) and $request[0] == 'login') {
 			return [
