@@ -4,17 +4,19 @@ use Model\Core\Autoloader;
 use Model\Core\Module;
 use Model\Form\Form;
 
-class AdminTemplateEditt extends Module {
+class AdminTemplateEditt extends Module
+{
 	/**
 	 * @param array $options
 	 * @throws \Exception
 	 */
-	public function init(array $options){
-		if($this->model->moduleExists('DatePicker'))
+	public function init(array $options)
+	{
+		if ($this->model->moduleExists('DatePicker'))
 			$this->model->load('DatePicker');
-		if($this->model->moduleExists('CkEditor'))
+		if ($this->model->moduleExists('CkEditor'))
 			$this->model->load('CkEditor');
-		if($this->model->moduleExists('InstantSearch'))
+		if ($this->model->moduleExists('InstantSearch'))
 			$this->model->load('InstantSearch');
 
 		$this->model->load('FrontEnd');
@@ -23,70 +25,74 @@ class AdminTemplateEditt extends Module {
 		$this->model->load('ContextMenu');
 		$this->model->load('CSRF');
 
-		if($this->model->isLoaded('Multilang')){
-            $this->model->_Multilang->reloadConfig([
-                'type' => 'session',
-            ]);
+		if ($this->model->isLoaded('Multilang')) {
+			$this->model->_Multilang->reloadConfig([
+				'type' => 'session',
+			]);
 
-			if(isset($_GET['mlang']))
-                die('ok');
+			if (isset($_GET['mlang']))
+				die('ok');
 
-			if(isset($_GET['getCurrentLanguage'])){
-			    echo $this->model->_Multilang->lang;
-			    die();
-            }
-        }
+			if (isset($_GET['getCurrentLanguage'])) {
+				echo $this->model->_Multilang->lang;
+				die();
+			}
+		}
 
-		if(!isset($this->model->_Admin->request[1]) and isset($this->model->_Admin->request[0], $_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-searchFields'])){ // List request
-			$_REQUEST['search-columns'] = $_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-searchFields'];
+		if (!isset($this->model->_Admin->request[1]) and isset($this->model->_Admin->request[0], $_COOKIE['model-admin-' . $this->model->_Admin->request[0] . '-searchFields'])) { // List request
+			$_REQUEST['search-columns'] = $_COOKIE['model-admin-' . $this->model->_Admin->request[0] . '-searchFields'];
 		}
 	}
 
 	/**
-     * Returns a list of the used assets (javascript and stylesheets) for Service Worker caching
-     *
+	 * Returns a list of the used assets (javascript and stylesheets) for Service Worker caching
+	 *
 	 * @return array
 	 */
-	public function getAssetsForServiceWorker(){
-        return array_merge(array_values(array_filter(array_map(function($url){
-			if(substr($url, 0, 4)==='http')
+	public function getAssetsForServiceWorker(): array
+	{
+		return array_merge(array_values(array_filter(array_map(function ($url) {
+			if (substr($url, 0, 4) === 'http')
 				return false;
-			return PATH.$url;
+			return PATH . $url;
 		}, $this->model->_Output->getJsList(true) + $this->model->_Output->getCSSList(true)))), [
-		    PATH.'model/AdminTemplateEditt/files/basics.css',
-            PATH.'model/AdminTemplateEditt/files/menu.css',
-            PATH.'model/AdminTemplateEditt/files/style.css',
-        ]);
-    }
+			PATH . 'model/AdminTemplateEditt/files/basics.css',
+			PATH . 'model/AdminTemplateEditt/files/menu.css',
+			PATH . 'model/AdminTemplateEditt/files/style.css',
+		]);
+	}
 
 	/**
 	 * Recursively renders a left menu items list
 	 *
-	 * @param int $parent
+	 * @param string $parent
 	 * @param array $items
 	 * @param int $lvl
 	 */
-	public function renderMenuItems($parent, array $items, $lvl=1){
-		foreach($items as $pIdx => $p){
-			if(isset($p['rule'])){
-				$link = $this->model->_Admin->getUrlPrefix().$p['rule'];
-				$onclick = 'loadAdminPage([\''.$p['rule'].'\']); return false';
-			}else{
+	public function renderMenuItems(string $parent, array $items, int $lvl = 1)
+	{
+		foreach ($items as $pIdx => $p) {
+			if (isset($p['rule'])) {
+				$link = $this->model->_Admin->getUrlPrefix() . $p['rule'];
+				$onclick = 'loadAdminPage([\'' . $p['rule'] . '\']); return false';
+			} else {
 				$link = '#';
-				$onclick = 'switchMenuGroup(\''.$parent.'-'.$pIdx.'\'); return false';
+				$onclick = 'switchMenuGroup(\'' . $parent . '-' . $pIdx . '\'); return false';
 			}
 			?>
-            <a href="<?=$link?>" class="main-menu-sub" id="menu-group-<?=$parent?>-<?=$pIdx?>" onclick="<?=$onclick?>" data-menu-id="<?=$parent.'-'.$pIdx?>">
-                <img src="<?=PATH?>model/<?=$this->getClass()?>/files/img/page.png" alt="" />
-                <span class="cont-testo-menu"><?=entities($p['name'])?></span>
+            <a href="<?= $link ?>" class="main-menu-sub" id="menu-group-<?= $parent ?>-<?= $pIdx ?>"
+               onclick="<?= $onclick ?>" data-menu-id="<?= $parent . '-' . $pIdx ?>">
+                <img src="<?= PATH ?>model/<?= $this->getClass() ?>/files/img/page.png" alt=""/>
+                <span class="cont-testo-menu"><?= entities($p['name']) ?></span>
             </a>
 			<?php
-			if(isset($p['sub']) and $p['sub']){
+			if (isset($p['sub']) and $p['sub']) {
 				?>
-                <div class="main-menu-cont expandible" id="menu-group-<?=$parent?>-<?=$pIdx?>-cont" style="height: 0; padding-left: <?=(15*$lvl)?>px" data-menu-id="<?=$parent.'-'.$pIdx?>">
+                <div class="main-menu-cont expandible" id="menu-group-<?= $parent ?>-<?= $pIdx ?>-cont"
+                     style="height: 0; padding-left: <?= (15 * $lvl) ?>px" data-menu-id="<?= $parent . '-' . $pIdx ?>">
                     <div>
 						<?php
-						$this->renderMenuItems($parent.'-'.$pIdx, $p['sub'], $lvl+1);
+						$this->renderMenuItems($parent . '-' . $pIdx, $p['sub'], $lvl + 1);
 						?>
                     </div>
                 </div>
@@ -104,12 +110,13 @@ class AdminTemplateEditt extends Module {
 	 * @return array
 	 * @throws \Model\Core\Exception
 	 */
-	public function respond($request, array $data = []){
-		if(isset($request[0]) and $request[0]=='login'){
+	public function respond(string $request, array $data = []): array
+	{
+		if (isset($request[0]) and $request[0] == 'login') {
 			return [
 				'template-module' => $this->getClass(),
 				'template' => 'login',
-                'showLayout' => false,
+				'showLayout' => false,
 			];
 		}
 
@@ -121,63 +128,63 @@ class AdminTemplateEditt extends Module {
 			'template' => null,
 		];
 
-		if(isset($_GET['ajax']))
+		if (isset($_GET['ajax']))
 			$options['showLayout'] = false;
 
-		if(isset($_GET['print'])){
+		if (isset($_GET['print'])) {
 			$options['header'] = ['print-header'];
 			$options['footer'] = ['print-footer'];
 		}
 
-		if(!isset($request[1]))
+		if (!isset($request[1]))
 			$request[1] = '';
 
-		switch($request[1]){
+		switch ($request[1]) {
 			case '':
-				if(isset($data['columns'], $data['elements'])){
+				if (isset($data['columns'], $data['elements'])) {
 					$this->loadResizeModule($data['columns']);
 
 					$backgroundRule = isset($this->model->_Admin->options['background']) ? $this->model->_Admin->options['background'] : false;
 					$colorRule = isset($this->model->_Admin->options['color']) ? $this->model->_Admin->options['color'] : false;
 
-					foreach($data['elements'] as &$el){
-						if(!is_string($backgroundRule) and is_callable($backgroundRule)){
+					foreach ($data['elements'] as &$el) {
+						if (!is_string($backgroundRule) and is_callable($backgroundRule)) {
 							$el['background'] = call_user_func($backgroundRule, $el['element']);
-						}else{
+						} else {
 							$el['background'] = $backgroundRule;
 						}
-						foreach($el['columns'] as $column_id => $c){
-							if(isset($data['columns'][$column_id]['background']) and $data['columns'][$column_id]['background']){
-								if(!is_string($data['columns'][$column_id]['background']) and is_callable($data['columns'][$column_id]['background'])){
+						foreach ($el['columns'] as $column_id => $c) {
+							if (isset($data['columns'][$column_id]['background']) and $data['columns'][$column_id]['background']) {
+								if (!is_string($data['columns'][$column_id]['background']) and is_callable($data['columns'][$column_id]['background'])) {
 									$el['columns'][$column_id]['background'] = call_user_func($data['columns'][$column_id]['background'], $el['element']);
-								}else{
+								} else {
 									$el['columns'][$column_id]['background'] = $data['columns'][$column_id]['background'];
 								}
-							}else{
+							} else {
 								$el['columns'][$column_id]['background'] = false;
 							}
 						}
 
-						if(!is_string($colorRule) and is_callable($colorRule)){
+						if (!is_string($colorRule) and is_callable($colorRule)) {
 							$el['color'] = call_user_func($colorRule, $el['element']);
-						}else{
+						} else {
 							$el['color'] = $colorRule;
 						}
-						foreach($el['columns'] as $column_id => $c){
-							if(isset($data['columns'][$column_id]['color']) and $data['columns'][$column_id]['color']){
-								if(!is_string($data['columns'][$column_id]['color']) and is_callable($data['columns'][$column_id]['color'])){
+						foreach ($el['columns'] as $column_id => $c) {
+							if (isset($data['columns'][$column_id]['color']) and $data['columns'][$column_id]['color']) {
+								if (!is_string($data['columns'][$column_id]['color']) and is_callable($data['columns'][$column_id]['color'])) {
 									$el['columns'][$column_id]['color'] = call_user_func($data['columns'][$column_id]['color'], $el['element']);
-								}else{
+								} else {
 									$el['columns'][$column_id]['color'] = $data['columns'][$column_id]['color'];
 								}
-							}else{
+							} else {
 								$el['columns'][$column_id]['color'] = false;
 							}
 						}
 					}
 					unset($el);
 
-					if(isset($_GET['print']))
+					if (isset($_GET['print']))
 						$template = 'print-table';
 					else
 						$template = 'table';
@@ -187,16 +194,16 @@ class AdminTemplateEditt extends Module {
 						'cacheTemplate' => false,
 						'data' => $data,
 					]);
-				}else{
-					$dir = $this->model->_Admin->url ? $this->model->_Admin->url.DIRECTORY_SEPARATOR : '';
+				} else {
+					$dir = $this->model->_Admin->url ? $this->model->_Admin->url . DIRECTORY_SEPARATOR : '';
 
-					if(isset($request[0])){
+					if (isset($request[0])) {
 						return array_merge($options, [
 							'template-module' => null,
-							'template' => $dir.$request[0],
+							'template' => $dir . $request[0],
 							'cacheTemplate' => false,
 						]);
-					}else{
+					} else {
 						return array_merge($options, [
 							'template' => 'dashboard',
 							'cacheTemplate' => false,
@@ -205,42 +212,42 @@ class AdminTemplateEditt extends Module {
 				}
 				break;
 			case 'edit':
-				if(isset($_GET['getData'])){
+				if (isset($_GET['getData'])) {
 					$arr = $this->model->_Admin->getEditArray();
 					$this->model->sendJSON($arr);
-				}else{
-					$dir = $this->model->_Admin->url ? $this->model->_Admin->url.DIRECTORY_SEPARATOR : '';
+				} else {
+					$dir = $this->model->_Admin->url ? $this->model->_Admin->url . DIRECTORY_SEPARATOR : '';
 
-					if($this->model->element){
+					if ($this->model->element) {
 						$this->model->_Admin->form->reset();
 
-						$checkCustomTemplate = Autoloader::searchFile('template', $dir.$request[0]);
-						if($checkCustomTemplate){
-							$options['template'] = $dir.$request[0];
+						$checkCustomTemplate = Autoloader::searchFile('template', $dir . $request[0]);
+						if ($checkCustomTemplate) {
+							$options['template'] = $dir . $request[0];
 							unset($options['template-module']);
-						}else{
-						    $options['cacheTemplate'] = false;
+						} else {
+							$options['cacheTemplate'] = false;
 							$options['template'] = 'form-template';
 						}
 
 						$options['cacheTemplate'] = false;
 
-						if(isset($_GET['ajax'])){
+						if (isset($_GET['ajax'])) {
 							$options['showLayout'] = true;
 							$options['header'] = ['form-header'];
 							$options['footer'] = ['form-footer'];
-						}else{
+						} else {
 							$options['header'][] = 'form-header';
 							array_unshift($options['footer'], 'form-footer');
 						}
 
-						if(isset($_GET['duplicated']))
+						if (isset($_GET['duplicated']))
 							$options['messages'] = ['Succesfully duplicated!'];
 					}
 
-					if(isset($request[3])){
+					if (isset($request[3])) {
 						$options['showLayout'] = false;
-						$options['template'] = $dir.$request[0].DIRECTORY_SEPARATOR.$request[3];
+						$options['template'] = $dir . $request[0] . DIRECTORY_SEPARATOR . $request[3];
 					}
 
 					return $options;
@@ -258,12 +265,13 @@ class AdminTemplateEditt extends Module {
 	 * @return bool
 	 * @throws \Model\Core\Exception
 	 */
-	private function loadResizeModule(array $columns = []){
-		if($this->model->isLoaded('ResizeTable'))
+	private function loadResizeModule(array $columns = []): bool
+	{
+		if ($this->model->isLoaded('ResizeTable'))
 			return true;
 
 		$this->model->load('ResizeTable', [
-			'table'=>$this->model->_User_Admin->options['table'],
+			'table' => $this->model->_User_Admin->options['table'],
 			'page' => $this->model->_Admin->request[0],
 			'user' => $this->model->_User_Admin->logged(),
 			'columns' => array_keys($columns),
@@ -277,7 +285,8 @@ class AdminTemplateEditt extends Module {
 	/**
 	 * Sends a JSON with the page aids for the current page
 	 */
-	public function pageAids(){
+	public function pageAids()
+	{
 		$request = array_filter([
 			$this->model->_Admin->request[0],
 			isset($_GET['action']) ? $_GET['action'] : null,
@@ -287,7 +296,7 @@ class AdminTemplateEditt extends Module {
 		$actions = $this->model->_Admin->getActions($request);
 
 		$parsedActions = [];
-		foreach($actions as $actId => $act){
+		foreach ($actions as $actId => $act) {
 			$action = [
 				'id' => $actId,
 				'text' => $act['text'],
@@ -297,11 +306,11 @@ class AdminTemplateEditt extends Module {
 				'action' => 'return false',
 			];
 
-			$iconPath = PATH.'model/'.$this->getClass().'/files/img/toolbar/'.$actId.'.png';
-			if(file_exists(PATHBASE.$iconPath)){
+			$iconPath = PATH . 'model/' . $this->getClass() . '/files/img/toolbar/' . $actId . '.png';
+			if (file_exists(PATHBASE . $iconPath)) {
 				$action['icon'] = $iconPath;
-			}else{
-				switch($actId){
+			} else {
+				switch ($actId) {
 					case 'new':
 						$action['fa-icon'] = 'far fa-plus-square';
 						break;
@@ -317,16 +326,16 @@ class AdminTemplateEditt extends Module {
 				}
 			}
 
-			switch($act['action']){
+			switch ($act['action']) {
 				case 'new':
 					$action['action'] = 'newElement(); return false';
 					break;
 				case 'delete':
-					if(!isset($_GET['action'])) {
+					if (!isset($_GET['action'])) {
 						$action['action'] = 'deleteRows(); return false';
-					}else{
-						if(isset($_GET['id']) and $_GET['id'])
-							$action['action'] = 'deleteRows(['.$_GET['id'].']); return false';
+					} else {
+						if (isset($_GET['id']) and $_GET['id'])
+							$action['action'] = 'deleteRows([' . $_GET['id'] . ']); return false';
 						else
 							continue 2;
 					}
@@ -342,7 +351,7 @@ class AdminTemplateEditt extends Module {
 			$parsedActions[] = $action;
 		}
 
-		if(((isset($this->model->_Admin->options['table']) and $this->model->_Admin->options['table']) or (isset($this->model->_Admin->options['element']) and $this->model->_Admin->options['element'])) and !isset($_GET['action'])){ // We're in a "table" page
+		if (((isset($this->model->_Admin->options['table']) and $this->model->_Admin->options['table']) or (isset($this->model->_Admin->options['element']) and $this->model->_Admin->options['element'])) and !isset($_GET['action'])) { // We're in a "table" page
 			$parsedActions[] = [
 				'id' => 'filters',
 				'text' => 'Filtri',
@@ -353,20 +362,20 @@ class AdminTemplateEditt extends Module {
 		}
 
 		$print = isset($this->model->_Admin->options['print']) ? $this->model->_Admin->options['print'] : false;
-		if($print){
+		if ($print) {
 			$parsedActions[] = [
 				'id' => 'print',
 				'text' => 'Stampa',
 				'fa-icon' => 'fas fa-print',
 				'url' => '#',
-				'action' => 'window.open(\''.$this->model->_Admin->getUrlPrefix().implode('/', $request).'?sId=\'+sId+\'&print\'); return false',
+				'action' => 'window.open(\'' . $this->model->_Admin->getUrlPrefix() . implode('/', $request) . '?sId=\'+sId+\'&print\'); return false',
 			];
 		}
 
-		if(isset($this->model->_Admin->options['actions'])){
-			foreach($this->model->_Admin->options['actions'] as $actIdx => $act){
+		if (isset($this->model->_Admin->options['actions'])) {
+			foreach ($this->model->_Admin->options['actions'] as $actIdx => $act) {
 				$act = array_merge([
-					'id' => 'custom-'.$actIdx,
+					'id' => 'custom-' . $actIdx,
 					'text' => '',
 					'icon' => null,
 					'fa-icon' => null,
@@ -374,26 +383,26 @@ class AdminTemplateEditt extends Module {
 					'action' => 'return false',
 				], $act);
 
-				if(isset($act['specific'])){
-					switch($act['specific']){
+				if (isset($act['specific'])) {
+					switch ($act['specific']) {
 						case 'table':
-							if(isset($_GET['action']))
+							if (isset($_GET['action']))
 								continue 2;
 							break;
 						case 'element':
-							if(!isset($_GET['action']) or $_GET['action']!='edit')
+							if (!isset($_GET['action']) or $_GET['action'] != 'edit')
 								continue 2;
 							break;
 						case 'element-edit':
-							if(!isset($_GET['action']) or $_GET['action']!='edit')
+							if (!isset($_GET['action']) or $_GET['action'] != 'edit')
 								continue 2;
-							if(!isset($_GET['id']) or !$_GET['id'])
+							if (!isset($_GET['id']) or !$_GET['id'])
 								continue 2;
 							break;
 						case 'element-new':
-							if(!isset($_GET['action']) or $_GET['action']!='edit')
+							if (!isset($_GET['action']) or $_GET['action'] != 'edit')
 								continue 2;
-							if(isset($_GET['id']) and $_GET['id'])
+							if (isset($_GET['id']) and $_GET['id'])
 								continue 2;
 							break;
 					}
@@ -414,8 +423,8 @@ class AdminTemplateEditt extends Module {
 
 		$breadcrumbsHtml = [];
 		$prefix = $this->model->_Admin->getUrlPrefix();
-		foreach($breadcrumbs as $b){
-			$breadcrumbsHtml[] = $b['url']!==null ? '<a href="'.$prefix.$b['url'].'" onclick="loadAdminPage([\''.$b['url'].'\']); return false">'.entities($b['name']).'</a>' : '<a>'.entities($b['name']).'</a>';
+		foreach ($breadcrumbs as $b) {
+			$breadcrumbsHtml[] = $b['url'] !== null ? '<a href="' . $prefix . $b['url'] . '" onclick="loadAdminPage([\'' . $b['url'] . '\']); return false">' . entities($b['name']) . '</a>' : '<a>' . entities($b['name']) . '</a>';
 		}
 		$breadcrumbsHtml = implode(' -&gt; ', $breadcrumbsHtml);
 
@@ -449,22 +458,23 @@ class AdminTemplateEditt extends Module {
 	 * @param array $breadcrumbs
 	 * @return bool
 	 */
-	private function searchBreadcrumbs(array $pages, $request, array &$breadcrumbs){
-		foreach($pages as $p){
-			if(isset($p['rule']) and $p['rule']==$request){
+	private function searchBreadcrumbs(array $pages, string $request, array &$breadcrumbs): bool
+	{
+		foreach ($pages as $p) {
+			if (isset($p['rule']) and $p['rule'] == $request) {
 				$breadcrumbs[] = [
 					'name' => $p['name'],
 					'url' => $p['rule'],
 				];
 				return true;
 			}
-			if(isset($p['sub'])){
+			if (isset($p['sub'])) {
 				$temp = $breadcrumbs;
 				$temp[] = [
 					'name' => $p['name'],
 					'url' => isset($p['rule']) ? $p['rule'] : null,
 				];
-				if($this->searchBreadcrumbs($p['sub'], $request, $temp)){
+				if ($this->searchBreadcrumbs($p['sub'], $request, $temp)) {
 					$breadcrumbs = $temp;
 					return true;
 				}
@@ -481,7 +491,8 @@ class AdminTemplateEditt extends Module {
 	 * @return array
 	 * @throws \Model\Core\Exception
 	 */
-	public function getFiltersForms($arr = false){
+	public function getFiltersForms(bool $arr = false): array
+	{
 		$defaults = [
 			'top' => [
 				'all' => '=',
@@ -490,14 +501,14 @@ class AdminTemplateEditt extends Module {
 		];
 
 		$customFilters = $this->model->_Admin->getCustomFiltersForm();
-		if($customFilters){
-			foreach($customFilters->getDataset() as $k => $f){
+		if ($customFilters) {
+			foreach ($customFilters->getDataset() as $k => $f) {
 				$form = isset($f->options['admin-form']) ? $f->options['admin-form'] : 'filters';
 
-				if(isset($f->options['admin-type'])){
+				if (isset($f->options['admin-type'])) {
 					$defaults[$form][$k] = $f->options['admin-type'];
-				}else{
-					switch($f->options['type']){
+				} else {
+					switch ($f->options['type']) {
 						case 'date':
 						case 'time':
 						case 'datetime':
@@ -514,7 +525,7 @@ class AdminTemplateEditt extends Module {
 		$adminListOptions = $this->model->_Admin->getListOptions();
 
 		$forms = [];
-		foreach($defaults as $form => $defaultFilters){
+		foreach ($defaults as $form => $defaultFilters) {
 			$forms[$form] = $this->getFiltersForm($form, $defaultFilters, $adminListOptions['filters'], $arr);
 		}
 
@@ -531,14 +542,15 @@ class AdminTemplateEditt extends Module {
 	 * @return Form|array
 	 * @throws \Model\Core\Exception
 	 */
-	private function getFiltersForm($name, array $default = [], array $filtersSet = [], $arr = false){
+	private function getFiltersForm(string $name, array $default = [], array $filtersSet = [], bool $arr = false)
+	{
 		$filtersArr = null;
-		if(isset($_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-filters-'.$name]))
-			$filtersArr = json_decode($_COOKIE['model-admin-'.$this->model->_Admin->request[0].'-filters-'.$name], true);
-		if($filtersArr===null)
+		if (isset($_COOKIE['model-admin-' . $this->model->_Admin->request[0] . '-filters-' . $name]))
+			$filtersArr = json_decode($_COOKIE['model-admin-' . $this->model->_Admin->request[0] . '-filters-' . $name], true);
+		if ($filtersArr === null)
 			$filtersArr = $default;
 
-		if($arr)
+		if ($arr)
 			return $filtersArr;
 
 		$form = new Form([
@@ -549,14 +561,14 @@ class AdminTemplateEditt extends Module {
 		$customFilters = $this->model->_Admin->getCustomFiltersForm();
 
 		$values = [];
-		foreach($filtersSet as $f){
-			if(isset($filtersArr[$f[0]])){
-				switch(count($f)){
+		foreach ($filtersSet as $f) {
+			if (isset($filtersArr[$f[0]])) {
+				switch (count($f)) {
 					case 2: // Custom filter
 						$values[$f[0]] = $f[1];
 						break;
 					case 3: // Normal filter
-						if($f[1]!=$filtersArr[$f[0]]) // Different operator
+						if ($f[1] != $filtersArr[$f[0]]) // Different operator
 							continue 2;
 						$values[$f[0]] = $f[2];
 						break;
@@ -567,39 +579,39 @@ class AdminTemplateEditt extends Module {
 			}
 		}
 
-		foreach($filtersArr as $k=>$t){
-			if(isset($customFilters[$k])){
+		foreach ($filtersArr as $k => $t) {
+			if (isset($customFilters[$k])) {
 				$datum = $form->add($customFilters[$k]);
 				$datum->options['attributes']['data-filter'] = $k;
 				$datum->options['attributes']['data-filter-type'] = isset($datum->options['admin-type']) ? $datum->options['admin-type'] : 'custom';
-				$datum->options['attributes']['data-default'] = (string) $datum->options['default'];
-				if(isset($values[$k]))
+				$datum->options['attributes']['data-default'] = (string)$datum->options['default'];
+				if (isset($values[$k]))
 					$datum->setValue($values[$k]);
-                elseif($filtersSet) // If at least one filter is set, but not this one, that means the default value was erased by the user
+                elseif ($filtersSet) // If at least one filter is set, but not this one, that means the default value was erased by the user
 					$datum->setValue(null);
-			}else{
+			} else {
 				$fieldOptions = [
 					'attributes' => [
-                        'data-filter' => $k,
+						'data-filter' => $k,
 						'data-filter-type' => $t,
 						'data-default' => '',
-                        'name' => 'f-'.$k,
+						'name' => 'f-' . $k,
 					],
 					'default' => null,
 					'admin-type' => $t,
 				];
 
-				if($k==='all'){
+				if ($k === 'all') {
 					$fieldOptions['label'] = 'Ricerca generale';
 					$fieldOptions['attributes']['data-filter'] = 'all';
 					$fieldOptions['attributes']['data-filter-type'] = 'custom';
 				}
 
-				if($t==='range'){
+				if ($t === 'range') {
 
-				}else{
+				} else {
 					$datum = $form->add($k, $fieldOptions);
-					if(isset($values[$k]))
+					if (isset($values[$k]))
 						$datum->setValue($values[$k]);
 				}
 			}
@@ -613,8 +625,9 @@ class AdminTemplateEditt extends Module {
 	 *
 	 * Saves the width of a column, called via an ajax request
 	 */
-	public function saveWidth(){
-		if($this->model->_CSRF->checkCsrf() and isset($_GET['k'], $_POST['w']) and is_numeric($_POST['w'])){
+	public function saveWidth()
+	{
+		if ($this->model->_CSRF->checkCsrf() and isset($_GET['k'], $_POST['w']) and is_numeric($_POST['w'])) {
 			$this->loadResizeModule();
 			$this->model->_ResizeTable->set($_GET['k'], $_POST['w']);
 		}
@@ -629,14 +642,15 @@ class AdminTemplateEditt extends Module {
 	 * @return array
 	 * @throws \Model\Core\Exception
 	 */
-	public function pickFilters(){
-		if($this->model->_CSRF->checkCsrf()){
+	public function pickFilters(): array
+	{
+		if ($this->model->_CSRF->checkCsrf()) {
 			$filtersPost = json_decode($_POST['filters'], true);
-			if($filtersPost===null)
+			if ($filtersPost === null)
 				die('Errore JSON');
 
 			$filtersArr = [];
-			foreach($filtersPost as $f=>$v){
+			foreach ($filtersPost as $f => $v) {
 				$k = substr($f, -4);
 				$f = substr($f, 0, -5);
 				$filtersArr[$f][$k] = $v;
@@ -647,14 +661,14 @@ class AdminTemplateEditt extends Module {
 				'filters' => [],
 			];
 
-			foreach($filtersArr as $f=>$fOpt){
-				if(!isset($fOpt['type'], $fOpt['form']))
+			foreach ($filtersArr as $f => $fOpt) {
+				if (!isset($fOpt['type'], $fOpt['form']))
 					continue;
 				$filters[$fOpt['form']][$f] = $fOpt['type'];
 			}
 
-			foreach($filters as $form => $fArr){
-				setcookie('model-admin-'.$this->model->_Admin->request[0].'-filters-'.$form, json_encode($fArr), time()+(60*60*24*365), $this->model->prefix().($this->model->_Admin->url ? $this->model->_Admin->url.'/' : ''));
+			foreach ($filters as $form => $fArr) {
+				setcookie('model-admin-' . $this->model->_Admin->request[0] . '-filters-' . $form, json_encode($fArr), time() + (60 * 60 * 24 * 365), $this->model->prefix() . ($this->model->_Admin->url ? $this->model->_Admin->url . '/' : ''));
 			}
 			die('ok');
 		}
@@ -675,9 +689,10 @@ class AdminTemplateEditt extends Module {
 	 * @return array
 	 * @throws \Model\Core\Exception
 	 */
-	public function pickSearchFields(){
-		if($this->model->_CSRF->checkCsrf()){
-			setcookie('model-admin-'.$this->model->_Admin->request[0].'-searchFields', json_encode(explode(',', $_POST['fields'])), time()+(60*60*24*365), $this->model->prefix().($this->model->_Admin->url ? $this->model->_Admin->url.'/' : ''));
+	public function pickSearchFields(): array
+	{
+		if ($this->model->_CSRF->checkCsrf()) {
+			setcookie('model-admin-' . $this->model->_Admin->request[0] . '-searchFields', json_encode(explode(',', $_POST['fields'])), time() + (60 * 60 * 24 * 365), $this->model->prefix() . ($this->model->_Admin->url ? $this->model->_Admin->url . '/' : ''));
 			die('ok');
 		}
 		return [
@@ -696,7 +711,8 @@ class AdminTemplateEditt extends Module {
 	 * @param string $name
 	 * @param array $options
 	 */
-	public function renderSublist($name, array $options = []){
+	public function renderSublist(string $name, array $options = [])
+	{
 		$options = array_merge([
 			'type' => 'row',
 			'fields' => [],
@@ -707,74 +723,77 @@ class AdminTemplateEditt extends Module {
 			'add-inside' => false,
 		], $options);
 
-		echo '<div id="cont-ch-'.entities($options['cont']).'" data-rows-class="'.$options['class'].'">';
+		echo '<div id="cont-ch-' . entities($options['cont']) . '" data-rows-class="' . $options['class'] . '">';
 
 		$dummy = $this->model->element->create($name, '[n]');
 		$form = $this->model->_Admin->getSublistRowForm($dummy, $options);
 
-		if($options['type']=='row'){
+		if ($options['type'] == 'row') {
 			echo '<div class="rob-field-cont">';
 			echo '<div class="rob-field" style="width: 5%"></div>';
 			echo '<div class="rob-field" style="width: 95%">';
 			echo '<div class="rob-field-cont sublist-row">';
-			$template = $form->getTemplate(['one-row'=>true]);
-			foreach($template as $f){
-				echo '<div class="rob-field" style="width: '.$f['w'].'%">'.entities($form[$f['field']]->getLabel()).'</div>';
+			$template = $form->getTemplate(['one-row' => true]);
+			foreach ($template as $f) {
+				echo '<div class="rob-field" style="width: ' . $f['w'] . '%">' . entities($form[$f['field']]->getLabel()) . '</div>';
 			}
 			echo '</div>';
 			echo '</div>';
 			echo '</div>';
 		}
 
-		if(!$options['add-inside'])
+		if (!$options['add-inside'])
 			echo '</div>';
 
-		if($options['add']){
-			if($options['add']===true){
+		if ($options['add']) {
+			if ($options['add'] === true) {
 				?>
-                <div class="rob-field-cont sublist-row" style="cursor: pointer" onclick="sublistAddRow('<?=entities($name)?>', '<?=entities($options['cont'])?>')">
+                <div class="rob-field-cont sublist-row" style="cursor: pointer"
+                     onclick="sublistAddRow('<?= entities($name) ?>', '<?= entities($options['cont']) ?>')">
                     <div class="rob-field" style="width: 5%"></div>
                     <div class="rob-field" style="width: 95%">
                         <i class="fas fa-plus" aria-hidden="true"></i> Aggiungi
                     </div>
                 </div>
 				<?php
-			}else{
+			} else {
 				echo $options['add'];
 			}
 		}
 
-		if($options['add-inside'])
+		if ($options['add-inside'])
 			echo '</div>';
 		?>
-        <div id="sublist-template-<?=entities($options['cont'])?>" class="sublist-template">
+        <div id="sublist-template-<?= entities($options['cont']) ?>" class="sublist-template">
 			<?php
-			if(($options['type']==='inner-template' or $options['type']==='outer-template') and $options['template']===null)
+			if (($options['type'] === 'inner-template' or $options['type'] === 'outer-template') and $options['template'] === null)
 				$options['template'] = $name;
 
-			if($options['template']){
-				$dir = $this->model->_Admin->url ? $this->model->_Admin->url.DIRECTORY_SEPARATOR : '';
-				$template_path = Autoloader::searchFile('template', $dir.$this->model->_Admin->request[0].DIRECTORY_SEPARATOR.$options['template']);
-				if(!$template_path)
+			if ($options['template']) {
+				$dir = $this->model->_Admin->url ? $this->model->_Admin->url . DIRECTORY_SEPARATOR : '';
+				$template_path = Autoloader::searchFile('template', $dir . $this->model->_Admin->request[0] . DIRECTORY_SEPARATOR . $options['template']);
+				if (!$template_path)
 					$options['template'] = null;
 			}
 
-			if($options['template'] and $options['type']==='outer-template'){
+			if ($options['template'] and $options['type'] === 'outer-template') {
 				include($template_path);
-			}else{
+			} else {
 				?>
                 <div class="rob-field" style="width: 5%; text-align: center">
-                    <a href="#" onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?=entities($name)?>', '<?=entities($options['cont'])?>', '[n]'); return false"><i class="fas fa-trash" aria-label="Delete" style="color: #000"></i></a>
-                    <input type="hidden" name="ch-<?=entities($name)?>-[n]" value="1" />
+                    <a href="#"
+                       onclick="if(confirm('Sicuro di voler eliminare questa riga?')) sublistDeleteRow('<?= entities($name) ?>', '<?= entities($options['cont']) ?>', '[n]'); return false"><i
+                                class="fas fa-trash" aria-label="Delete" style="color: #000"></i></a>
+                    <input type="hidden" name="ch-<?= entities($name) ?>-[n]" value="1"/>
                 </div>
                 <div class="rob-field" style="width: 95%">
 					<?php
-					if($options['template'] and $options['type']==='inner-template'){
+					if ($options['template'] and $options['type'] === 'inner-template') {
 						include($template_path);
-					}else{
+					} else {
 						$form->render([
-							'one-row' => $options['type']==='row',
-							'show-labels' => $options['type']==='form',
+							'one-row' => $options['type'] === 'row',
+							'show-labels' => $options['type'] === 'form',
 						]);
 					}
 					?>
@@ -793,33 +812,34 @@ class AdminTemplateEditt extends Module {
 	 * @param array $tabs
 	 * @param array $options
 	 */
-	public function renderTabs($name, array $tabs, array $options = []){
+	public function renderTabs(string $name, array $tabs, array $options = [])
+	{
 		$options = array_merge([
 			'before' => false,
 			'after' => false,
 			'default' => null,
 		], $options);
 
-		$totK = $this->model->_Admin->request[0].'-'.$this->model->element['id'].'-'.$name;
+		$totK = $this->model->_Admin->request[0] . '-' . $this->model->element['id'] . '-' . $name;
 
-		if($options['default']!==null and !isset($tabs[$options['default']]))
+		if ($options['default'] !== null and !isset($tabs[$options['default']]))
 			$options['default'] = null;
 
-		echo '<div class="admin-tabs" data-tabs="'.entities($totK).'" data-name="'.entities($name).'"'.($options['default']!==null ? ' data-default="'.entities($options['default']).'"' : '').'>';
-		if($options['before'])
-			echo '<div>'.$options['before'].'</div>';
-		foreach($tabs as $k=>$t) {
-			if(!is_array($t))
-				$t = ['label'=>$t];
+		echo '<div class="admin-tabs" data-tabs="' . entities($totK) . '" data-name="' . entities($name) . '"' . ($options['default'] !== null ? ' data-default="' . entities($options['default']) . '"' : '') . '>';
+		if ($options['before'])
+			echo '<div>' . $options['before'] . '</div>';
+		foreach ($tabs as $k => $t) {
+			if (!is_array($t))
+				$t = ['label' => $t];
 			$t = array_merge([
-				'label'=>'',
-				'onclick'=>'',
+				'label' => '',
+				'onclick' => '',
 			], $t);
 
-			echo '<a class="admin-tab" data-tab="'.entities($k).'" data-onclick="'.($t['onclick'] ? entities($t['onclick']).';' : '').'">'.entities($t['label']).'</a>';
+			echo '<a class="admin-tab" data-tab="' . entities($k) . '" data-onclick="' . ($t['onclick'] ? entities($t['onclick']) . ';' : '') . '">' . entities($t['label']) . '</a>';
 		}
-		if($options['after'])
-			echo '<div>'.$options['after'].'</div>';
+		if ($options['after'])
+			echo '<div>' . $options['after'] . '</div>';
 		echo '</div>';
 	}
 
@@ -828,8 +848,9 @@ class AdminTemplateEditt extends Module {
 	 * @param string $rule
 	 * @return array|bool
 	 */
-	public function getController(array $request, string $rule){
-	    $this->model->_Admin->getController($request, 0); // Lets the Admin module set its internal url parameter
+	public function getController(array $request, string $rule)
+	{
+		$this->model->_Admin->getController($request, 0); // Lets the Admin module set its internal url parameter
 
 		return [
 			'controller' => 'AdminServiceWorker',
