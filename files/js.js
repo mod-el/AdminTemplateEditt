@@ -42,7 +42,7 @@ window.addEventListener('DOMContentLoaded', function () {
 				if (request[2]) {
 					loadElementData(request[0], request[2]).then(fillAdminForm).then(callElementCallback).then(monitorFields).catch(reportAdminError);
 				} else {
-					initalizeEmptyForm().then(monitorFields);
+					initializeEmptyForm().then(monitorFields);
 				}
 			});
 		} else {
@@ -1115,7 +1115,7 @@ function fillAdminForm(data) {
 	});
 }
 
-function initalizeEmptyForm() {
+function initializeEmptyForm() {
 	var form = _('adminForm');
 	if (!form)
 		return false;
@@ -1355,7 +1355,7 @@ function historyWipe() {
 }
 
 function newElement() {
-	return loadElement(currentAdminPage.split('/')[0]).then(initalizeEmptyForm).then(monitorFields);
+	return loadElement(currentAdminPage.split('/')[0]).then(initializeEmptyForm).then(monitorFields);
 }
 
 function save() {
