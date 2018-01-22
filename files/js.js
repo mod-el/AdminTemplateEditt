@@ -1116,11 +1116,11 @@ function fillAdminForm(data) {
 }
 
 function initializeEmptyForm() {
-	var form = _('adminForm');
+	let form = _('adminForm');
 	if (!form)
 		return false;
 
-	var promises = [];
+	let promises = [];
 
 	for (let i = 0, f; f = form.elements[i++];) {
 		promises.push(f.getValue().then((function (name) {
@@ -1131,6 +1131,8 @@ function initializeEmptyForm() {
 			}
 		})(f.name)).then((function (f) {
 			return function (fieldValue) {
+				if(fieldValue)
+					changedValues[f.name] = fieldValue;
 				return f.setValue(fieldValue).then(() => {
 					f.setAttribute('data-filled', '1');
 				});
