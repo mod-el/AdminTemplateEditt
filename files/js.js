@@ -42,7 +42,7 @@ window.addEventListener('DOMContentLoaded', function () {
 				if (request[2]) {
 					loadElementData(request[0], request[2]).then(fillAdminForm).then(callElementCallback).then(monitorFields).catch(reportAdminError);
 				} else {
-					initalizeEmptyForm().then(monitorFields);
+					initializeEmptyForm().then(monitorFields);
 				}
 			});
 		} else {
@@ -1115,12 +1115,12 @@ function fillAdminForm(data) {
 	});
 }
 
-function initalizeEmptyForm() {
-	var form = _('adminForm');
+function initializeEmptyForm() {
+	let form = _('adminForm');
 	if (!form)
 		return false;
 
-	var promises = [];
+	let promises = [];
 
 	for (let i = 0, f; f = form.elements[i++];) {
 		promises.push(f.getValue().then((function (name) {
@@ -1131,6 +1131,8 @@ function initalizeEmptyForm() {
 			}
 		})(f.name)).then((function (f) {
 			return function (fieldValue) {
+				if(fieldValue)
+					changedValues[f.name] = fieldValue;
 				return f.setValue(fieldValue).then(() => {
 					f.setAttribute('data-filled', '1');
 				});
@@ -1355,7 +1357,7 @@ function historyWipe() {
 }
 
 function newElement() {
-	return loadElement(currentAdminPage.split('/')[0]).then(initalizeEmptyForm).then(monitorFields);
+	return loadElement(currentAdminPage.split('/')[0]).then(initializeEmptyForm).then(monitorFields);
 }
 
 function save() {
