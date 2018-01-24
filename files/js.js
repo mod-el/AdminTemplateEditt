@@ -52,7 +52,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	if(_('admin-language-selector')){
 		ajax(adminPrefix + currentAdminPage.split('/')[0], {'getCurrentLanguage': ''}).then(r => {
-			_('admin-language-selector').setValue(r);
+			_('admin-language-selector').setValue(r, false);
 		});
 	}
 });
