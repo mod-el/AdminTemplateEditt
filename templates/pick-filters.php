@@ -27,7 +27,7 @@
 			'all' => true,
 		];
 		foreach($table->columns as $k=>$col) {
-			if (in_array($k, ['id', 'zk_deleted', 'zkversion'])/* or $k === $this->model->_Admin->options['gestisci_ordine']*/)
+			if (in_array($k, ['id', 'zk_deleted'])/* or $k === $this->model->_Admin->options['gestisci_ordine']*/)
 				continue;
 			$campi[$k] = $col;
 		}
