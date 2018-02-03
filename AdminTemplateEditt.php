@@ -24,6 +24,7 @@ class AdminTemplateEditt extends Module
 		$this->model->load('Form');
 		$this->model->load('ContextMenu');
 		$this->model->load('CSRF');
+//		$this->model->load('DraggableOrder');
 
 		if ($this->model->isLoaded('Multilang')) {
 			$this->model->_Multilang->reloadConfig([
@@ -182,15 +183,29 @@ class AdminTemplateEditt extends Module
 							}
 						}
 					}
-					unset($el);
 
-					if (isset($_GET['print']))
-						$template = 'print-table';
-					else
-						$template = 'table';
+					$options['draggable'] = false;
+
+					if (isset($_GET['print'])) {
+						$options['template'] = 'print-table';
+					} else {
+						$options['template'] = 'table';
+
+						if (isset($el)) {
+							$orderBy = $el['element']->getOrderBy();
+							foreach ($orderBy as $field => $orderByData) {
+								if ($orderByData['custom']) {
+									$options['draggable'] = [
+										'field' => $field,
+										'depending_on' => $orderByData['depending_on'],
+									];
+									break;
+								}
+							}
+						}
+					}
 
 					return array_merge($options, [
-						'template' => $template,
 						'cacheTemplate' => false,
 						'data' => $data,
 					]);
