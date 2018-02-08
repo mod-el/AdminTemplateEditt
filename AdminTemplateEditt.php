@@ -24,7 +24,7 @@ class AdminTemplateEditt extends Module
 		$this->model->load('Form');
 		$this->model->load('ContextMenu');
 		$this->model->load('CSRF');
-//		$this->model->load('DraggableOrder');
+		$this->model->load('DraggableOrder');
 
 		if ($this->model->isLoaded('Multilang')) {
 			$this->model->_Multilang->reloadConfig([

@@ -86,7 +86,7 @@ if ($this->options['draggable']) {
 		?>
         <div<?php
 		if ($this->options['draggable']) {
-			echo ' data-draggable-index="' . entities($el['element'][$this->options['draggable']['field']]) . '"';
+			echo ' data-draggable-id="' . entities($id) . '" data-draggable-index="' . entities($el['element'][$this->options['draggable']['field']]) . '"';
 		}
 		?>>
             <div class="results-table-row" data-n="<?= $c_row++ ?>" data-id="<?= $id ?>"
