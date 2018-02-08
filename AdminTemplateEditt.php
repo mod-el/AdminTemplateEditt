@@ -18,13 +18,14 @@ class AdminTemplateEditt extends Module
 			$this->model->load('CkEditor');
 		if ($this->model->moduleExists('InstantSearch'))
 			$this->model->load('InstantSearch');
+		if ($this->model->moduleExists('DraggableOrder'))
+			$this->model->load('DraggableOrder');
 
 		$this->model->load('FrontEnd');
 		$this->model->load('Popup');
 		$this->model->load('Form');
 		$this->model->load('ContextMenu');
 		$this->model->load('CSRF');
-		$this->model->load('DraggableOrder');
 
 		if ($this->model->isLoaded('Multilang')) {
 			$this->model->_Multilang->reloadConfig([
