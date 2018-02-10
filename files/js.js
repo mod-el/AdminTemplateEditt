@@ -50,7 +50,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
-	if(_('admin-language-selector')){
+	if (_('admin-language-selector')) {
 		ajax(adminPrefix + currentAdminPage.split('/')[0], {'getCurrentLanguage': ''}).then(r => {
 			_('admin-language-selector').setValue(r, false);
 		});
@@ -646,20 +646,33 @@ function tableEvents() {
 	table.querySelectorAll('.results-table-row').forEach(function (row) {
 		row.addEventListener('click', function (event) {
 			if (event.button === 0) {
-				if (row.dataset.clickable === '1') {
-					if (row.dataset.onclick) {
-						eval('var custom_function = function(){ ' + this.dataset.onclick + ' }');
-						custom_function.call(this);
-					} else {
-						loadElement(currentAdminPage.split('/')[0], row.dataset.id);
-					}
-				}
+				adminRowClicked(row);
 			}
 		});
 	});
 
 	sortedBy = JSON.parse(_('sortedBy').getValue(true));
 	currentPage = _('currentPage').getValue(true);
+}
+
+function adminRowClicked(row) {
+	if (row.dataset.clickable === '1') {
+		if (row.dataset.onclick) {
+			eval('var custom_function = function(){ ' + this.dataset.onclick + ' }');
+			custom_function.call(this);
+		} else {
+			loadElement(currentAdminPage.split('/')[0], row.dataset.id);
+		}
+	}
+}
+
+function adminRowDragged(element, target) {
+	if (element.idx === target.idx) {
+		let row = document.querySelector('.results-table-row[data-id="' + element.id + '"]');
+		adminRowClicked(row);
+	} else {
+
+	}
 }
 
 function changeSorting(event, column) {
@@ -1131,7 +1144,7 @@ function initializeEmptyForm() {
 			}
 		})(f.name)).then((function (f) {
 			return function (fieldValue) {
-				if(fieldValue)
+				if (fieldValue)
 					changedValues[f.name] = fieldValue;
 				return f.setValue(fieldValue).then(() => {
 					f.setAttribute('data-filled', '1');
@@ -1839,7 +1852,7 @@ function changeAdminLang(l) {
 	return ajax(adminPrefix + currentAdminPage.split('/')[0], {
 		'mlang': l
 	}).then(r => {
-		if(r==='ok')
+		if (r === 'ok')
 			document.location.reload();
 		else
 			alert('Error while setting language. Maybe Multilang module is not loaded in the Frontcontroller?');
