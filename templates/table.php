@@ -67,8 +67,8 @@
 </div>
 
 <div id="results-table"<?php
-if ($this->options['draggable']) {
-	echo ' data-draggable-cont';
+if ($this->options['draggable'] and !$this->options['data']['sortedBy']) {
+	echo ' data-draggable-cont data-draggable-callback="adminRowDragged(element, target)"';
 }
 ?>>
 	<?php
@@ -85,7 +85,7 @@ if ($this->options['draggable']) {
 		}
 		?>
         <div<?php
-		if ($this->options['draggable']) {
+		if ($this->options['draggable'] and !$this->options['data']['sortedBy']) {
 			echo ' data-draggable-id="' . entities($id) . '" data-draggable-index="' . entities($el['element'][$this->options['draggable']['field']]) . '"';
 		}
 		?>>
