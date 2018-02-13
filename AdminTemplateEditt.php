@@ -194,14 +194,11 @@ class AdminTemplateEditt extends Module
 
 						if (isset($el)) {
 							$orderBy = $el['element']->getOrderBy();
-							foreach ($orderBy as $field => $orderByData) {
-								if ($orderByData['custom']) {
-									$options['draggable'] = [
-										'field' => $field,
-										'depending_on' => $orderByData['depending_on'],
-									];
-									break;
-								}
+							if ($orderBy and $orderBy['custom']) {
+								$options['draggable'] = [
+									'field' => $orderBy['field'],
+									'depending_on' => $orderBy['depending_on'],
+								];
 							}
 						}
 					}

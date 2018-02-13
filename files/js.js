@@ -671,7 +671,15 @@ function adminRowDragged(element, target) {
 		let row = document.querySelector('.results-table-row[data-id="' + element.id + '"]');
 		adminRowClicked(row);
 	} else {
+		showLoadingMask();
+		ajax(adminPrefix + currentAdminPage.split('/')[0] + '/changeOrder/' + encodeURIComponent(element.id), 'to=' + target.idx, 'c_id=' + c_id).then(r => {
+			hideLoadingMask();
 
+			if (r !== 'ok') {
+				alert(r);
+				reloadResultsTable();
+			}
+		});
 	}
 }
 
