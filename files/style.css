@@ -155,7 +155,7 @@ textarea{
 
 #table-headings{
 	font-size: 0;
-	overflow-x: hidden;
+	overflow: hidden;
 	padding-right: 20px;
 }
 
