@@ -60,8 +60,8 @@ $this->languageBound = true;
         </div>
         <div>
             <div>
-				<?php if(file_exists(INCLUDE_PATH.'img/logo.png')){ ?>
-                    <a href="<?=$this->model->_Admin->getUrlPrefix()?>"><img src="<?=PATH?>img/logo.png" alt="" style="max-height: 39px" /></a>
+				<?php if(file_exists(INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'logo.png')){ ?>
+                    <a href="<?=$this->model->_Admin->getUrlPrefix()?>"><img src="<?=PATH?>app/assets/img/logo.png" alt="" style="max-height: 39px" /></a>
 				<?php }else{ ?>
                     <a href="<?=$this->model->_Admin->getUrlPrefix()?>" style="font-size: 26px"><?=APP_NAME?></a>
 				<?php } ?>

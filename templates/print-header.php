@@ -16,8 +16,8 @@
 <div style="width: 210mm">
     <div style="padding-bottom: 10px">
 		<?php
-		if(file_exists(INCLUDE_PATH.'img'.DIRECTORY_SEPARATOR.'logo.png')){
-			?><a href="<?=$this->model->_Admin->getUrlPrefix()?>"><img src="<?=PATH?>img/logo.png" alt="" style="max-width: 30%" /></a><?php
+		if(file_exists(INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'logo.png')){
+			?><a href="<?=$this->model->_Admin->getUrlPrefix()?>"><img src="<?=PATH?>app/assets/img/logo.png" alt="" style="max-width: 30%" /></a><?php
 		}else{
 			?><span style="font-size: 26px"><?=entities(APP_NAME)?></span><?php
 		}
