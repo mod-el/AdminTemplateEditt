@@ -87,6 +87,13 @@ if ($this->options['draggable'] and !$this->options['data']['sortedBy']) {
         <div<?php
 		if ($this->options['draggable'] and !$this->options['data']['sortedBy']) {
 			echo ' data-draggable-id="' . entities($id) . '" data-draggable-index="' . entities($el['element'][$this->options['draggable']['field']]) . '"';
+			if ($this->options['draggable']['depending_on']) {
+				$draggableDependingOn = [];
+				foreach($this->options['draggable']['depending_on'] as $field)
+					$draggableDependingOn[] = $el['element'][$field];
+				$draggableDependingOn = implode(',', $draggableDependingOn);
+				echo ' data-draggable-parent="' . $draggableDependingOn . '"';
+			}
 		}
 		?>>
             <div class="results-table-row" data-n="<?= $c_row++ ?>" data-id="<?= $id ?>"
