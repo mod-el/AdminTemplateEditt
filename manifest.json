@@ -1,21 +1,11 @@
 {
 	"name": "Admin 'EDitt'",
 	"description": "Admin template 'EDitt'",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"dependencies": {
-		"Admin": ">=0.14.0",
-		"Output": ">=0.2.1",
-		"ContextMenu": ">=1.1.0",
-		"FrontEnd": ">=1.1.0",
-		"ResizeTable": ">=1.2.0",
-		"Popup": ">=1.0.0",
-		"WebAppManifest": ">=0.1.0",
-		"CSRF": ">=0.1.0"
+		"AdminFront": ">=0.1.0"
 	},
 	"is-admin-template": true,
 	"css": [],
-	"js": [
-		"files/js.js"
-	],
 	"assets-position": "foot"
 }

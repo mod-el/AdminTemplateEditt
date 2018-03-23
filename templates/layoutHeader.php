@@ -1,5 +1,5 @@
 <?php
-$config = $this->model->_Admin->retrieveConfig();
+$config = $this->model->_AdminFront->retrieveConfig();
 $hideMenu = isset($config['hide-menu']) ? $config['hide-menu'] : 'mobile';
 $maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
 $this->languageBound = true;
@@ -11,12 +11,12 @@ $this->languageBound = true;
 <head>
 	[:head]
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="manifest" href="<?=$this->model->_Admin->getUrlPrefix()?>manifest.json">
+    <link rel="manifest" href="<?=$this->model->_AdminFront->getUrlPrefix()?>manifest.json">
     <meta name="theme-color" content="#383837">
 
     <script>
 		var maxMenuWidth = <?=$maxMenuWidth?>;
-		var adminPrefix = <?=json_encode($this->model->_Admin->getUrlPrefix())?>;
+		var adminPrefix = <?=json_encode($this->model->_AdminFront->getUrlPrefix())?>;
 		var elementCallback = null;
     </script>
     <link rel="stylesheet" type="text/css" href="<?=PATH?>model/AdminTemplateEditt/files/basics.css" />
@@ -53,17 +53,17 @@ $this->languageBound = true;
 			}
 			?>
             <div>
-                <a href="<?=$this->model->_Admin->getUrlPrefix()?>logout" class="tasto-header">
-					<?= entities($this->model->_Admin->word('logout')) ?>
+                <a href="<?=$this->model->_AdminFront->getUrlPrefix()?>logout" class="tasto-header">
+					<?= entities($this->model->_AdminFront->word('logout')) ?>
                 </a>
             </div>
         </div>
         <div>
             <div>
 				<?php if(file_exists(INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'logo.png')){ ?>
-                    <a href="<?=$this->model->_Admin->getUrlPrefix()?>"><img src="<?=PATH?>app/assets/img/logo.png" alt="" style="max-height: 39px" /></a>
+                    <a href="<?=$this->model->_AdminFront->getUrlPrefix()?>"><img src="<?=PATH?>app/assets/img/logo.png" alt="" style="max-height: 39px" /></a>
 				<?php }else{ ?>
-                    <a href="<?=$this->model->_Admin->getUrlPrefix()?>" style="font-size: 26px"><?=APP_NAME?></a>
+                    <a href="<?=$this->model->_AdminFront->getUrlPrefix()?>" style="font-size: 26px"><?=APP_NAME?></a>
 				<?php } ?>
             </div>
             <div style="border-left: solid #FFF 1px">
@@ -78,11 +78,11 @@ $this->languageBound = true;
     <div id="filtersForm" style="display: none">
         <div class="pad5v no-overflow">
             <div class="right">
-                [<a href="#" onclick="switchFiltersForm(false); return false"> <?= entities($this->model->_Admin->word('filters-close')) ?> </a>]
+                [<a href="#" onclick="switchFiltersForm(false); return false"> <?= entities($this->model->_AdminFront->word('filters-close')) ?> </a>]
             </div>
-            [<a href="#" onclick="manageFilters(); return false"> <?= entities($this->model->_Admin->word('filters-manage')) ?> </a>]
-            [<a href="#" onclick="manageSearchFields(); return false"> <?= entities($this->model->_Admin->word('filters-manage-main')) ?> </a>]
-            [<a href="#" onclick="filtersReset(); return false"> <?= entities($this->model->_Admin->word('filters-reset')) ?> </a>]
+            [<a href="#" onclick="manageFilters(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage')) ?> </a>]
+            [<a href="#" onclick="manageSearchFields(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage-main')) ?> </a>]
+            [<a href="#" onclick="filtersReset(); return false"> <?= entities($this->model->_AdminFront->word('filters-reset')) ?> </a>]
         </div>
         <div id="filtersFormCont"></div>
     </div>
@@ -94,11 +94,11 @@ $this->languageBound = true;
     <div class="grid" id="main-grid">
         <div id="main-menu" data-hide="<?=$hideMenu?>">
 			<?php
-			$pages = $this->model->_Admin->getPages();
+			$pages = $this->model->_AdminFront->getPages();
 
 			foreach($pages as $pIdx => $p){
 			    if(isset($p['rule'])){
-					$link = $this->model->_Admin->getUrlPrefix().$p['rule'];
+					$link = $this->model->_AdminFront->getUrlPrefix().$p['rule'];
 					$onclick = 'loadAdminPage([\''.$p['rule'].'\']); return false';
                 }else{
 					$link = '#';
