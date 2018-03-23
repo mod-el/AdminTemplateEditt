@@ -12,6 +12,9 @@ class Config extends Module_Config
 	 */
 	public function makeCache(): bool
 	{
+		if(!class_exists('\Model\AdminFront\Config'))
+			return true;
+
 		$adminConfig = new \Model\AdminFront\Config($this->model);
 
 		$adminConfig->checkAndInsertWords([
