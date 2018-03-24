@@ -75,7 +75,7 @@ class AdminTemplateEditt extends Module
 	{
 		foreach ($items as $pIdx => $p) {
 			if (isset($p['rule'])) {
-				$link = $this->model->_Admin->getUrlPrefix() . $p['rule'];
+				$link = $this->model->_AdminFront->getUrlPrefix() . $p['rule'];
 				$onclick = 'loadAdminPage([\'' . $p['rule'] . '\']); return false';
 			} else {
 				$link = '#';
