@@ -237,10 +237,10 @@ textarea{
 
 #results-table > div > div{
 	height: 30px;
+	font-size: 0;
 }
 
 .results-table-row{
-	font-size: 0;
 	white-space: nowrap;
 	position: relative;
 	-webkit-box-sizing: border-box;
