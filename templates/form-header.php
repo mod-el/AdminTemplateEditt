@@ -23,3 +23,4 @@ if(!isset($_GET['print'])){
 	<input style="display:none" type="password" name="fakepasswordremembered" />
 
     <input type="hidden" name="_model_version" value="1" />
+    <input type="hidden" name="_mandatory_fields" value="<?=entities(json_encode($this->model->_Admin->options['required']))?>" />
