@@ -84,7 +84,7 @@ $this->languageBound = true;
             [<a href="#" onclick="manageSearchFields(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage-main')) ?> </a>]
             [<a href="#" onclick="filtersReset(); return false"> <?= entities($this->model->_AdminFront->word('filters-reset')) ?> </a>]
         </div>
-        <div id="filtersFormCont"></div>
+        <form id="filtersFormCont"></form>
     </div>
 
     <link rel="stylesheet" type="text/css" href="<?=PATH?>model/AdminTemplateEditt/files/menu.css" />
