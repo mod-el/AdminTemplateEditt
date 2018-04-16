@@ -6,7 +6,7 @@ $this->languageBound = true;
 ?>
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 
 <head>
 	[:head]
