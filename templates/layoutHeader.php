@@ -97,6 +97,8 @@ $this->languageBound = true;
 			$pages = $this->model->_AdminFront->getPages();
 
 			foreach($pages as $pIdx => $p){
+				if ($p['hidden'] ?? false)
+			        continue;
 			    if(isset($p['rule'])){
 					$link = $this->model->_AdminFront->getUrlPrefix().$p['rule'];
 					$onclick = 'loadAdminPage([\''.$p['rule'].'\']); return false';

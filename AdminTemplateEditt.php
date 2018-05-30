@@ -82,7 +82,7 @@ class AdminTemplateEditt extends Module
 				$onclick = 'switchMenuGroup(\'' . $parent . '-' . $pIdx . '\'); return false';
 			}
 			?>
-            <a href="<?= $link ?>" class="main-menu-sub" id="menu-group-<?= $parent ?>-<?= $pIdx ?>" onclick="<?= $onclick ?>" data-menu-id="<?= $parent . '-' . $pIdx ?>">
+            <a href="<?= $link ?>" class="main-menu-sub" id="menu-group-<?= $parent ?>-<?= $pIdx ?>" onclick="<?= $onclick ?>" data-menu-id="<?= $parent . '-' . $pIdx ?>"<?= ($p['hidden'] ?? false) ? ' style="display: none"' : '' ?>>
                 <img src="<?= PATH ?>model/<?= $this->getClass() ?>/files/img/page.png" alt=""/>
                 <span class="cont-testo-menu"><?= entities($p['name']) ?></span> </a>
 			<?php
