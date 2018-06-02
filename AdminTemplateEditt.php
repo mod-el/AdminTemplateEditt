@@ -82,19 +82,19 @@ class AdminTemplateEditt extends Module
 				$onclick = 'switchMenuGroup(\'' . $parent . '-' . $pIdx . '\'); return false';
 			}
 			?>
-            <a href="<?= $link ?>" class="main-menu-sub" id="menu-group-<?= $parent ?>-<?= $pIdx ?>" onclick="<?= $onclick ?>" data-menu-id="<?= $parent . '-' . $pIdx ?>"<?= ($p['hidden'] ?? false) ? ' style="display: none"' : '' ?>>
-                <img src="<?= PATH ?>model/<?= $this->getClass() ?>/files/img/page.png" alt=""/>
-                <span class="cont-testo-menu"><?= entities($p['name']) ?></span> </a>
+			<a href="<?= $link ?>" class="main-menu-sub" id="menu-group-<?= $parent ?>-<?= $pIdx ?>" onclick="<?= $onclick ?>" data-menu-id="<?= $parent . '-' . $pIdx ?>"<?= ($p['hidden'] ?? false) ? ' style="display: none"' : '' ?>>
+				<img src="<?= PATH ?>model/<?= $this->getClass() ?>/files/img/page.png" alt=""/>
+				<span class="cont-testo-menu"><?= entities($p['name']) ?></span> </a>
 			<?php
 			if (isset($p['sub']) and $p['sub']) {
 				?>
-                <div class="main-menu-cont expandible" id="menu-group-<?= $parent ?>-<?= $pIdx ?>-cont" style="height: 0; padding-left: <?= (15 * $lvl) ?>px" data-menu-id="<?= $parent . '-' . $pIdx ?>">
-                    <div>
+				<div class="main-menu-cont expandible" id="menu-group-<?= $parent ?>-<?= $pIdx ?>-cont" style="height: 0; padding-left: <?= (15 * $lvl) ?>px" data-menu-id="<?= $parent . '-' . $pIdx ?>">
+					<div>
 						<?php
 						$this->renderMenuItems($parent . '-' . $pIdx, $p['sub'], $lvl + 1);
 						?>
-                    </div>
-                </div>
+					</div>
+				</div>
 				<?php
 			}
 		}
