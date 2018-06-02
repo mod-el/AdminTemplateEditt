@@ -20,6 +20,8 @@ class AdminTemplateEditt extends Module
 			$this->model->load('InstantSearch');
 		if ($this->model->moduleExists('DraggableOrder'))
 			$this->model->load('DraggableOrder');
+		if ($this->model->moduleExists('Bootstrap'))
+			$this->model->load('Bootstrap');
 
 		$this->model->load('FrontEnd');
 		$this->model->load('Popup');
