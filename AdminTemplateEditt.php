@@ -12,6 +12,8 @@ class AdminTemplateEditt extends Module
 	 */
 	public function init(array $options)
 	{
+		$this->model->load('FrontEnd');
+
 		if ($this->model->moduleExists('DatePicker'))
 			$this->model->load('DatePicker');
 		if ($this->model->moduleExists('CkEditor'))
@@ -20,10 +22,9 @@ class AdminTemplateEditt extends Module
 			$this->model->load('InstantSearch');
 		if ($this->model->moduleExists('DraggableOrder'))
 			$this->model->load('DraggableOrder');
-		if ($this->model->moduleExists('Bootstrap'))
-			$this->model->load('Bootstrap');
+		if ($this->model->moduleExists('Dashboard'))
+			$this->model->load('Dashboard');
 
-		$this->model->load('FrontEnd');
 		$this->model->load('Popup');
 		$this->model->load('Form');
 		$this->model->load('ContextMenu');
