@@ -124,7 +124,7 @@ $this->languageBound = true;
                 }
             }
 			?>
-            <div id="main-menu-resize" onmousedown="startMenuResize(event); event.stopPropagation(); event.preventDefault()" ondblclick="switchMenu()"></div>
+            <div id="main-menu-resize" onmousedown="startMenuResize(event); event.stopPropagation(); event.preventDefault()" ondblclick="menuResizing = false; switchMenu()"></div>
         </div>
 
         <div id="main-page-cont" style="width: calc(<?='100% - '.$maxMenuWidth.'px'?>)">

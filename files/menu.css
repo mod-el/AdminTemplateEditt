@@ -19,6 +19,16 @@
 	width: 3px;
 	height: 100%;
 	cursor: ew-resize;
+	-webkit-transition: background-color 0.2s;
+	-moz-transition: background-color 0.2s;
+	-ms-transition: background-color 0.2s;
+	-o-transition: background-color 0.2s;
+	transition: background-color 0.2s;
+	background: transparent;
+}
+
+#main-menu-resize:hover {
+	background: rgba(113, 175, 113, 0.5);
 }
 
 #img-open-menu {
