@@ -1,4 +1,4 @@
-#main-menu{
+#main-menu {
 	width: 40%;
 	min-height: 100%;
 	background-color: #f2f2f2;
@@ -12,7 +12,7 @@
 	overflow: hidden;
 }
 
-#main-menu-resize{
+#main-menu-resize {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -21,7 +21,7 @@
 	cursor: ew-resize;
 }
 
-#img-open-menu{
+#img-open-menu {
 	-webkit-transition: opacity 0.3s ease-out;
 	-moz-transition: opacity 0.3s ease-out;
 	-o-transition: opacity 0.3s ease-out;
@@ -33,7 +33,7 @@
 	left: 5px;
 }
 
-a.main-menu-tasto:link, a.main-menu-tasto:visited{
+a.main-menu-tasto:link, a.main-menu-tasto:visited {
 	box-sizing: border-box;
 	display: block;
 	padding: 5px;
@@ -48,22 +48,22 @@ a.main-menu-tasto:link, a.main-menu-tasto:visited{
 	color: #000;
 }
 
-a.main-menu-tasto.selected:link, a.main-menu-tasto.selected:visited{
+a.main-menu-tasto.selected:link, a.main-menu-tasto.selected:visited {
 	background-color: #71af71;
 	color: #FFF;
 }
 
-.main-menu-cont > div{
+.main-menu-cont > div {
 	padding: 5px 0;
 }
 
-.cont-testo-menu{
+.cont-testo-menu {
 	overflow: hidden;
 	white-space: nowrap;
 	vertical-align: middle;
 }
 
-a.main-menu-sub:link, a.main-menu-sub:visited{
+a.main-menu-sub:link, a.main-menu-sub:visited {
 	padding: 5px 0 5px 10px;
 	white-space: nowrap;
 	color: #000;
@@ -72,12 +72,12 @@ a.main-menu-sub:link, a.main-menu-sub:visited{
 	text-decoration: none;
 }
 
-a.main-menu-sub:hover, .main-menu-sub.selected{
+a.main-menu-sub:hover, .main-menu-sub.selected {
 	background-color: rgba(113, 175, 113, 0.1);
 	text-decoration: none;
 }
 
-.main-menu-sub img{
+.main-menu-sub img {
 	vertical-align: middle;
 }
 
@@ -106,8 +106,8 @@ a.main-menu-sub:hover, .main-menu-sub.selected{
 	}
 }
 
-@media screen and (min-width: 800px){
-	a.main-menu-tasto:link, a.main-menu-tasto:visited{
+@media screen and (min-width: 800px) {
+	a.main-menu-tasto:link, a.main-menu-tasto:visited {
 		background-image: url('img/menu-icon.png');
 		background-repeat: no-repeat;
 		background-position: 10px center;
@@ -115,7 +115,7 @@ a.main-menu-sub:hover, .main-menu-sub.selected{
 		padding-left: 35px;
 	}
 
-	a.main-menu-tasto.selected:link, a.main-menu-tasto.selected:visited{
+	a.main-menu-tasto.selected:link, a.main-menu-tasto.selected:visited {
 		background-image: url('img/menu-icon.png');
 	}
 }
