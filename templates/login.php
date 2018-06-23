@@ -86,7 +86,7 @@
 <div id="intestazione-cont">
 	<header id="intestazione" class="container text-center">
 		<h3 id="titolo" class="display-3">
-			<?= APP_NAME ?> Admin
+			<?= APP_NAME ?>
 		</h3>
 		<div id="firma">
 			<?php $config = $this->model->_Admin->retrieveConfig(); ?>
