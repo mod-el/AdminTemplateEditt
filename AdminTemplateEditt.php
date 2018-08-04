@@ -72,13 +72,48 @@ class AdminTemplateEditt extends Module
 	}
 
 	/**
+	 * Renders the menu
+	 *
+	 * @param array $pages
+	 */
+	public function renderMenu(array $pages)
+	{
+		foreach ($pages as $pIdx => $p) {
+			if ($p['hidden'] ?? false)
+				continue;
+			if (isset($p['rule'])) {
+				$link = $this->model->_AdminFront->getUrlPrefix() . $p['rule'];
+				$onclick = 'loadAdminPage([\'' . $p['rule'] . '\']); return false';
+			} else {
+				$link = '#';
+				$onclick = 'switchMenuGroup(\'' . $pIdx . '\'); return false';
+			}
+			?>
+			<a href="<?= $link ?>" class="main-menu-tasto" id="menu-group-<?= $pIdx ?>" onclick="<?= $onclick ?>" data-menu-id="<?= $pIdx ?>">
+				<span class="cont-testo-menu"><?= entities($p['name']) ?></span> </a>
+			<?php
+			if (isset($p['sub']) and $p['sub']) {
+				?>
+				<div class="main-menu-cont expandible" id="menu-group-<?= $pIdx ?>-cont" style="height: 0px" data-menu-id="<?= $pIdx ?>">
+					<div>
+						<?php
+						$this->renderMenuItems($pIdx, $p['sub']);
+						?>
+					</div>
+				</div>
+				<?php
+			}
+		}
+	}
+
+	/**
 	 * Recursively renders a left menu items list
 	 *
 	 * @param string $parent
 	 * @param array $items
 	 * @param int $lvl
 	 */
-	public function renderMenuItems(string $parent, array $items, int $lvl = 1)
+	protected function renderMenuItems(string $parent, array $items, int $lvl = 1)
 	{
 		foreach ($items as $pIdx => $p) {
 			if (isset($p['rule'])) {

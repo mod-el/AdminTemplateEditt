@@ -11,15 +11,12 @@ $this->languageBound = true;
 <head>
 	[:head]
 	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<link rel="manifest" href="<?= $this->model->_AdminFront->getUrlPrefix() ?>manifest.json">
 	<meta name="theme-color" content="#383837">
-
 	<script>
 		var maxMenuWidth = <?=$maxMenuWidth?>;
-		var adminPrefix = <?=json_encode($this->model->_AdminFront->getUrlPrefix())?>;
-		var elementCallback = null;
 	</script>
 	<link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/files/basics.css"/>
+	<script type="text/javascript" src="<?= PATH ?>model/AdminTemplateEditt/files/js.js"></script>
 	<style>
 		#main-menu {
 			max-width: <?=$maxMenuWidth?>px;
@@ -93,33 +90,7 @@ $this->languageBound = true;
 	<div id="main-menu" data-hide="<?= $hideMenu ?>">
 		<?php
 		$pages = $this->model->_AdminFront->getPages();
-
-		foreach ($pages as $pIdx => $p) {
-			if ($p['hidden'] ?? false)
-				continue;
-			if (isset($p['rule'])) {
-				$link = $this->model->_AdminFront->getUrlPrefix() . $p['rule'];
-				$onclick = 'loadAdminPage([\'' . $p['rule'] . '\']); return false';
-			} else {
-				$link = '#';
-				$onclick = 'switchMenuGroup(\'' . $pIdx . '\'); return false';
-			}
-			?>
-			<a href="<?= $link ?>" class="main-menu-tasto" id="menu-group-<?= $pIdx ?>" onclick="<?= $onclick ?>" data-menu-id="<?= $pIdx ?>">
-				<span class="cont-testo-menu"><?= entities($p['name']) ?></span> </a>
-			<?php
-			if (isset($p['sub']) and $p['sub']) {
-				?>
-				<div class="main-menu-cont expandible" id="menu-group-<?= $pIdx ?>-cont" style="height: 0px" data-menu-id="<?= $pIdx ?>">
-					<div>
-						<?php
-						$this->model->_AdminTemplateEditt->renderMenuItems($pIdx, $p['sub']);
-						?>
-					</div>
-				</div>
-				<?php
-			}
-		}
+		$this->model->_AdminTemplateEditt->renderMenu($pages);
 		?>
 		<div id="main-menu-resize" onmousedown="startMenuResize(event); event.stopPropagation(); event.preventDefault()" ondblclick="menuResizing = false; switchMenu()"></div>
 	</div>
