@@ -79,7 +79,7 @@ $this->languageBound = true;
 		</div>
 		[<a href="#" onclick="manageFilters(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage')) ?> </a>] [<a href="#" onclick="manageSearchFields(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage-main')) ?> </a>] [<a href="#" onclick="filtersReset(); return false"> <?= entities($this->model->_AdminFront->word('filters-reset')) ?> </a>]
 	</div>
-	<form id="filtersFormCont"></form>
+	<form id="filtersFormCont" onsubmit="return false"></form>
 </div>
 
 <link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/files/menu.css"/>
