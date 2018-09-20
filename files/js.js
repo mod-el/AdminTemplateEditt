@@ -83,7 +83,7 @@ function openMenuTo(id) {
  Given a specific request, opens the left menu to the appropriate button
  */
 function selectFromMainMenu(request) {
-	var button = document.querySelector('.main-menu-tasto[href="' + adminPrefix + request[0] + '"], .main-menu-sub[href="' + adminPrefix + request[0] + '"]');
+	let button = document.querySelector('.main-menu-tasto[href="' + adminPrefix + request[0] + '"], .main-menu-sub[href="' + adminPrefix + request[0] + '"], .main-menu-tasto[href="' + adminPrefix + request.join('/') + '"], .main-menu-sub[href="' + adminPrefix + request.join('/') + '"]');
 	if (button)
 		openMenuTo(button.getAttribute('data-menu-id'));
 	else
