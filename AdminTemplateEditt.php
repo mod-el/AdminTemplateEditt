@@ -81,6 +81,9 @@ class AdminTemplateEditt extends Module
 		foreach ($pages as $pIdx => $p) {
 			if ($p['hidden'] ?? false)
 				continue;
+			if ($p['page'] and !$this->model->_Admin->canUser('L', $p['page']))
+				continue;
+
 			if (isset($p['rule'])) {
 				if (($p['direct'] ?? null) and is_numeric($p['direct'])) {
 					$link = $this->model->_AdminFront->getUrlPrefix() . $p['rule'] . '/edit/' . $p['direct'];
