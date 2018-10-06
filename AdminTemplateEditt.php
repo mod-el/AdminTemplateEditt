@@ -125,8 +125,13 @@ class AdminTemplateEditt extends Module
 	{
 		foreach ($items as $pIdx => $p) {
 			if (isset($p['rule'])) {
-				$link = $this->model->_AdminFront->getUrlPrefix() . $p['rule'];
-				$onclick = 'loadAdminPage([\'' . $p['rule'] . '\']); return false';
+				if (($p['direct'] ?? null) and is_numeric($p['direct'])) {
+					$link = $this->model->_AdminFront->getUrlPrefix() . $p['rule'] . '/edit/' . $p['direct'];
+					$onclick = 'loadElement(\'' . $p['rule'] . '\', ' . $p['direct'] . '); return false';
+				} else {
+					$link = $this->model->_AdminFront->getUrlPrefix() . $p['rule'];
+					$onclick = 'loadAdminPage([\'' . $p['rule'] . '\']); return false';
+				}
 			} else {
 				$link = '#';
 				$onclick = 'switchMenuGroup(\'' . $parent . '-' . $pIdx . '\'); return false';
