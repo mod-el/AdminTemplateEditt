@@ -3,7 +3,8 @@
 	"description": "Admin template 'EDitt'",
 	"version": "0.4.6",
 	"dependencies": {
-		"AdminFront": ">=0.2.0",
+		"Core": ">=2.7.1",
+		"AdminFront": ">=0.2.1",
 		"Bootstrap": ">=0.0.2"
 	},
 	"is-admin-template": true,
