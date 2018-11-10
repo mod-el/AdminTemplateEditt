@@ -30,19 +30,8 @@ class AdminTemplateEditt extends Module
 		$this->model->load('ContextMenu');
 		$this->model->load('CSRF');
 
-		if ($this->model->isLoaded('Multilang')) {
-			$this->model->_Multilang->reloadConfig([
-				'type' => 'session',
-			]);
-
-			if (isset($_GET['mlang']))
-				die('ok');
-
-			if (isset($_GET['getCurrentLanguage'])) {
-				echo $this->model->_Multilang->lang;
-				die();
-			}
-		}
+		if ($this->model->isLoaded('Multilang') and isset($_COOKIE['admin-lang']))
+			$this->model->_Multilang->setLang($_COOKIE['admin-lang']);
 
 		if (!isset($this->model->_AdminFront->request[1]) and isset($this->model->_AdminFront->request[0], $_COOKIE['model-admin-' . $this->model->_AdminFront->request[0] . '-searchFields'])) { // List request
 			$_REQUEST['search-columns'] = $_COOKIE['model-admin-' . $this->model->_AdminFront->request[0] . '-searchFields'];
