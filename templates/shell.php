@@ -31,6 +31,17 @@ $this->languageBound = true;
 <body>
 <header id="header">
 	<div class="tasti-right">
+		<?php
+		if ($this->model->isLoaded('Notifications')) {
+			?>
+			<div>
+				<a href="#" onclick="return false" class="tasto-header">
+					<i class="fas fa-bell" style="font-size: 17px"></i>
+				</a>
+			</div>
+			<?php
+		}
+		?>
 		<div>
 			<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>logout" class="tasto-header">
 				<?= entities($this->model->_AdminFront->word('logout')) ?>
@@ -38,18 +49,16 @@ $this->languageBound = true;
 		</div>
 	</div>
 	<div>
-		<div>
+		<div class="d-none d-sm-inline-block" style="border-right: solid #FFF 1px">
 			<?php if (file_exists(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'logo.png')) { ?>
 				<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>"><img src="<?= PATH ?>app/assets/img/logo.png" alt="" style="max-height: 39px"/></a>
 			<?php } else { ?>
 				<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>" style="font-size: 26px"><?= APP_NAME ?></a>
 			<?php } ?>
 		</div>
-		<div style="border-left: solid #FFF 1px">
+		<div>
 			<img src="<?= PATH ?>model/AdminTemplateEditt/files/img/utente.png" alt=""/>
-			<span style="padding-left: 5px">
-                    <?= $this->model->_User_Admin->username ?>
-                </span>
+			<span style="padding-left: 5px"><?= $this->model->_User_Admin->username ?></span>
 		</div>
 	</div>
 </header>
