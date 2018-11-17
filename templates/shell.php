@@ -37,8 +37,9 @@ $this->languageBound = true;
 		if ($this->model->isLoaded('Notifications')) {
 			?>
 			<div>
-				<a href="#" onclick="toggleNotifications(); return false" class="tasto-header" id="campanellina-notifiche">
+				<a href="#" onclick="toggleNotifications(); return false" class="tasto-header" id="notifications-bell">
 					<i class="fas fa-bell" style="font-size: 17px"></i>
+					<span id="notifications-counter" style="display: none"></span>
 				</a>
 			</div>
 			<?php

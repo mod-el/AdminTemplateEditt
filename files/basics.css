@@ -87,6 +87,24 @@ a:link, a:visited {
 	display: block;
 }
 
+#notifications-bell {
+	position: relative;
+}
+
+#notifications-counter {
+	font-size: 10px;
+	line-height: 16px;
+	position: absolute;
+	bottom: 5px;
+	left: -11px;
+	text-align: center;
+	width: 16px;
+	height: 16px;
+	border-radius: 8px;
+	background: #F00;
+	color: #FFF;
+}
+
 #notifications-container a.notification:link, #notifications-container a.notification:visited {
 	display: block;
 	background: #FFF;
@@ -104,6 +122,14 @@ a:link, a:visited {
 
 #notifications-container a.notification:active {
 	background: #F9F9F9;
+}
+
+.notifications-mid-title {
+	line-height: 16px;
+	padding-bottom: 5px;
+	font-size: 13px;
+	color: #333;
+	font-weight: bold;
 }
 
 .notification-title {

@@ -95,7 +95,7 @@ function selectFromMainMenu(request) {
  */
 function toggleNotifications() {
 	let cont = _('header-notifications-container');
-	let campanellina = _('campanellina-notifiche');
+	let campanellina = _('notifications-bell');
 
 	if (cont.style.display === 'none') {
 		cont.style.display = 'block';
@@ -103,7 +103,7 @@ function toggleNotifications() {
 		cont.loading().ajax(adminPrefix + 'model-admin-notifications/list', {
 			'ajax': 1,
 			'user_idx': 'Admin'
-		});
+		}).then(checkNotifications);
 	} else {
 		cont.style.display = 'none';
 		campanellina.removeClass('active');
