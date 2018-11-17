@@ -14,6 +14,8 @@ $this->languageBound = true;
 	<meta name="theme-color" content="#383837">
 	<script>
 		var maxMenuWidth = <?=$maxMenuWidth?>;
+		var model_notifications_user_idx = 'Admin';
+		var model_notifications_user = '<?=$this->model->_User_Admin->logged()?>';
 	</script>
 	<link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/files/basics.css"/>
 	<script type="text/javascript" src="<?= PATH ?>model/AdminTemplateEditt/files/js.js"></script>
@@ -35,7 +37,7 @@ $this->languageBound = true;
 		if ($this->model->isLoaded('Notifications')) {
 			?>
 			<div>
-				<a href="#" onclick="return false" class="tasto-header">
+				<a href="#" onclick="toggleNotifications(); return false" class="tasto-header" id="campanellina-notifiche">
 					<i class="fas fa-bell" style="font-size: 17px"></i>
 				</a>
 			</div>
@@ -61,6 +63,13 @@ $this->languageBound = true;
 			<span style="padding-left: 5px"><?= $this->model->_User_Admin->username ?></span>
 		</div>
 	</div>
+	<?php
+	if ($this->model->isLoaded('Notifications')) {
+		?>
+		<div id="header-notifications-container" style="display: none"></div>
+		<?php
+	}
+	?>
 </header>
 
 <div id="filtersForm" style="display: none">

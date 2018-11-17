@@ -89,3 +89,23 @@ function selectFromMainMenu(request) {
 	else
 		closeAllMenuGroups();
 }
+
+/*
+ Displays or hides the notifications box
+ */
+function toggleNotifications() {
+	let cont = _('header-notifications-container');
+	let campanellina = _('campanellina-notifiche');
+
+	if (cont.style.display === 'none') {
+		cont.style.display = 'block';
+		campanellina.addClass('active');
+		cont.loading().ajax(adminPrefix + 'model-admin-notifications/list', {
+			'ajax': 1,
+			'user_idx': 'Admin'
+		});
+	} else {
+		cont.style.display = 'none';
+		campanellina.removeClass('active');
+	}
+}
