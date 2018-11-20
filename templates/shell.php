@@ -89,6 +89,14 @@ $this->languageBound = true;
 
 <div class="grid" id="main-grid">
 	<div id="main-menu" data-hide="<?= $hideMenu ?>">
+		<div class="d-block d-sm-none text-center p-2">
+			<?php if (file_exists(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'logo.png')) { ?>
+				<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>"><img src="<?= PATH ?>app/assets/img/logo.png" alt="" style="max-width: 95%"/></a>
+			<?php } else { ?>
+				<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>" style="font-size: 20px"><?= APP_NAME ?></a>
+			<?php } ?>
+		</div>
+
 		<?php
 		$pages = $this->model->_AdminFront->getPages();
 		$this->model->_AdminTemplateEditt->renderMenu($pages);
