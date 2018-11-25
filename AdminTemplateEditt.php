@@ -41,6 +41,7 @@ class AdminTemplateEditt extends Module
 	/**
 	 * Returns a list of the used assets (javascript and stylesheets) for Service Worker caching
 	 *
+	 * @param bool $excludeExternal
 	 * @return array
 	 */
 	public function getAssetsForServiceWorker(bool $excludeExternal = true): array
@@ -58,90 +59,6 @@ class AdminTemplateEditt extends Module
 			PATH . 'model/AdminTemplateEditt/files/menu.css',
 			PATH . 'model/AdminTemplateEditt/files/style.css',
 		]);
-	}
-
-	/**
-	 * Renders the menu
-	 *
-	 * @param array $pages
-	 */
-	public function renderMenu(array $pages)
-	{
-		foreach ($pages as $pIdx => $p) {
-			if ($p['hidden'] ?? false)
-				continue;
-			if (($p['page'] ?? null) and !$this->model->_Admin->canUser('L', $p['page']))
-				continue;
-
-			if (isset($p['rule'])) {
-				if (($p['direct'] ?? null) and is_numeric($p['direct'])) {
-					$link = $this->model->_AdminFront->getUrlPrefix() . $p['rule'] . '/edit/' . $p['direct'];
-					$onclick = 'loadElement(\'' . $p['rule'] . '\', ' . $p['direct'] . '); return false';
-				} else {
-					$link = $this->model->_AdminFront->getUrlPrefix() . $p['rule'];
-					$onclick = 'loadAdminPage([\'' . $p['rule'] . '\']); return false';
-				}
-			} else {
-				$link = '#';
-				$onclick = 'switchMenuGroup(\'' . $pIdx . '\'); return false';
-			}
-			?>
-			<a href="<?= $link ?>" class="main-menu-tasto" id="menu-group-<?= $pIdx ?>" onclick="<?= $onclick ?>" data-menu-id="<?= $pIdx ?>">
-				<span class="cont-testo-menu"><?= entities($p['name']) ?></span> </a>
-			<?php
-			if (isset($p['sub']) and $p['sub']) {
-				?>
-				<div class="main-menu-cont expandible" id="menu-group-<?= $pIdx ?>-cont" style="height: 0px" data-menu-id="<?= $pIdx ?>">
-					<div>
-						<?php
-						$this->renderMenuItems($pIdx, $p['sub']);
-						?>
-					</div>
-				</div>
-				<?php
-			}
-		}
-	}
-
-	/**
-	 * Recursively renders a left menu items list
-	 *
-	 * @param string $parent
-	 * @param array $items
-	 * @param int $lvl
-	 */
-	protected function renderMenuItems(string $parent, array $items, int $lvl = 1)
-	{
-		foreach ($items as $pIdx => $p) {
-			if (isset($p['rule'])) {
-				if (($p['direct'] ?? null) and is_numeric($p['direct'])) {
-					$link = $this->model->_AdminFront->getUrlPrefix() . $p['rule'] . '/edit/' . $p['direct'];
-					$onclick = 'loadElement(\'' . $p['rule'] . '\', ' . $p['direct'] . '); return false';
-				} else {
-					$link = $this->model->_AdminFront->getUrlPrefix() . $p['rule'];
-					$onclick = 'loadAdminPage([\'' . $p['rule'] . '\']); return false';
-				}
-			} else {
-				$link = '#';
-				$onclick = 'switchMenuGroup(\'' . $parent . '-' . $pIdx . '\'); return false';
-			}
-			?>
-			<a href="<?= $link ?>" class="main-menu-sub" id="menu-group-<?= $parent ?>-<?= $pIdx ?>" onclick="<?= $onclick ?>" data-menu-id="<?= $parent . '-' . $pIdx ?>"<?= ($p['hidden'] ?? false) ? ' style="display: none"' : '' ?>>
-				<img src="<?= PATH ?>model/<?= $this->getClass() ?>/files/img/page.png" alt=""/>
-				<span class="cont-testo-menu"><?= entities($p['name']) ?></span> </a>
-			<?php
-			if (isset($p['sub']) and $p['sub']) {
-				?>
-				<div class="main-menu-cont expandible" id="menu-group-<?= $parent ?>-<?= $pIdx ?>-cont" style="height: 0; padding-left: <?= (15 * $lvl) ?>px" data-menu-id="<?= $parent . '-' . $pIdx ?>">
-					<div>
-						<?php
-						$this->renderMenuItems($parent . '-' . $pIdx, $p['sub'], $lvl + 1);
-						?>
-					</div>
-				</div>
-				<?php
-			}
-		}
 	}
 
 	/**

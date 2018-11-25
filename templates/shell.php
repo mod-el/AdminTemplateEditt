@@ -13,6 +13,7 @@ $this->languageBound = true;
 	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<meta name="theme-color" content="#383837">
 	<script>
+		var adminApiPath = '<?=$this->model->_AdminFront->getUrlPrefix()?>api/';
 		var maxMenuWidth = <?=$maxMenuWidth?>;
 		var model_notifications_user_idx = 'Admin';
 		var model_notifications_user = '<?=$this->model->_User_Admin->logged()?>';
@@ -87,7 +88,7 @@ $this->languageBound = true;
 
 <a href="#" onclick="switchMenu(); return false"><img src="<?= PATH ?>model/AdminTemplateEditt/files/img/open-menu.png" alt="" id="img-open-menu"<?php if ($hideMenu != 'always') { ?> style="opacity: 0"<?php } ?> /></a>
 
-<div class="grid" id="main-grid">
+<div class="grid" id="main-grid" style="display: none">
 	<div id="main-menu" data-hide="<?= $hideMenu ?>">
 		<div class="d-block d-sm-none text-center p-2">
 			<?php if (file_exists(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'logo.png')) { ?>
@@ -97,10 +98,7 @@ $this->languageBound = true;
 			<?php } ?>
 		</div>
 
-		<?php
-		$pages = $this->model->_AdminFront->getPages();
-		$this->model->_AdminTemplateEditt->renderMenu($pages);
-		?>
+		<div id="main-menu-ajaxcont"></div>
 		<div id="main-menu-resize" onmousedown="startMenuResize(event); event.stopPropagation(); event.preventDefault()" ondblclick="menuResizing = false; switchMenu()"></div>
 	</div>
 

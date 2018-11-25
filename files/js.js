@@ -1,4 +1,101 @@
 /*
+ Given a set of pages, builds the left menu
+ */
+function buildMenu(pages) {
+	let cont = _('main-menu-ajaxcont');
+	pages.forEach((p, idx) => {
+		let pageData = getLinkFromPage(p);
+		let link = pageData.link, click = pageData.click;
+
+		let button = document.createElement('a');
+		button.setAttribute('href', link);
+		button.setAttribute('id', 'menu-group-' + idx);
+		button.setAttribute('data-menu-id', idx);
+		button.className = 'main-menu-tasto';
+		if (click)
+			button.addEventListener('click', click);
+		button.innerHTML = '<span class="cont-testo-menu">' + entities(p['name']) + '</span>';
+		cont.appendChild(button);
+
+		if (typeof p.sub !== 'undefined' && p.sub.length > 0) {
+			let subCont = document.createElement('div');
+			subCont.className = 'main-menu-cont expandible';
+			subCont.setAttribute('id', 'menu-group-' + idx + '-cont');
+			subCont.style.height = '0px';
+			subCont.setAttribute('data-menu-id', idx);
+			subCont.innerHTML = '<div></div>';
+			subCont = cont.appendChild(subCont);
+
+			fillMenuSubCont(subCont.firstElementChild, idx, p.sub, 1);
+		}
+	});
+}
+
+function fillMenuSubCont(cont, parentIdx, pages, lvl) {
+	pages.forEach((p, idx) => {
+		let pageData = getLinkFromPage(p);
+		let link = pageData.link, click = pageData.click;
+
+		let button = document.createElement('a');
+		button.setAttribute('href', link);
+		button.setAttribute('id', 'menu-group-' + parentIdx + '-' + idx);
+		button.setAttribute('data-menu-id', parentIdx + '-' + idx);
+		button.className = 'main-menu-sub';
+		if (click)
+			button.addEventListener('click', click);
+		button.innerHTML = '<img src="' + absolute_path + 'model/AdminTemplateEditt/files/img/page.png" alt=""/> <span class="cont-testo-menu">' + entities(p['name']) + '</span>';
+		cont.appendChild(button);
+
+		if (typeof p.sub !== 'undefined' && p.sub.length > 0) {
+			let subCont = document.createElement('div');
+			subCont.className = 'main-menu-cont expandible';
+			subCont.setAttribute('id', 'menu-group-' + parentIdx + '-' + idx + '-cont');
+			subCont.style.height = '0px';
+			subCont.style.paddingLeft = (15 * lvl) + 'px';
+			subCont.setAttribute('data-menu-id', parentIdx + '-' + idx);
+			subCont.innerHTML = '<div></div>';
+			subCont = cont.appendChild(subCont);
+
+			fillMenuSubCont(subCont.firstElementChild, parentIdx + '-' + idx, p.sub, lvl + 1);
+		}
+	});
+}
+
+function getLinkFromPage(p) {
+	let link = '', click = null;
+
+	if (p.path) {
+		if (p.direct) {
+			link = adminPrefix + p.path + '/edit/' + p.direct;
+			click = function (event) {
+				event.preventDefault();
+				loadElement(p.path, p.direct);
+				return false;
+			};
+		} else {
+			link = adminPrefix + p.path;
+			click = function (event) {
+				event.preventDefault();
+				loadAdminPage([p.path]);
+				return false;
+			};
+		}
+	} else {
+		link = '#';
+		click = function (event) {
+			event.preventDefault();
+			switchMenuGroup(idx);
+			return false;
+		};
+	}
+
+	return {
+		'link': link,
+		'click': click
+	};
+}
+
+/*
  Opens or close a menu group
  */
 function switchMenuGroup(id) {
