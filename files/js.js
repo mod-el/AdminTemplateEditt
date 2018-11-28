@@ -4,7 +4,7 @@
 function buildMenu(pages) {
 	let cont = _('main-menu-ajaxcont');
 	pages.forEach((p, idx) => {
-		let pageData = getLinkFromPage(p);
+		let pageData = getLinkFromPage(p, idx);
 		let link = pageData.link, click = pageData.click;
 
 		let button = document.createElement('a');
@@ -33,7 +33,7 @@ function buildMenu(pages) {
 
 function fillMenuSubCont(cont, parentIdx, pages, lvl) {
 	pages.forEach((p, idx) => {
-		let pageData = getLinkFromPage(p);
+		let pageData = getLinkFromPage(p, idx);
 		let link = pageData.link, click = pageData.click;
 
 		let button = document.createElement('a');
@@ -61,7 +61,7 @@ function fillMenuSubCont(cont, parentIdx, pages, lvl) {
 	});
 }
 
-function getLinkFromPage(p) {
+function getLinkFromPage(p, idx) {
 	let link = '', click = null;
 
 	if (p.path) {
