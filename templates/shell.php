@@ -14,6 +14,7 @@ $this->languageBound = true;
 	<meta name="theme-color" content="#383837">
 	<script>
 		var adminApiPath = '<?=$this->model->_AdminFront->getUrlPrefix()?>api/';
+		var adminApiToken = '<?=$this->model->_AdminFront->getApiToken()?>';
 		var maxMenuWidth = <?=$maxMenuWidth?>;
 		var model_notifications_user_idx = 'Admin';
 		var model_notifications_user = '<?=$this->model->_User_Admin->logged()?>';
