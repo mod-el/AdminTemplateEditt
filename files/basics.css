@@ -48,15 +48,15 @@ a:link, a:visited {
 	font-family: 'Raleway', sans-serif;
 }
 
-.tasti-right {
+#header-right {
 	float: right;
 }
 
-.tasti-right > div {
+#header-right > div {
 	border-right: solid #666 1px;
 }
 
-.tasti-right > div:last-of-type {
+#header-right > div:last-of-type {
 	border-right: none;
 }
 

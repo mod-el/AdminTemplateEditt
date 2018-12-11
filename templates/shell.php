@@ -14,7 +14,6 @@ $this->languageBound = true;
 	<meta name="theme-color" content="#383837">
 	<script>
 		var adminApiPath = '<?=$this->model->_AdminFront->getUrlPrefix()?>api/';
-		var adminApiToken = '<?=$this->model->_AdminFront->getApiToken()?>';
 		var maxMenuWidth = <?=$maxMenuWidth?>;
 		var model_notifications_user_idx = 'Admin';
 		var model_notifications_user = '<?=$this->model->_User_Admin->logged()?>';
@@ -34,7 +33,7 @@ $this->languageBound = true;
 
 <body>
 <header id="header">
-	<div class="tasti-right">
+	<div id="header-right" style="display: none">
 		<?php
 		if ($this->model->isLoaded('Notifications')) {
 			?>
@@ -48,7 +47,7 @@ $this->languageBound = true;
 		}
 		?>
 		<div>
-			<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>logout" class="tasto-header">
+			<a href="#" onclick="logout(); return false" class="tasto-header">
 				<?= entities($this->model->_AdminFront->word('logout')) ?>
 			</a>
 		</div>
@@ -61,9 +60,9 @@ $this->languageBound = true;
 				<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>" style="font-size: 26px"><?= APP_NAME ?></a>
 			<?php } ?>
 		</div>
-		<div>
+		<div id="header-user-cont" style="display: none">
 			<img src="<?= PATH ?>model/AdminTemplateEditt/files/img/utente.png" alt=""/>
-			<span style="padding-left: 5px"><?= $this->model->_User_Admin->username ?></span>
+			<span id="header-username"></span>
 		</div>
 	</div>
 	<?php

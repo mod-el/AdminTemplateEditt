@@ -3,6 +3,7 @@
  */
 function buildMenu(pages) {
 	let cont = _('main-menu-ajaxcont');
+	cont.innerHTML = '';
 	pages.forEach((p, idx) => {
 		let pageData = getLinkFromPage(p, idx);
 		let link = pageData.link, click = pageData.click;
