@@ -13,7 +13,7 @@ $this->languageBound = true;
 	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<meta name="theme-color" content="#383837">
 	<script>
-		var adminApiPath = '<?=$this->model->_AdminFront->getApiPath()?>';
+		var adminApiPath = '<?=$this->model->_Admin->getApiPath()?>';
 		var maxMenuWidth = <?=$maxMenuWidth?>;
 		var model_notifications_user_idx = 'Admin';
 		var model_notifications_user = '<?=$this->model->_User_Admin->logged()?>';
