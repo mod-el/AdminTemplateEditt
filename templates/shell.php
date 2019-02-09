@@ -16,7 +16,7 @@ $this->languageBound = true;
 		var adminApiPath = '<?=$this->model->_Admin->getApiPath()?>';
 		var maxMenuWidth = <?=$maxMenuWidth?>;
 		var model_notifications_user_idx = 'Admin';
-		var model_notifications_user = '<?=$this->model->_User_Admin->logged()?>';
+		var model_notifications_user = null;
 	</script>
 	<link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/files/basics.css"/>
 	<script type="text/javascript" src="<?= PATH ?>model/AdminTemplateEditt/files/js.js"></script>
