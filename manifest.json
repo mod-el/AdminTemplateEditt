@@ -1,10 +1,10 @@
 {
 	"name": "Admin 'EDitt'",
 	"description": "Admin template 'EDitt'",
-	"version": "0.5.2",
+	"version": "0.5.3",
 	"dependencies": {
-		"Core": ">=2.8.1",
-		"AdminFront": ">=0.3.3",
+		"Core": ">=2.8.2",
+		"AdminFront": ">=0.4.0",
 		"Bootstrap": ">=0.0.2"
 	},
 	"is-admin-template": true,
