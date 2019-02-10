@@ -77,7 +77,7 @@ function getLinkFromPage(p, idx) {
 			link = adminPrefix + p.path;
 			click = function (event) {
 				event.preventDefault();
-				loadAdminPage([p.path]);
+				loadAdminPage(p.path);
 				return false;
 			};
 		}
