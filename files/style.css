@@ -84,7 +84,7 @@ textarea {
 	padding: 0 5px;
 }
 
-#topForm .rob-field {
+#topForm .flex-fields > div {
 	padding-top: 0;
 	padding-bottom: 0;
 }
