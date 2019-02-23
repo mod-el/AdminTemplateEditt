@@ -112,7 +112,7 @@ textarea {
 	position: absolute;
 	left: 0;
 	top: 0;
-	z-index: 200;
+	z-index: 100;
 }
 
 #main-loading.grey {
@@ -343,7 +343,7 @@ div:nth-child(odd) > .results-table-row {
 	-webkit-box-shadow: 3px 3px 6px #333;
 	-moz-box-shadow: 3px 3px 6px #333;
 	box-shadow: 3px 3px 6px #333;
-	z-index: 100;
+	z-index: 150;
 	border: solid #EEE 1px;
 	border-top: none;
 
@@ -461,7 +461,7 @@ input[data-managefilters] + label:hover, input[data-managefilters]:checked + lab
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	z-index: 100;
+	z-index: 150;
 	height: 10px;
 }
 
