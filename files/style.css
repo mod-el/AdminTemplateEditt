@@ -391,11 +391,11 @@ input[data-managesearchfields]:checked + label {
 	background-color: rgba(161, 207, 229, 0.5);
 }
 
-input[data-managefilters] {
+input[data-manage-filter-type], input[data-manage-filter-form] {
 	display: none;
 }
 
-input[data-managefilters] + label {
+input[data-manage-filter-type] + label, input[data-manage-filter-form] + label {
 	padding: 10px;
 	cursor: pointer;
 	display: inline-block;
@@ -408,7 +408,7 @@ input[data-managefilters] + label {
 	transition: background-color 0.2s ease-out;
 }
 
-input[data-managefilters] + label:hover, input[data-managefilters]:checked + label {
+input[data-manage-filter-type] + label:hover, input[data-manage-filter-type]:checked + label, input[data-manage-filter-form] + label:hover, input[data-manage-filter-form]:checked + label {
 	background-color: rgba(161, 207, 229, 0.5);
 }
 

@@ -79,7 +79,10 @@ $this->languageBound = true;
 		<div class="right">
 			[<a href="#" onclick="switchFiltersForm(false); return false"> <?= entities($this->model->_AdminFront->word('filters-close')) ?> </a>]
 		</div>
-		[<a href="#" onclick="manageFilters(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage')) ?> </a>] [<a href="#" onclick="manageSearchFields(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage-main')) ?> </a>] [<a href="#" onclick="filtersReset(); return false"> <?= entities($this->model->_AdminFront->word('filters-reset')) ?> </a>]
+		[<a href="#" onclick="manageFilters(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage')) ?> </a>]
+		[<a href="#" onclick="if(confirm('Questo reimposterà i filtri al loro stato iniziale, sicuro?')) filtersLayoutReset(); return false"> Reset layout filtri </a>]
+		[<a href="#" onclick="manageSearchFields(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage-main')) ?> </a>]
+		[<a href="#" onclick="filtersReset(); return false"> Reset </a>]
 	</div>
 	<form id="filtersFormCont" onsubmit="return false"></form>
 </div>

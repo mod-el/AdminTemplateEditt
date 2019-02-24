@@ -64,53 +64,6 @@ class AdminTemplateEditt extends Module
 	/**
 	 * Method called via Ajax
 	 *
-	 * Shows the filters picking template, and saves them if necessary
-	 *
-	 * @return array
-	 * @throws \Model\Core\Exception
-	 */
-	public function pickFilters(): array
-	{
-		if ($this->model->_CSRF->checkCsrf()) {
-			$filtersPost = json_decode($_POST['filters'], true);
-			if ($filtersPost === null)
-				die('Errore JSON');
-
-			$filtersArr = [];
-			foreach ($filtersPost as $f => $v) {
-				$k = substr($f, -4);
-				$f = substr($f, 0, -5);
-				$filtersArr[$f][$k] = $v;
-			}
-
-			$filters = [
-				'top' => [],
-				'filters' => [],
-			];
-
-			foreach ($filtersArr as $f => $fOpt) {
-				if (!isset($fOpt['type'], $fOpt['form']))
-					continue;
-				$filters[$fOpt['form']][$f] = $fOpt['type'];
-			}
-
-			foreach ($filters as $form => $fArr) {
-				setcookie('model-admin-' . $this->model->_AdminFront->request[0] . '-filters-' . $form, json_encode($fArr), time() + (60 * 60 * 24 * 365), $this->model->prefix() . ($this->model->_AdminFront->url ? $this->model->_AdminFront->url . '/' : ''));
-			}
-			die('ok');
-		}
-		return [
-			'template-module' => $this->getClass(),
-			'template-module-layout' => $this->getClass(),
-			'showLayout' => false,
-			'template' => 'pick-filters',
-			'cacheTemplate' => false,
-		];
-	}
-
-	/**
-	 * Method called via Ajax
-	 *
 	 * Shows the search fields picking template, and saves them if necessary
 	 *
 	 * @return array
