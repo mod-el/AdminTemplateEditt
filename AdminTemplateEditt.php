@@ -62,29 +62,6 @@ class AdminTemplateEditt extends Module
 	}
 
 	/**
-	 * Method called via Ajax
-	 *
-	 * Shows the search fields picking template, and saves them if necessary
-	 *
-	 * @return array
-	 * @throws \Model\Core\Exception
-	 */
-	public function pickSearchFields(): array
-	{
-		if ($this->model->_CSRF->checkCsrf()) {
-			setcookie('model-admin-' . $this->model->_AdminFront->request[0] . '-searchFields', json_encode(explode(',', $_POST['fields'])), time() + (60 * 60 * 24 * 365), $this->model->prefix() . ($this->model->_AdminFront->url ? $this->model->_AdminFront->url . '/' : ''));
-			die('ok');
-		}
-		return [
-			'template-module' => $this->getClass(),
-			'template-module-layout' => $this->getClass(),
-			'showLayout' => false,
-			'template' => 'pick-search-fields',
-			'cacheTemplate' => false,
-		];
-	}
-
-	/**
 	 * Renders a group of tabs
 	 *
 	 * @param string $name
