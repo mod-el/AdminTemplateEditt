@@ -185,11 +185,11 @@ textarea {
 	margin-top: 10px;
 }
 
-input[data-managesearchfields] {
+input[data-managesearchfields], input[data-customize-column] {
 	display: none;
 }
 
-input[data-managesearchfields] + label {
+input[data-managesearchfields] + label, input[data-customize-column] + label {
 	padding: 10px;
 	cursor: pointer;
 	width: 100%;
@@ -203,13 +203,14 @@ input[data-managesearchfields] + label {
 	-ms-transition: background-color 0.2s ease-out;
 	-o-transition: background-color 0.2s ease-out;
 	transition: background-color 0.2s ease-out;
+	user-select: none;
 }
 
-input[data-managesearchfields] + label:hover {
+input[data-managesearchfields] + label:hover, input[data-customize-column] + label:hover {
 	background-color: rgba(161, 207, 229, 0.3);
 }
 
-input[data-managesearchfields]:checked + label {
+input[data-managesearchfields]:checked + label, input[data-customize-column]:checked + label {
 	background-color: rgba(161, 207, 229, 0.5);
 }
 
