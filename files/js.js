@@ -142,13 +142,11 @@ function closeMenuGroup(tasto, cont) {
 /*
  Closes all menu groups except for the ones provided in the first argument
  */
-function closeAllMenuGroups(except) {
-	if (typeof except === 'undefined')
-		except = [];
-	document.querySelectorAll('.main-menu-sub, .main-menu-tasto').forEach(function (tasto) {
-		if (!in_array(tasto.getAttribute('data-menu-id'), except)) {
-			var cont = _('.main-menu-cont[data-menu-id="' + tasto.getAttribute('data-menu-id') + '"]');
-			closeMenuGroup(tasto, cont);
+function closeAllMenuGroups(except = []) {
+	document.querySelectorAll('.main-menu-sub, .main-menu-tasto').forEach(button => {
+		if (!in_array(button.getAttribute('data-menu-id'), except)) {
+			let cont = _('.main-menu-cont[data-menu-id="' + button.getAttribute('data-menu-id') + '"]');
+			closeMenuGroup(button, cont);
 		}
 	});
 }
@@ -157,12 +155,12 @@ function closeAllMenuGroups(except) {
  Open the menù pages selecting a specific link
  */
 function openMenuTo(id) {
-	var tasto = _('menu-group-' + id);
-	if (!tasto)
+	let button = _('menu-group-' + id);
+	if (!button)
 		return false;
 
-	var toOpen = [];
-	var div = tasto;
+	let toOpen = [];
+	let div = button;
 	while (div) {
 		if (typeof div.getAttribute !== 'undefined' && div.getAttribute('data-menu-id') !== null)
 			toOpen.push(div.getAttribute('data-menu-id'));
@@ -170,10 +168,10 @@ function openMenuTo(id) {
 	}
 
 	closeAllMenuGroups(toOpen);
-	toOpen.forEach(function (id) {
-		var tasto = _('menu-group-' + id);
-		var cont = _('menu-group-' + id + '-cont');
-		openMenuGroup(tasto, cont);
+	toOpen.forEach(id => {
+		let button = _('menu-group-' + id);
+		let cont = _('menu-group-' + id + '-cont');
+		openMenuGroup(button, cont);
 	});
 }
 
