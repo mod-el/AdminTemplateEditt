@@ -34,7 +34,7 @@ function buildMenu(pages) {
 
 function fillMenuSubCont(cont, parentIdx, pages, lvl) {
 	pages.forEach((p, idx) => {
-		let pageData = getLinkFromPage(p, idx);
+		let pageData = getLinkFromPage(p, parentIdx + '-' + idx);
 		let link = pageData.link, click = pageData.click;
 
 		let button = document.createElement('a');
