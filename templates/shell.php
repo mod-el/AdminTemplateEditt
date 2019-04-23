@@ -62,7 +62,14 @@ $this->languageBound = true;
 		</div>
 		<div id="header-user-cont" style="display: none">
 			<img src="<?= PATH ?>model/AdminTemplateEditt/files/img/utente.png" alt=""/>
-			<span id="header-username"></span>
+			<span id="header-username">
+				<?php
+				if ($this->model->isLoaded('User', 'Admin')) {
+					$usernameColumn = $this->model->_User_Admin->getUsernameColumn();
+					echo entities($this->model->_User_Admin->get($usernameColumn));
+				}
+				?>
+			</span>
 		</div>
 	</div>
 	<?php
