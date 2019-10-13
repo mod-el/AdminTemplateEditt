@@ -44,7 +44,7 @@ function fillMenuSubCont(cont, parentIdx, pages, lvl) {
 		button.className = 'main-menu-sub';
 		if (click)
 			button.addEventListener('click', click);
-		button.innerHTML = '<img src="' + absolute_path + 'model/AdminTemplateEditt/files/img/page.png" alt=""/> <span class="cont-testo-menu">' + entities(p['name']) + '</span>';
+		button.innerHTML = '<img src="' + absolute_path + 'model/AdminTemplateEditt/assets/img/page.png" alt=""/> <span class="cont-testo-menu">' + entities(p['name']) + '</span>';
 		cont.appendChild(button);
 
 		if (typeof p.sub !== 'undefined' && p.sub.length > 0) {

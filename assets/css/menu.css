@@ -118,7 +118,7 @@ a.main-menu-sub:hover, .main-menu-sub.selected {
 
 @media screen and (min-width: 800px) {
 	a.main-menu-tasto:link, a.main-menu-tasto:visited {
-		background-image: url('img/menu-icon.png');
+		background-image: url('../img/menu-icon.png');
 		background-repeat: no-repeat;
 		background-position: 10px center;
 		padding: 10px;
@@ -126,6 +126,6 @@ a.main-menu-sub:hover, .main-menu-sub.selected {
 	}
 
 	a.main-menu-tasto.selected:link, a.main-menu-tasto.selected:visited {
-		background-image: url('img/menu-icon.png');
+		background-image: url('../img/menu-icon.png');
 	}
 }
