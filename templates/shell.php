@@ -18,8 +18,8 @@ $this->languageBound = true;
 		var model_notifications_user_idx = 'Admin';
 		var model_notifications_user = null;
 	</script>
-	<link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/files/basics.css"/>
-	<script type="text/javascript" src="<?= PATH ?>model/AdminTemplateEditt/files/js.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/assets/css/basics.css"/>
+	<script type="text/javascript" src="<?= PATH ?>model/AdminTemplateEditt/assets/js/js.js"></script>
 	<style>
 		#main-menu {
 			max-width: <?=$maxMenuWidth?>px;
@@ -61,8 +61,15 @@ $this->languageBound = true;
 			<?php } ?>
 		</div>
 		<div id="header-user-cont" style="display: none">
-			<img src="<?= PATH ?>model/AdminTemplateEditt/files/img/utente.png" alt=""/>
-			<span id="header-username"></span>
+			<img src="<?= PATH ?>model/AdminTemplateEditt/assets/img/utente.png" alt=""/>
+			<span id="header-username">
+				<?php
+				if ($this->model->_User_Admin->logged()) {
+					$usernameColumn = $this->model->_User_Admin->getUsernameColumn();
+					echo entities($this->model->_User_Admin->get($usernameColumn));
+				}
+				?>
+			</span>
 		</div>
 	</div>
 	<?php
@@ -86,9 +93,9 @@ $this->languageBound = true;
 	<form id="filtersFormCont" onsubmit="return false"></form>
 </div>
 
-<link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/files/menu.css"/>
+<link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/assets/css/menu.css"/>
 
-<a href="#" onclick="switchMenu(); return false"><img src="<?= PATH ?>model/AdminTemplateEditt/files/img/open-menu.png" alt="" id="img-open-menu"<?php if ($hideMenu != 'always') { ?> style="opacity: 0"<?php } ?> /></a>
+<a href="#" onclick="switchMenu(); return false"><img src="<?= PATH ?>model/AdminTemplateEditt/assets/img/open-menu.png" alt="" id="img-open-menu"<?php if ($hideMenu != 'always') { ?> style="opacity: 0"<?php } ?> /></a>
 
 <div class="grid" id="main-grid" style="display: none">
 	<div id="main-menu" data-hide="<?= $hideMenu ?>">
@@ -121,7 +128,7 @@ $this->languageBound = true;
 
 </body>
 
-<link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/files/style.css"/>
+<link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/assets/css/style.css"/>
 
 [:foot]
 
