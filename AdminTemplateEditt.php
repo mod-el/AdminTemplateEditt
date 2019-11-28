@@ -55,9 +55,9 @@ class AdminTemplateEditt extends Module
 				return PATH . $url;
 			}
 		}, array_merge($this->model->_Output->getJsList(true), $this->model->_Output->getCSSList(true))))), [
-			PATH . 'model/AdminTemplateEditt/files/basics.css',
-			PATH . 'model/AdminTemplateEditt/files/menu.css',
-			PATH . 'model/AdminTemplateEditt/files/style.css',
+			PATH . 'model/AdminTemplateEditt/assets/basics.css',
+			PATH . 'model/AdminTemplateEditt/assets/menu.css',
+			PATH . 'model/AdminTemplateEditt/assets/style.css',
 		]);
 	}
 
