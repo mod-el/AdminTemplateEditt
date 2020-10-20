@@ -8,8 +8,11 @@ html, body {
 	margin: 0;
 }
 
+html {
+	--menu-width: 220px;
+}
+
 body {
-	background-color: #f2f2f2;
 	color: #333;
 	font-family: 'Lato', sans-serif;
 }
@@ -24,24 +27,42 @@ a:link, a:visited {
 	text-decoration: none;
 }
 
-#header {
+#main-container {
 	width: 100%;
-	height: 45px;
+	height: 100%;
+	display: grid;
+	grid-template-columns: var(--menu-width) auto;
+	grid-template-rows: 45px auto;
+	grid-template-areas:
+	    "header header"
+	    "menu main";
+
+	transition: all 0.4s;
+}
+
+#main-container.no-menu {
+	grid-template-areas: "header header" "main main";
+}
+
+/***********************************************************************/
+/***************************** HEADER **********************************/
+/***********************************************************************/
+
+#main-container > header {
+	grid-area: header;
+	background: #000 url('../img/bg-header.png') center repeat-x;
+	box-sizing: border-box;
 	padding: 3px 0;
 	line-height: 39px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	background: #000 url('../img/bg-header.png') center repeat-x;
 	white-space: nowrap;
 	position: relative;
 }
 
-#header a:link, #header a:visited {
+#main-container > header a:link, #main-container > header a:visited {
 	color: #FFF;
 }
 
-#header > div > div {
+#main-container > header > div > div {
 	display: inline-block;
 	color: #FFF;
 	padding: 0 10px;
@@ -65,7 +86,7 @@ a:link, a:visited {
 	display: inline-block;
 }
 
-#header a.tasto-header:hover, #header a.tasto-header.active {
+#main-container > header a.tasto-header:hover, #main-container > header a.tasto-header.active {
 	color: #cdcc08;
 }
 
@@ -82,7 +103,7 @@ a:link, a:visited {
 	z-index: 100;
 }
 
-#header > div > #notifications-container {
+#main-container > header > div > #notifications-container {
 	padding: 0;
 	display: block;
 }
@@ -151,11 +172,23 @@ a:link, a:visited {
 	line-height: 10px;
 }
 
-#main-grid {
-	white-space: nowrap;
+/***********************************************************************/
+/*****************************  **********************************/
+/***********************************************************************/
+
+#main-container > aside {
+	grid-area: menu;
+	background-color: #f2f2f2;
 	position: relative;
+	overflow: hidden;
 }
 
-#main-grid > * {
-	white-space: normal;
+#main-container.no-menu > aside {
+	display: none;
+}
+
+#main-container > main {
+	grid-area: main;
+	background-color: #fff;
+	position: relative;
 }

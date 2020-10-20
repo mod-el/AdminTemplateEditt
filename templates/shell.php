@@ -1,7 +1,6 @@
 <?php
 $config = $this->model->_AdminFront->retrieveConfig();
-$hideMenu = isset($config['hide-menu']) ? $config['hide-menu'] : 'mobile';
-$maxMenuWidth = isset($_COOKIE['menu-width']) ? $_COOKIE['menu-width'] : 220;
+$hideMenu = $config['hide-menu'] ?? 'mobile';
 $this->languageBound = true;
 ?>
 <!DOCTYPE html>
@@ -14,91 +13,71 @@ $this->languageBound = true;
 	<meta name="theme-color" content="#383837">
 	<script>
 		var adminApiPath = '<?=$this->model->_Admin->getApiPath()?>';
-		var maxMenuWidth = <?=$maxMenuWidth?>;
 		var model_notifications_user_idx = 'Admin';
 		var model_notifications_user = null;
 	</script>
-	<link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/assets/css/basics.css"/>
-	<script type="text/javascript" src="<?= PATH ?>model/AdminTemplateEditt/assets/js/js.js"></script>
-	<style>
-		#main-menu {
-			max-width: <?=$maxMenuWidth?>px;
-		}
-
-		#main-grid {
-			display: none;
-		}
-	</style>
 </head>
 
 <body>
-<header id="header">
-	<div id="header-right" style="display: none">
-		<?php
-		if ($this->model->isLoaded('Notifications')) {
-			?>
-			<div>
-				<a href="#" onclick="toggleNotifications(); return false" class="tasto-header" id="notifications-bell">
-					<i class="fas fa-bell" style="font-size: 17px"></i>
-					<span id="notifications-counter" style="display: none"></span>
-				</a>
-			</div>
-			<?php
-		}
-		?>
-		<div>
-			<a href="#" onclick="logout(); return false" class="tasto-header">
-				<?= entities($this->model->_AdminFront->word('logout')) ?>
-			</a>
-		</div>
-	</div>
-	<div>
-		<div class="d-none d-sm-inline-block" style="border-right: solid #FFF 1px">
-			<?php if (file_exists(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'logo.png')) { ?>
-				<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>"><img src="<?= PATH ?>app/assets/img/logo.png" alt="" style="max-height: 39px"/></a>
-			<?php } else { ?>
-				<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>" style="font-size: 26px"><?= APP_NAME ?></a>
-			<?php } ?>
-		</div>
-		<div id="header-user-cont" style="display: none">
-			<img src="<?= PATH ?>model/AdminTemplateEditt/assets/img/utente.png" alt=""/>
-			<span id="header-username">
-				<?php
-				if ($this->model->_User_Admin->logged()) {
-					$usernameColumn = $this->model->_User_Admin->getUsernameColumn();
-					echo entities($this->model->_User_Admin->get($usernameColumn));
-				}
-				?>
-			</span>
-		</div>
-	</div>
-	<?php
-	if ($this->model->isLoaded('Notifications')) {
-		?>
-		<div id="header-notifications-container" style="display: none"></div>
-		<?php
-	}
-	?>
-</header>
-
-<div id="filtersForm" style="display: none">
-	<div class="pad5v no-overflow">
-		<div class="right">
-			[<a href="#" onclick="switchFiltersForm(false); return false"> <?= entities($this->model->_AdminFront->word('filters-close')) ?> </a>]
-		</div>
-		[<a href="#" onclick="manageFilters(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage')) ?> </a>]
-		[<a href="#" onclick="manageSearchFields(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage-main')) ?> </a>]
-		[<a href="#" onclick="filtersReset(); return false"> Reset valori </a>]
-	</div>
-	<form id="filtersFormCont" onsubmit="return false"></form>
-</div>
-
-<link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/assets/css/menu.css"/>
 
 <a href="#" onclick="switchMenu(); return false"><img src="<?= PATH ?>model/AdminTemplateEditt/assets/img/open-menu.png" alt="" id="img-open-menu"<?php if ($hideMenu != 'always') { ?> style="opacity: 0"<?php } ?> /></a>
 
-<div class="grid" id="main-grid" style="display: none">
-	<div id="main-menu" data-hide="<?= $hideMenu ?>">
+<div id="main-container">
+	<header id="header">
+		<div id="header-right" style="display: none">
+			<?php
+			if ($this->model->isLoaded('Notifications')) {
+				?>
+				<div>
+					<a href="#" onclick="toggleNotifications(); return false" class="tasto-header" id="notifications-bell">
+						<i class="fas fa-bell" style="font-size: 17px"></i>
+						<span id="notifications-counter" style="display: none"></span>
+					</a>
+				</div>
+				<?php
+			}
+			?>
+			<div>
+				<a href="#" onclick="logout(); return false" class="tasto-header">
+					<?= entities($this->model->_AdminFront->word('logout')) ?>
+				</a>
+			</div>
+		</div>
+		<div>
+			<div class="d-none d-sm-inline-block" style="border-right: solid #FFF 1px">
+				<?php if (file_exists(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'logo.png')) { ?>
+					<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>"><img src="<?= PATH ?>app/assets/img/logo.png" alt="" style="max-height: 39px"/></a>
+				<?php } else { ?>
+					<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>" style="font-size: 26px"><?= APP_NAME ?></a>
+				<?php } ?>
+			</div>
+			<div id="header-user-cont" style="display: none">
+				<img src="<?= PATH ?>model/AdminTemplateEditt/assets/img/utente.png" alt=""/>
+				<span id="header-username"></span>
+			</div>
+		</div>
+		<?php
+		if ($this->model->isLoaded('Notifications')) {
+			?>
+			<div id="header-notifications-container" style="display: none"></div>
+			<?php
+		}
+		?>
+	</header>
+
+	<div id="filtersForm" style="display: none">
+		<div class="pad5v no-overflow">
+			<div class="right">
+				[<a href="#" onclick="switchFiltersForm(false); return false"> <?= entities($this->model->_AdminFront->word('filters-close')) ?> </a>]
+			</div>
+			[<a href="#" onclick="manageFilters(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage')) ?> </a>]
+			[<a href="#" onclick="manageSearchFields(); return false"> <?= entities($this->model->_AdminFront->word('filters-manage-main')) ?> </a>]
+			[<a href="#" onclick="filtersReset(); return false"> Reset valori </a>]
+		</div>
+		<form id="filtersFormCont" onsubmit="return false"></form>
+	</div>
+
+	<aside id="main-menu-cont" data-hide="<?= $hideMenu ?>">
 		<div class="d-block d-sm-none text-center p-2">
 			<?php if (file_exists(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'logo.png')) { ?>
 				<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>"><img src="<?= PATH ?>app/assets/img/logo.png" alt="" style="max-width: 95%"/></a>
@@ -107,19 +86,16 @@ $this->languageBound = true;
 			<?php } ?>
 		</div>
 
-		<div id="main-menu-ajaxcont"></div>
+		<div id="main-menu"></div>
 		<div id="main-menu-resize" onmousedown="startMenuResize(event); event.stopPropagation(); event.preventDefault()" ondblclick="menuResizing = false; switchMenu()"></div>
-	</div>
+	</aside>
 
-	<div id="main-page-cont" style="width: calc(<?= '100% - ' . $maxMenuWidth . 'px' ?>)">
-		<div id="toolbar"></div>
-
-		<div id="main-page">
-			<div id="breadcrumbs" style="display: none"></div>
-			<div id="main-content" style="left: 0px"></div>
-			<div id="main-loading"><img src="<?= PATH ?>model/Output/files/loading.gif" alt=""/></div>
-		</div>
-	</div>
+	<main id="main-page">
+		<div id="toolbar" class="d-none"></div>
+		<div id="breadcrumbs" class="d-none"></div>
+		<div id="main-loading"><img src="<?= PATH ?>model/Output/files/loading.gif" alt=""/></div>
+		<div id="main-content"></div>
+	</main>
 </div>
 
 <div id="main-loading-bar-cont">
@@ -127,8 +103,6 @@ $this->languageBound = true;
 </div>
 
 </body>
-
-<link rel="stylesheet" type="text/css" href="<?= PATH ?>model/AdminTemplateEditt/assets/css/style.css"/>
 
 [:foot]
 

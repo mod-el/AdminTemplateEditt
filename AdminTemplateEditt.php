@@ -23,6 +23,8 @@ class AdminTemplateEditt extends Module
 		if ($this->model->moduleExists('Dashboard'))
 			$this->model->load('Dashboard');
 
+		$this->model->addCSS('model/AdminTemplateEditt/assets/css/basics.css', ['head' => true]);
+
 		if ($this->model->isLoaded('Multilang') and isset($_COOKIE['admin-lang']))
 			$this->model->_Multilang->setLang($_COOKIE['admin-lang']);
 
@@ -48,9 +50,9 @@ class AdminTemplateEditt extends Module
 				return PATH . $url;
 			}
 		}, array_merge($this->model->_Output->getJsList(true), $this->model->_Output->getCSSList(true))))), [
-			PATH . 'model/AdminTemplateEditt/assets/basics.css',
-			PATH . 'model/AdminTemplateEditt/assets/menu.css',
-			PATH . 'model/AdminTemplateEditt/assets/style.css',
+			PATH . 'model/AdminTemplateEditt/assets/css/basics.css',
+			PATH . 'model/AdminTemplateEditt/assets/css/menu.css',
+			PATH . 'model/AdminTemplateEditt/assets/css/style.css',
 		]);
 	}
 
