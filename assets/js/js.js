@@ -232,7 +232,7 @@ function getLinkFromPage(p, idx) {
 			link = adminPrefix + p.path + '/edit/' + p.direct;
 			click = function (event) {
 				event.preventDefault();
-				loadElement(p.path, p.direct);
+				loadAdminPage(p.path + '/edit/' + p.direct, '', true, true);
 				return false;
 			};
 		} else {
