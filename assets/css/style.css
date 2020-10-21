@@ -88,6 +88,12 @@ textarea {
 #main-content {
 	grid-area: main;
 	padding: 0 10px;
+	position: relative;
+	left: 0px;
+	-webkit-transition: left 0.3s;
+	-moz-transition: left 0.3s;
+	-o-transition: left 0.3s;
+	transition: left 0.3s;
 }
 
 #main-loading {
