@@ -264,14 +264,6 @@ input[data-manage-filter-type] + label:hover, input[data-manage-filter-type]:che
 	color: #888;
 }
 
-.sublist-template {
-	display: none;
-}
-
-.sublist-row > * {
-	vertical-align: middle;
-}
-
 #main-loading-bar-cont {
 	position: fixed;
 	bottom: 0;
