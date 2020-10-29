@@ -16,21 +16,8 @@ class AdminTemplateEditt extends Module
 
 		if ($this->model->moduleExists('DatePicker'))
 			$this->model->load('DatePicker');
-		if ($this->model->moduleExists('CkEditor'))
-			$this->model->load('CkEditor');
-		if ($this->model->moduleExists('InstantSearch'))
-			$this->model->load('InstantSearch');
-		if ($this->model->moduleExists('Dashboard'))
-			$this->model->load('Dashboard');
 
 		$this->model->addCSS('model/AdminTemplateEditt/assets/css/basics.css', ['head' => true]);
-
-		if ($this->model->isLoaded('Multilang') and isset($_COOKIE['admin-lang']))
-			$this->model->_Multilang->setLang($_COOKIE['admin-lang']);
-
-		if (!isset($this->model->_AdminFront->request[1]) and isset($this->model->_AdminFront->request[0], $_COOKIE['model-admin-' . $this->model->_AdminFront->request[0] . '-searchFields'])) { // List request
-			$_REQUEST['search-columns'] = $_COOKIE['model-admin-' . $this->model->_AdminFront->request[0] . '-searchFields'];
-		}
 	}
 
 	/**
@@ -54,43 +41,5 @@ class AdminTemplateEditt extends Module
 			PATH . 'model/AdminTemplateEditt/assets/css/menu.css',
 			PATH . 'model/AdminTemplateEditt/assets/css/style.css',
 		]);
-	}
-
-	/**
-	 * Renders a group of tabs
-	 *
-	 * @param string $name
-	 * @param array $tabs
-	 * @param array $options
-	 */
-	public function renderTabs(string $name, array $tabs, array $options = [])
-	{
-		$options = array_merge([
-			'before' => false,
-			'after' => false,
-			'default' => null,
-		], $options);
-
-		$totK = $this->model->_AdminFront->request[0] . '-' . $this->model->element['id'] . '-' . $name;
-
-		if ($options['default'] !== null and !isset($tabs[$options['default']]))
-			$options['default'] = null;
-
-		echo '<div class="admin-tabs" data-tabs="' . entities($totK) . '" data-name="' . entities($name) . '"' . ($options['default'] !== null ? ' data-default="' . entities($options['default']) . '"' : '') . '>';
-		if ($options['before'])
-			echo '<div>' . $options['before'] . '</div>';
-		foreach ($tabs as $k => $t) {
-			if (!is_array($t))
-				$t = ['label' => $t];
-			$t = array_merge([
-				'label' => '',
-				'onclick' => '',
-			], $t);
-
-			echo '<a class="admin-tab" data-tab="' . entities($k) . '" data-onclick="' . ($t['onclick'] ? entities($t['onclick']) . ';' : '') . '">' . entities($t['label']) . '</a>';
-		}
-		if ($options['after'])
-			echo '<div>' . $options['after'] . '</div>';
-		echo '</div>';
 	}
 }

@@ -36,7 +36,6 @@ function buildMenu(pages) {
 }
 
 function loadLoginPage() {
-	// _('toolbar').style.display = 'none';
 	_('header-right').style.display = 'none';
 	_('header-user-cont').style.display = 'none';
 	buildMenu([]);
@@ -45,7 +44,6 @@ function loadLoginPage() {
 }
 
 function unloadLoginPage() {
-	// _('toolbar').style.display = 'block';
 	_('header-right').style.display = 'block';
 	_('header-user-cont').style.display = 'inline-block';
 	openMenu();
