@@ -17,7 +17,8 @@ class AdminTemplateEditt extends Module
 		if ($this->model->moduleExists('DatePicker'))
 			$this->model->load('DatePicker');
 
-		$this->model->addCSS('model/AdminTemplateEditt/assets/css/basics.css', ['head' => true]);
+		// TODO
+//		$this->model->addCSS('model/AdminTemplateEditt/assets/css/basics.css', ['head' => true]);
 	}
 
 	/**
@@ -38,7 +39,6 @@ class AdminTemplateEditt extends Module
 			}
 		}, array_merge($this->model->_Output->getJsList(true), $this->model->_Output->getCSSList(true))))), [
 			PATH . 'model/AdminTemplateEditt/assets/css/basics.css',
-			PATH . 'model/AdminTemplateEditt/assets/css/menu.css',
 			PATH . 'model/AdminTemplateEditt/assets/css/style.css',
 		]);
 	}
