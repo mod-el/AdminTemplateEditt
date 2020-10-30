@@ -69,6 +69,10 @@ a:link, a:visited {
 	font-family: 'Raleway', sans-serif;
 }
 
+#header-left > div:first-child {
+	width: var(--menu-width);
+}
+
 #header-right {
 	float: right;
 }

@@ -43,7 +43,7 @@ $this->languageBound = true;
 				</a>
 			</div>
 		</div>
-		<div>
+		<div id="header-left">
 			<div class="d-none d-sm-inline-block" style="border-right: solid #FFF 1px">
 				<?php if (file_exists(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'logo.png')) { ?>
 					<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>"><img src="<?= PATH ?>app/assets/img/logo.png" alt="" style="max-height: 39px"/></a>
