@@ -15,7 +15,7 @@
 	transition: none !important;
 }
 
-input[type=text], input[type=password], input[type=date], input[type=time], input[type=number], textarea, select {
+input[type=text], input[type=password], input[type=date], input[type=time], input[type=number], input[type=tel], input[type=email], textarea, select {
 	padding: 0 5px;
 	border: solid #b3b3b3 1px;
 	font-family: 'Lato', sans-serif;
