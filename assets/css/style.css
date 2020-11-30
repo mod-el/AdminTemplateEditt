@@ -48,6 +48,25 @@ textarea {
 	position: relative;
 }
 
+#main-page.no-toolbar {
+	grid-template-rows: 26px auto;
+	grid-template-areas:
+	    "breadcrumbs"
+	    "main";
+}
+
+#main-page.no-breadcrumbs {
+	grid-template-rows: 45px auto;
+	grid-template-areas:
+	    "toolbar"
+	    "main";
+}
+
+#main-page.no-toolbar.no-breadcrumbs {
+	grid-template-rows: auto;
+	grid-template-areas: "main";
+}
+
 #toolbar {
 	grid-area: toolbar;
 	background: #f2f2f2;
