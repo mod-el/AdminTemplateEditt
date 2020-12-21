@@ -90,7 +90,7 @@ $this->languageBound = true;
 		<div id="main-menu-resize" onmousedown="startMenuResize(event); event.stopPropagation(); event.preventDefault()" ondblclick="menuResizing = false; switchMenu()"></div>
 	</aside>
 
-	<main id="main-page">
+	<main id="main-page" class="no-toolbar no-breadcrumbs">
 		<div id="toolbar" class="d-none"></div>
 		<div id="breadcrumbs" class="d-none"></div>
 		<div id="main-loading"><img src="<?= PATH ?>model/Output/files/loading.gif" alt=""/></div>
