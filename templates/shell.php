@@ -16,6 +16,21 @@ $this->languageBound = true;
 		var model_notifications_user_idx = 'Admin';
 		var model_notifications_user = null;
 	</script>
+
+	<style>
+		html {
+			--color-light: #71af71;
+		<?php
+/* TODO
+--color-main: <?=$config['color-main']?>;
+--color-light: <?=$config['color-light']?>;
+--color-menu: <?=$config['color-menu']?>;
+--color-menu-bg: <?=$config['color-menu-bg']?>;
+--color-logo-bg: <?=$config['color-logo-bg']?>;
+ */
+ ?>
+		}
+	</style>
 </head>
 
 <body>
