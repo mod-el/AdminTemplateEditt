@@ -356,14 +356,52 @@ function toggleNotifications() {
 	if (cont.style.display === 'none') {
 		cont.style.display = 'block';
 		campanellina.addClass('active');
-		cont.loading().ajax(adminPrefix + 'model-admin-notifications/list', {
-			'ajax': 1,
-			'user_idx': 'Admin'
-		}).then(checkNotifications);
+		cont.loading();
+		return ajax(PATH + 'model-notifications/list', {'user_idx': 'Admin'}).then(async response => {
+			await fillNotifications(cont, response);
+			return checkNotifications();
+		});
 	} else {
 		cont.style.display = 'none';
 		campanellina.removeClass('active');
 	}
+}
+
+async function fillNotifications(cont, response) {
+	cont.innerHTML = '<div id="notifications-container"></div>';
+	cont = _('notifications-container');
+
+	for (let groupKey of Object.keys(response)) {
+		let group = response[groupKey];
+		if (group.notifications.length === 0)
+			continue;
+
+		let notificationsGroup = document.createElement('div');
+		cont.appendChild(notificationsGroup);
+
+		let notificationTitle = document.createElement('div');
+		notificationTitle.className = 'notifications-mid-title';
+		notificationTitle.innerHTML = entities(group.title);
+		notificationsGroup.appendChild(notificationTitle);
+
+		for (let notification of group.notifications) {
+			let a = document.createElement('a');
+			a.className = 'notification';
+			a.setAttribute('href', notification.url);
+
+			if (notification.title)
+				a.innerHTML += '<div class="notification-title">' + entities(notification.title) + '</div>';
+			if (notification.short_text)
+				a.innerHTML += '<div class="notification-text">' + entities(notification.short_text) + '</div>';
+
+			a.innerHTML += '<div class="notification-date">' + entities(notification.formatted_date) + '</div>';
+
+			notificationsGroup.appendChild(a);
+		}
+	}
+
+	if (response.new.notifications.length + response.seen.notifications.length === 0)
+		cont.innerHTML = '<a href="#" onclick="return false" class="notification"><div class="notification-text"><i>Non ci sono notifiche al momento</i></div></a>';
 }
 
 function switchFiltersForm(origin) {

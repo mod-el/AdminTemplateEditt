@@ -100,12 +100,14 @@ a:link, a:visited {
 	top: 40px;
 	right: 76px;
 	width: 400px;
+	height: calc(100vh - 50px);
 	max-width: 90%;
 	background: #f2f2f2;
 	border: solid #e9e9e9 1px;
 	box-shadow: 5px 5px 10px #888;
 	padding: 12px;
 	z-index: 100;
+	overflow-y: auto;
 }
 
 #main-container > header > div > #notifications-container {
