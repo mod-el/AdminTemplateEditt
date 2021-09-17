@@ -1,6 +1,6 @@
 <?php
-$config = $this->model->_AdminFront->retrieveConfig();
-$hideMenu = $config['hide-menu'] ?? 'mobile';
+$adminFrontConfig = $this->model->_AdminFront->retrieveConfig();
+$hideMenu = $adminFrontConfig['hide-menu'] ?? 'mobile';
 $this->languageBound = true;
 ?>
 <!DOCTYPE html>
