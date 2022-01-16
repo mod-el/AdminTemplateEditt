@@ -61,11 +61,14 @@ $this->languageBound = true;
 		</div>
 		<div id="header-left">
 			<div class="d-none d-sm-inline-block" style="border-right: solid #FFF 1px">
-				<?php if (file_exists(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'logo.png')) { ?>
-					<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>"><img src="<?= PATH ?>app/assets/img/logo.png" alt="" style="max-height: 39px"/></a>
-				<?php } else { ?>
-					<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>" style="font-size: 26px"><?= APP_NAME ?></a>
-				<?php } ?>
+				<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>" style="font-size: 26px" onclick="loadAdminPage('', {}, {}, false); return false">
+					<?php
+					if (file_exists(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'logo.png'))
+						echo '<img src="' . PATH . 'app/assets/img/logo.png" alt="' . APP_NAME . ' logo" style="max-height: 39px"/>';
+					else
+						echo APP_NAME;
+					?>
+				</a>
 			</div>
 			<div id="header-user-cont" style="display: none">
 				<img src="<?= PATH ?>model/AdminTemplateEditt/assets/img/utente.png" alt=""/>
