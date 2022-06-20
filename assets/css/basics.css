@@ -45,6 +45,16 @@ a:link, a:visited {
 	grid-template-areas: "header header" "main main";
 }
 
+@media print {
+	#main-container {
+		grid-template-areas: "header header" "main main" !important;
+	}
+
+	#main-container > aside {
+		display: none !important;
+	}
+}
+
 /***********************************************************************/
 /***************************** HEADER **********************************/
 /***********************************************************************/
