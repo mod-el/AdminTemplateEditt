@@ -16,6 +16,8 @@ function buildMenu(pages) {
 		button.setAttribute('id', 'menu-group-' + idx);
 		button.setAttribute('data-menu-id', idx);
 		button.className = 'main-menu-tasto';
+		if (p.icon)
+			button.style.backgroundImage = 'url(\'' + p.icon + '\')';
 		if (click)
 			button.addEventListener('click', click);
 		button.innerHTML = '<span class="cont-testo-menu">' + entities(p['name']) + '</span>';

@@ -327,8 +327,8 @@ a.main-menu-sub:hover, .main-menu-sub.selected {
 		background-image: url('../img/menu-icon.png');
 		background-repeat: no-repeat;
 		background-position: 10px center;
-		padding: 10px;
-		padding-left: 35px;
+		background-size: 18px;
+		padding: 10px 10px 10px 35px;
 	}
 
 	a.main-menu-tasto.selected:link, a.main-menu-tasto.selected:visited {
