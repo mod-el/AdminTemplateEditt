@@ -4,8 +4,7 @@
 	"version": "1.0.0",
 	"dependencies": {
 		"Core": ">=2.10.0",
-		"AdminFront": ">=1.0.0",
-		"Bootstrap": ">=0.1.0"
+		"AdminFront": ">=1.0.0"
 	},
 	"is-admin-template": true,
 	"assets-position": "foot"

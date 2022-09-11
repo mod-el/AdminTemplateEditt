@@ -10,6 +10,8 @@ class AdminTemplateEditt extends Module
 	 */
 	public function init(array $options)
 	{
+		\Model\Assets\Assets::enable('bootstrap', 4);
+
 		$this->model->load('FrontEnd');
 
 		if ($this->model->moduleExists('DatePicker'))
