@@ -1,8 +1,8 @@
 <?php namespace Model\AdminTemplateEditt;
 
-use Model\Multilang\MultilangProviderInterface;
+use Model\Multilang\AbstractMultilangProvider;
 
-class MultilangProvider implements MultilangProviderInterface
+class MultilangProvider extends AbstractMultilangProvider
 {
 	public static function dictionary(): array
 	{
