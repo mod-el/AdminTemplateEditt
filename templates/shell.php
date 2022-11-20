@@ -15,7 +15,6 @@ $hideMenu = $adminFrontConfig['hide-menu'] ?? 'mobile';
 		var model_notifications_user_idx = 'Admin';
 		var model_notifications_user = null;
 		var enableHistoryNavigation = <?=json_encode($adminFrontConfig['enableHistoryNavigation'])?>;
-		var cp_token = '[:i:cp_token]';
 	</script>
 
 	<style>
