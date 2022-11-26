@@ -25,7 +25,6 @@
 		<div class="red-message" id="login-error-message" style="display: none"></div>
 	</div>
 	<form action="?" method="post" id="login" onsubmit="login(); return false">
-		<?php \Model\CSRF\CSRF::render('admin.login'); ?>
 		<input type="text" class="form-control" name="username" placeholder="username" autofocus/><br/>
 		<input type="password" class="form-control" name="password" placeholder="password"/><br/>
 		<button type="submit" class="form-control" id="login-button">Login</button>
