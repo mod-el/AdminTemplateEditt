@@ -1,4 +1,4 @@
-<?php namespace Model\AdminTemplateEditt;
+<?php namespace Model\AdminTemplateEditt\Providers;
 
 use Model\Multilang\AbstractMultilangProvider;
 
