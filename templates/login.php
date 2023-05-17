@@ -1,4 +1,4 @@
-<style type="text/css">
+<style>
 	#login {
 		margin: auto;
 		max-width: 400px;
