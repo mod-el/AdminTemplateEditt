@@ -115,7 +115,7 @@ a:link, a:visited {
 
 #main-container > header {
 	grid-area: header;
-	background: #000 url('../img/bg-header.png') center repeat-x;
+	background: var(--background-header) center repeat-x;
 	box-sizing: border-box;
 	padding: 3px 0;
 	line-height: 39px;
@@ -124,12 +124,12 @@ a:link, a:visited {
 }
 
 #main-container > header a:link, #main-container > header a:visited {
-	color: #FFF;
+	color: var(--text-header);
 }
 
 #main-container > header > div > div {
 	display: inline-block;
-	color: #FFF;
+	color: var(--text-header);
 	padding: 0 10px;
 	font-family: 'Raleway', sans-serif;
 }
@@ -318,13 +318,13 @@ a.main-menu-tasto:link, a.main-menu-tasto:visited {
 	border-bottom: solid #CDCDCD 1px;
 	overflow: hidden;
 	text-decoration: none;
-	background-color: #FFF;
-	color: #000;
+	background-color: var(--background-menu-primary-off);
+	color: var(--text-menu-primary-off);
 }
 
 a.main-menu-tasto.selected:link, a.main-menu-tasto.selected:visited {
-	background-color: #71af71;
-	color: #FFF;
+	background-color: var(--background-menu-primary-on);
+	color: var(--text-menu-primary-on);
 }
 
 .main-menu-cont > div {

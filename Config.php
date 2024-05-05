@@ -15,7 +15,7 @@ class Config extends Module_Config
 			return '<?php
 $config = ' . var_export([
 					'background-header' => '#333333',
-					'text-header' => '#333333',
+					'text-header' => '#ffffff',
 					'background-menu-primary-off' => '#ffffff',
 					'background-menu-primary-on' => '#71af71',
 					'text-menu-primary-off' => '#000000',
@@ -47,7 +47,7 @@ $config = ' . var_export([
 		$config = parent::retrieveConfig();
 		return array_merge([
 			'background-header' => '#333333',
-			'text-header' => '#333333',
+			'text-header' => '#ffffff',
 			'background-menu-primary-off' => '#ffffff',
 			'background-menu-primary-on' => '#71af71',
 			'text-menu-primary-off' => '#000000',
