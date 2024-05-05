@@ -1,6 +1,8 @@
 <?php
 $adminFrontConfig = $this->model->_AdminFront->retrieveConfig();
 $hideMenu = $adminFrontConfig['hide-menu'] ?? 'mobile';
+
+$config = $this->model->_AdminTemplateRob->retrieveConfig();
 ?>
 <!DOCTYPE html>
 
@@ -19,16 +21,16 @@ $hideMenu = $adminFrontConfig['hide-menu'] ?? 'mobile';
 
 	<style>
 		html {
-			--color-light: #71af71;
-		<?php
-/* TODO
---color-main: <?=$config['color-main']?>;
---color-light: <?=$config['color-light']?>;
---color-menu: <?=$config['color-menu']?>;
---color-menu-bg: <?=$config['color-menu-bg']?>;
---color-logo-bg: <?=$config['color-logo-bg']?>;
- */
- ?>
+			--background-header: <?=$config['background-header']?>;
+			--text-header: <?=$config['text-header']?>;
+			--background-menu-primary-off: <?=$config['background-menu-primary-off']?>;
+			--background-menu-primary-on: <?=$config['background-menu-primary-on']?>;
+			--text-menu-primary-off: <?=$config['text-menu-primary-off']?>;
+			--text-menu-primary-on: <?=$config['text-menu-primary-on']?>;
+			--background-menu-secondary-off: <?=$config['background-menu-secondary-off']?>;
+			--background-menu-secondary-on: <?=$config['background-menu-secondary-on']?>;
+			--text-menu-secondary-off: <?=$config['text-menu-secondary-off']?>;
+			--text-menu-secondary-on: <?=$config['text-menu-secondary-on']?>;
 		}
 	</style>
 </head>
