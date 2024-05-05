@@ -310,7 +310,7 @@ a:link, a:visited {
 a.main-menu-tasto:link, a.main-menu-tasto:visited {
 	box-sizing: border-box;
 	display: block;
-	padding: 5px;
+	padding: 10px;
 	line-height: 21px;
 	cursor: pointer;
 	font-size: 1.1rem;
@@ -373,19 +373,5 @@ a.main-menu-sub:hover, .main-menu-sub.selected {
 
 	#toolbar {
 		overflow-x: auto;
-	}
-}
-
-@media screen and (min-width: 800px) {
-	a.main-menu-tasto:link, a.main-menu-tasto:visited {
-		background-image: url('../img/menu-icon.png');
-		background-repeat: no-repeat;
-		background-position: 10px center;
-		background-size: 18px;
-		padding: 10px 10px 10px 35px;
-	}
-
-	a.main-menu-tasto.selected:link, a.main-menu-tasto.selected:visited {
-		background-image: url('../img/menu-icon.png');
 	}
 }

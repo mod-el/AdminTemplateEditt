@@ -72,7 +72,7 @@ $config = $this->model->_AdminTemplateEditt->retrieveConfig();
 				</a>
 			</div>
 			<div id="header-user-cont" style="display: none">
-				<img src="<?= PATH ?>model/AdminTemplateEditt/assets/img/utente.png" alt=""/>
+				<i class="fas fa-user"></i>
 				<span id="header-username"></span>
 			</div>
 		</div>
