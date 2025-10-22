@@ -375,3 +375,12 @@ a.main-menu-sub:hover, .main-menu-sub.selected {
 		overflow-x: auto;
 	}
 }
+
+@media screen and (min-width: 800px) {
+	a.main-menu-tasto:link, a.main-menu-tasto:visited {
+		background-repeat: no-repeat;
+		background-position: 10px center;
+		background-size: 18px;
+		padding: 10px 10px 10px 35px;
+	}
+}
