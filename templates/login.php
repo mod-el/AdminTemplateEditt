@@ -84,13 +84,13 @@
 
 	.form-group input:focus {
 		outline: none;
-		border-color: #009fe8;
+		border-color: var(--background-menu-primary-on);
 		box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 	}
 
 	button[type=submit] {
 		width: 100%;
-		background: #009fe8;
+		background: var(--background-menu-primary-on);
 		color: #FFF;
 		padding: 14px 20px;
 		border: none;
@@ -105,7 +105,7 @@
 	}
 
 	button[type=submit]:hover {
-		background: #00acf5;
+		background: var(--background-menu-secondary-on);
 		transform: translateY(-1px);
 		box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 	}
@@ -125,11 +125,15 @@
 </style>
 
 <section class="container" id="login-cont">
-	<div class="text-center">
-		<div class="login-logo">
+	<?php
+	if (file_exists(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'logo.png')) {
+		?>
+		<div class="text-center login-logo">
 			<img src="<?= PATH ?>app/assets/img/logo.png" alt="Logo"/>
 		</div>
-	</div>
+		<?php
+	}
+	?>
 
 	<div class="login-card">
 		<h2 class="login-title">Login</h2>
