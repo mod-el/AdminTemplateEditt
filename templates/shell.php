@@ -61,7 +61,7 @@ $config = $this->model->_AdminTemplateEditt->retrieveConfig();
 			</div>
 		</div>
 		<div id="header-left">
-			<div class="d-none d-sm-inline-block" style="border-right: solid var(--text-header) 1px">
+			<div class="d-none d-sm-inline-block text-center" style="border-right: solid var(--text-header) 1px">
 				<a href="<?= $this->model->_AdminFront->getUrlPrefix() ?>" style="font-size: 26px" onclick="loadAdminPage('', {}, {}, false); return false">
 					<?php
 					if (file_exists(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'logo.png'))
