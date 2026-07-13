@@ -14,8 +14,8 @@ class AdminTemplateEditt extends Module
 
 		$this->model->load('FrontEnd');
 
-		if ($this->model->moduleExists('DatePicker'))
-			$this->model->load('DatePicker');
+		if (\Model\Assets\Assets::has('date-picker'))
+			\Model\Assets\Assets::enable('date-picker');
 
 		// TODO
 //		$this->model->addCSS('model/AdminTemplateEditt/assets/css/basics.css', ['head' => true]);
